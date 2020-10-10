@@ -7,16 +7,16 @@ namespace app\models\base;
 use Yii;
 
 /**
- * This is the base-model class for table "master_pendidikan".
+ * This is the base-model class for table "pelatihan_tingkat".
  *
  * @property integer $id
  * @property string $nama
  * @property integer $flag
  *
- * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
+ * @property \app\models\Pelatihan[] $pelatihans
  * @property string $aliasModel
  */
-abstract class Pendidikan extends \yii\db\ActiveRecord
+abstract class PelatihanTingkat extends \yii\db\ActiveRecord
 {
 
 
@@ -26,7 +26,7 @@ abstract class Pendidikan extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'master_pendidikan';
+        return 'pelatihan_tingkat';
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class Pendidikan extends \yii\db\ActiveRecord
     public function attributeHints()
     {
         return array_merge(parent::attributeHints(), [
-            'nama' => 'nama pendidikan , ex : SD, SMP, SMA',
+            'nama' => 'Nama tingkat pelatihan, ex : pelatihan dasar, pelatihan menengah',
             'flag' => '0 = deleted, 1 = active',
         ]);
     }
@@ -67,9 +67,9 @@ abstract class Pendidikan extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihanPesertas()
+    public function getPelatihans()
     {
-        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['pendidikan_id' => 'id']);
+        return $this->hasMany(\app\models\Pelatihan::className(), ['tingkat_id' => 'id']);
     }
 
 

@@ -3,13 +3,13 @@
 namespace app\models;
 
 use Yii;
-use \app\models\base\KategoriSoal as BaseKategoriSoal;
+use \app\models\base\PelatihanSoalPilihanGanda as BasePelatihanSoalPilihanGanda;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "master_kategori_soal".
+ * This is the model class for table "pelatihan_soal_pilihan_ganda".
  */
-class KategoriSoal extends BaseKategoriSoal
+class PelatihanSoalPilihanGanda extends BasePelatihanSoalPilihanGanda
 {
 
     public function behaviors()

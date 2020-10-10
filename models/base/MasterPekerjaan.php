@@ -7,16 +7,16 @@ namespace app\models\base;
 use Yii;
 
 /**
- * This is the base-model class for table "master_kategori_soal".
+ * This is the base-model class for table "master_pekerjaan".
  *
  * @property integer $id
  * @property string $nama
- * @property integer $flag
  *
- * @property \app\models\PelatihanSoal[] $pelatihanSoals
+ * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
+ * @property \app\models\PelatihanPeserta[] $pelatihanPesertas0
  * @property string $aliasModel
  */
-abstract class KategoriSoal extends \yii\db\ActiveRecord
+abstract class MasterPekerjaan extends \yii\db\ActiveRecord
 {
 
 
@@ -26,7 +26,7 @@ abstract class KategoriSoal extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'master_kategori_soal';
+        return 'master_pekerjaan';
     }
 
     /**
@@ -36,7 +36,6 @@ abstract class KategoriSoal extends \yii\db\ActiveRecord
     {
         return [
             [['nama'], 'required'],
-            [['flag'], 'integer'],
             [['nama'], 'string', 'max' => 100]
         ];
     }
@@ -49,7 +48,6 @@ abstract class KategoriSoal extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nama' => 'Nama',
-            'flag' => 'Flag',
         ];
     }
 
@@ -59,17 +57,24 @@ abstract class KategoriSoal extends \yii\db\ActiveRecord
     public function attributeHints()
     {
         return array_merge(parent::attributeHints(), [
-            'nama' => 'jenis soal , ex : multiple choice, esay, short answer',
-            'flag' => '0 = deleted, 1 = active',
+            'nama' => 'nama pekerjaan',
         ]);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihanSoals()
+    public function getPelatihanPesertas()
     {
-        return $this->hasMany(\app\models\PelatihanSoal::className(), ['kategori_soal_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['pekerjaan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelatihanPesertas0()
+    {
+        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['pekerjaan_id' => 'id']);
     }
 
 

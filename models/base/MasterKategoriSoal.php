@@ -7,14 +7,16 @@ namespace app\models\base;
 use Yii;
 
 /**
- * This is the base-model class for table "master_jenis_kelamin".
+ * This is the base-model class for table "master_kategori_soal".
  *
  * @property integer $id
  * @property string $nama
  * @property integer $flag
+ *
+ * @property \app\models\PelatihanSoal[] $pelatihanSoals
  * @property string $aliasModel
  */
-abstract class JenisKelamin extends \yii\db\ActiveRecord
+abstract class MasterKategoriSoal extends \yii\db\ActiveRecord
 {
 
 
@@ -24,7 +26,7 @@ abstract class JenisKelamin extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'master_jenis_kelamin';
+        return 'master_kategori_soal';
     }
 
     /**
@@ -35,7 +37,7 @@ abstract class JenisKelamin extends \yii\db\ActiveRecord
         return [
             [['nama'], 'required'],
             [['flag'], 'integer'],
-            [['nama'], 'string', 'max' => 20]
+            [['nama'], 'string', 'max' => 100]
         ];
     }
 
@@ -57,8 +59,17 @@ abstract class JenisKelamin extends \yii\db\ActiveRecord
     public function attributeHints()
     {
         return array_merge(parent::attributeHints(), [
+            'nama' => 'jenis soal , ex : multiple choice, esay, short answer',
             'flag' => '0 = deleted, 1 = active',
         ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelatihanSoals()
+    {
+        return $this->hasMany(\app\models\PelatihanSoal::className(), ['kategori_soal_id' => 'id']);
     }
 
 

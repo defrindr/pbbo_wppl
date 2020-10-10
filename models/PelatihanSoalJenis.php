@@ -3,13 +3,13 @@
 namespace app\models;
 
 use Yii;
-use \app\models\base\JenisSoal as BaseJenisSoal;
+use \app\models\base\PelatihanSoalJenis as BasePelatihanSoalJenis;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "master_jenis_soal".
+ * This is the model class for table "pelatihan_soal_jenis".
  */
-class JenisSoal extends BaseJenisSoal
+class PelatihanSoalJenis extends BasePelatihanSoalJenis
 {
 
     public function behaviors()

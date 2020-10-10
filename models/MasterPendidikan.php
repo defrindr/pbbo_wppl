@@ -3,13 +3,13 @@
 namespace app\models;
 
 use Yii;
-use \app\models\base\JenisKelamin as BaseJenisKelamin;
+use \app\models\base\MasterPendidikan as BaseMasterPendidikan;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "master_jenis_kelamin".
+ * This is the model class for table "master_pendidikan".
  */
-class JenisKelamin extends BaseJenisKelamin
+class MasterPendidikan extends BaseMasterPendidikan
 {
 
     public function behaviors()
