@@ -20,7 +20,7 @@ use Yii;
 abstract class PelatihanLampiran extends \yii\db\ActiveRecord
 {
 
-
+    public $image;
 
     /**
      * @inheritdoc
@@ -29,16 +29,18 @@ abstract class PelatihanLampiran extends \yii\db\ActiveRecord
     {
         return 'pelatihan_lampiran';
     }
-
+    
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['pelatihan_id', 'judul_lampiran', 'file'], 'required'],
+            [['judul_lampiran', 'file'], 'required'],
             [['pelatihan_id'], 'integer'],
             [['judul_lampiran', 'file'], 'string', 'max' => 100],
+            [['image'], 'file', 'skipOnEmpty' => true, 'on' => 'update'],
+            [['image'], 'file', 'skipOnEmpty' => false, 'on' => 'create'],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']]
         ];
     }
@@ -52,6 +54,7 @@ abstract class PelatihanLampiran extends \yii\db\ActiveRecord
             'id' => 'ID',
             'pelatihan_id' => 'Pelatihan ID',
             'judul_lampiran' => 'Judul Lampiran',
+            'image' => 'Dokumen',
             'file' => 'File',
         ];
     }

@@ -18,16 +18,17 @@ use yii\behaviors\TimestampBehavior;
  * @property string $tanggal_mulai
  * @property string $tanggal_selesai
  * @property integer $tingkat_id
- * @property integer $status
+ * @property integer $status_id
  * @property string $forum_diskusi
  * @property integer $pelaksana_id
- * @property string $created_at
- * @property integer $created_by
  * @property string $modified_at
  * @property integer $modified_by
+ * @property string $created_at
+ * @property integer $created_by
  *
  * @property \app\models\PelatihanTingkat $tingkat
  * @property \app\models\User $pelaksana
+ * @property \app\models\PelatihanStatus $status
  * @property \app\models\PelatihanLampiran[] $pelatihanLampirans
  * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
  * @property \app\models\PelatihanSoalJenis[] $pelatihanSoalJenis
@@ -55,11 +56,11 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
         return [
             [
                 'class' => BlameableBehavior::className(),
-                'updatedByAttribute' => 'modified_by',
+                'updatedByAttribute' => false,
             ],
             [
                 'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => 'modified_at',
+                'updatedAtAttribute' => false,
             ],
         ];
     }
@@ -70,14 +71,15 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tanggal_selesai', 'tingkat_id', 'pelaksana_id'], 'required'],
+            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'pelaksana_id', 'modified_by'], 'required'],
             [['latar_belakang', 'tujuan'], 'string'],
-            [['tanggal_mulai', 'tanggal_selesai'], 'safe'],
-            [['tingkat_id', 'status', 'pelaksana_id'], 'integer'],
+            [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
+            [['tingkat_id', 'status_id', 'pelaksana_id', 'modified_by'], 'integer'],
             [['nama'], 'string', 'max' => 200],
             [['forum_diskusi'], 'string', 'max' => 100],
             [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
-            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']]
+            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
+            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']]
         ];
     }
 
@@ -94,7 +96,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
             'tingkat_id' => 'Tingkat ID',
-            'status' => 'Status',
+            'status_id' => 'Status ID',
             'forum_diskusi' => 'Forum Diskusi',
             'pelaksana_id' => 'Pelaksana ID',
             'created_at' => 'Created At',
@@ -112,7 +114,6 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
         return array_merge(parent::attributeHints(), [
             'nama' => 'nama pelatihan',
             'tingkat_id' => 'tingkat pelatihan',
-            'status' => '0 = menunggu, 1 = acc, 2= reject',
             'forum_diskusi' => 'link forum diskusi , ex : link grup whatsapp, telegram, discord',
         ]);
     }
@@ -131,6 +132,14 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     public function getPelaksana()
     {
         return $this->hasOne(\app\models\User::className(), ['id' => 'pelaksana_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStatus()
+    {
+        return $this->hasOne(\app\models\PelatihanStatus::className(), ['id' => 'status_id']);
     }
 
     /**
