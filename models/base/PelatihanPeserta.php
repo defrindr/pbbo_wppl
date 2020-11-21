@@ -11,22 +11,26 @@ use Yii;
  *
  * @property integer $id
  * @property integer $pelatihan_id
- * @property integer $nik
- * @property integer $nama
+ * @property string $nik
+ * @property string $nama
  * @property string $no_telp
  * @property string $email
- * @property integer $tempat_lahir
- * @property integer $tanggal_lahir
+ * @property string $tempat_lahir
+ * @property string $tanggal_lahir
  * @property integer $jenis_kelamin_id
  * @property integer $pekerjaan_id
  * @property integer $pendidikan_id
  * @property string $alamat
- * @property integer $desa
+ * @property integer $rt
+ * @property integer $rw
+ * @property integer $desa_id
  *
  * @property \app\models\Pelatihan $pelatihan
  * @property \app\models\MasterPekerjaan $pekerjaan
  * @property \app\models\MasterPekerjaan $pekerjaan0
  * @property \app\models\MasterPendidikan $pendidikan
+ * @property \app\models\MasterJenisKelamin $jenisKelamin
+ * @property \app\models\WilayahDesa $desa
  * @property \app\models\PelatihanSoalPeserta[] $pelatihanSoalPesertas
  * @property \app\models\PelatihanSoalPesertaJawaban[] $pelatihanSoalPesertaJawabans
  * @property \app\models\User[] $users
@@ -51,14 +55,16 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelatihan_id', 'nik', 'nama', 'no_telp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'alamat', 'desa'], 'required'],
-            [['pelatihan_id', 'nik', 'nama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'desa'], 'integer'],
-            [['no_telp'], 'string', 'max' => 20],
-            [['email', 'alamat'], 'string', 'max' => 100],
+            [['pelatihan_id', 'nik', 'nama', 'no_telp', 'email', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'alamat', 'desa_id'], 'required'],
+            [['pelatihan_id', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'rt', 'rw', 'desa_id'], 'integer'],
+            [['nik', 'no_telp'], 'string', 'max' => 20],
+            [['nama', 'email', 'tempat_lahir', 'tanggal_lahir', 'alamat'], 'string', 'max' => 100],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
             [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']],
             [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']],
-            [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']]
+            [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']],
+            [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
+            [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']]
         ];
     }
 
@@ -80,7 +86,9 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'pekerjaan_id' => 'Pekerjaan ID',
             'pendidikan_id' => 'Pendidikan ID',
             'alamat' => 'Alamat',
-            'desa' => 'Desa',
+            'rt' => 'Rt',
+            'rw' => 'Rw',
+            'desa_id' => 'Desa ID',
         ];
     }
 
@@ -96,6 +104,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'jenis_kelamin_id' => 'jenis kelamin',
             'pekerjaan_id' => 'pekerjaan saat ini',
             'pendidikan_id' => 'pendidikan terakhir yang ditempuh',
+            'alamat' => 'alamat domisili',
         ]);
     }
 
@@ -129,6 +138,22 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function getPendidikan()
     {
         return $this->hasOne(\app\models\MasterPendidikan::className(), ['id' => 'pendidikan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getJenisKelamin()
+    {
+        return $this->hasOne(\app\models\MasterJenisKelamin::className(), ['id' => 'jenis_kelamin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDesa()
+    {
+        return $this->hasOne(\app\models\WilayahDesa::className(), ['id' => 'desa_id']);
     }
 
     /**

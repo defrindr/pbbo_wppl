@@ -11,7 +11,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $kecamatan_id
- * @property string $desa
+ * @property string $nama
  *
  * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
  * @property \app\models\WilayahKecamatan $kecamatan
@@ -36,9 +36,9 @@ abstract class WilayahDesa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kecamatan_id', 'desa'], 'required'],
+            [['kecamatan_id', 'nama'], 'required'],
             [['kecamatan_id'], 'integer'],
-            [['desa'], 'string', 'max' => 100],
+            [['nama'], 'string', 'max' => 100],
             [['kecamatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahKecamatan::className(), 'targetAttribute' => ['kecamatan_id' => 'id']]
         ];
     }
@@ -51,8 +51,18 @@ abstract class WilayahDesa extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'kecamatan_id' => 'Kecamatan ID',
-            'desa' => 'Desa',
+            'nama' => 'Nama',
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeHints()
+    {
+        return array_merge(parent::attributeHints(), [
+            'nama' => 'Nama Desa',
+        ]);
     }
 
     /**
@@ -60,7 +70,7 @@ abstract class WilayahDesa extends \yii\db\ActiveRecord
      */
     public function getPelatihanPesertas()
     {
-        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['desa' => 'id']);
+        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['desa_id' => 'id']);
     }
 
     /**

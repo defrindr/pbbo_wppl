@@ -4,6 +4,7 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
+    'name' => 'Pelatihan Online',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [

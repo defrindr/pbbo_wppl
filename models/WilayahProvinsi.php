@@ -31,4 +31,15 @@ class WilayahProvinsi extends BaseWilayahProvinsi
             ]
         );
     }
+
+    public function dropdown(){
+        $output = "";
+
+        $data = WilayahProvinsi::all();
+
+        if(count($data) > 0) foreach($data as $row) $output = "<option value='{$row->id}'>{$row->nama}</option>";
+        else $output = "<option>-</option>";
+
+        return $output;
+    }
 }

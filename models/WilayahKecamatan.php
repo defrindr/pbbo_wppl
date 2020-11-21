@@ -31,4 +31,15 @@ class WilayahKecamatan extends BaseWilayahKecamatan
             ]
         );
     }
+
+    public function dropdown($id){
+        $output = "";
+
+        $data = WilayahKecamatan::where(['kabupaten_id' => $id])->all();
+
+        if(count($data) > 0) foreach($data as $row) $output = "<option value='{$row->id}'>{$row->nama}</option>";
+        else $output = "<option>-</option>";
+
+        return $output;
+    }
 }

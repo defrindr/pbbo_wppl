@@ -26,6 +26,7 @@ return array(
     'kartik\\datetime\\' => array($vendorDir . '/kartik-v/yii2-widget-datetimepicker/src'),
     'kartik\\date\\' => array($vendorDir . '/kartik-v/yii2-widget-datepicker/src'),
     'kartik\\base\\' => array($vendorDir . '/kartik-v/yii2-krajee-base/src'),
+    'drsdre\\wizardwidget\\' => array($vendorDir . '/drsdre/yii2-wizardwidget'),
     'dosamigos\\selectize\\' => array($vendorDir . '/2amigos/yii2-selectize-widget/src'),
     'dmstr\\helpers\\' => array($vendorDir . '/dmstr/yii2-helpers/src'),
     'dmstr\\db\\tests\\' => array($vendorDir . '/dmstr/yii2-db/db/tests'),

@@ -64,12 +64,12 @@
         "version_normalized": "2.4.8.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/almasaeed2010/AdminLTE.git",
+            "url": "https://github.com/ColorlibHQ/AdminLTE.git",
             "reference": "d9e68301848a95dff2e2dbef6569e617a9b3fa30"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/d9e68301848a95dff2e2dbef6569e617a9b3fa30",
+            "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/d9e68301848a95dff2e2dbef6569e617a9b3fa30",
             "reference": "d9e68301848a95dff2e2dbef6569e617a9b3fa30",
             "shasum": ""
         },
@@ -1204,6 +1204,53 @@
         "keywords": [
             "lexer",
             "parser"
+        ]
+    },
+    {
+        "name": "drsdre/yii2-wizardwidget",
+        "version": "1.2.3",
+        "version_normalized": "1.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drsdre/yii2-wizardwidget.git",
+            "reference": "51ef01d315875830af2565121fe1f3b1bf32850c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drsdre/yii2-wizardwidget/zipball/51ef01d315875830af2565121fe1f3b1bf32850c",
+            "reference": "51ef01d315875830af2565121fe1f3b1bf32850c",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": ">=2.0.6",
+            "yiisoft/yii2-bootstrap": "~2.0.0"
+        },
+        "time": "2016-12-28T13:00:02+00:00",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "drsdre\\wizardwidget\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "A.F.Schuurman",
+                "email": "andre.schuurman+yii2-wizardwidget@gmail.com"
+            }
+        ],
+        "description": "Multi step wizard widget using tabs to guide a user through steps to complete a task. Based on the Form wizard (using tabs) from lukepzak (see http://bootsnipp.com/snippets/featured/form-wizard-using-tabs).",
+        "keywords": [
+            "extension",
+            "tabs",
+            "ui",
+            "widget",
+            "wizard",
+            "yii2"
         ]
     },
     {

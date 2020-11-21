@@ -59,6 +59,7 @@ class ComposerStaticInitb67f4ccc492bdd59afbcc1ba1d1df3f0
         ),
         'd' => 
         array (
+            'drsdre\\wizardwidget\\' => 20,
             'dosamigos\\selectize\\' => 20,
             'dmstr\\helpers\\' => 14,
             'dmstr\\db\\tests\\' => 15,
@@ -196,6 +197,10 @@ class ComposerStaticInitb67f4ccc492bdd59afbcc1ba1d1df3f0
         'kartik\\base\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base/src',
+        ),
+        'drsdre\\wizardwidget\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/drsdre/yii2-wizardwidget',
         ),
         'dosamigos\\selectize\\' => 
         array (

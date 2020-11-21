@@ -55,11 +55,11 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'updatedByAttribute' => false,
             ],
             [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'updatedAtAttribute' => false,
             ],
         ];
@@ -77,9 +77,9 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             [['tingkat_id', 'status_id', 'pelaksana_id', 'modified_by'], 'integer'],
             [['nama'], 'string', 'max' => 200],
             [['forum_diskusi'], 'string', 'max' => 100],
-            [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
-            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
-            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']]
+            [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::class, 'targetAttribute' => ['tingkat_id' => 'id']],
+            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::class, 'targetAttribute' => ['pelaksana_id' => 'id']],
+            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::class, 'targetAttribute' => ['status_id' => 'id']]
         ];
     }
 
@@ -123,7 +123,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getTingkat()
     {
-        return $this->hasOne(\app\models\PelatihanTingkat::className(), ['id' => 'tingkat_id']);
+        return $this->hasOne(\app\models\PelatihanTingkat::class, ['id' => 'tingkat_id']);
     }
 
     /**
@@ -131,7 +131,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelaksana()
     {
-        return $this->hasOne(\app\models\User::className(), ['id' => 'pelaksana_id']);
+        return $this->hasOne(\app\models\User::class, ['id' => 'pelaksana_id']);
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getStatus()
     {
-        return $this->hasOne(\app\models\PelatihanStatus::className(), ['id' => 'status_id']);
+        return $this->hasOne(\app\models\PelatihanStatus::class, ['id' => 'status_id']);
     }
 
     /**
@@ -147,7 +147,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanLampirans()
     {
-        return $this->hasMany(\app\models\PelatihanLampiran::className(), ['pelatihan_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanLampiran::class, ['pelatihan_id' => 'id']);
     }
 
     /**
@@ -155,7 +155,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanPesertas()
     {
-        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['pelatihan_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanPeserta::class, ['pelatihan_id' => 'id']);
     }
 
     /**
@@ -163,7 +163,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanSoalJenis()
     {
-        return $this->hasMany(\app\models\PelatihanSoalJenis::className(), ['pelatihan_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanSoalJenis::class, ['pelatihan_id' => 'id']);
     }
 
     /**
@@ -171,7 +171,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanSoalPilihanGandas()
     {
-        return $this->hasMany(\app\models\PelatihanSoalPilihanGanda::className(), ['pelatihan_soal_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanSoalPilihanGanda::class, ['pelatihan_soal_id' => 'id']);
     }
 
 

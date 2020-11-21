@@ -213,4 +213,13 @@ return array (
       '@kartik/datetime' => $vendorDir . '/kartik-v/yii2-widget-datetimepicker/src',
     ),
   ),
+  'drsdre/yii2-wizardwidget' => 
+  array (
+    'name' => 'drsdre/yii2-wizardwidget',
+    'version' => '1.2.3.0',
+    'alias' => 
+    array (
+      '@drsdre/wizardwidget' => $vendorDir . '/drsdre/yii2-wizardwidget',
+    ),
+  ),
 );
