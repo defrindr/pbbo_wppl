@@ -17,8 +17,7 @@ use yii\bootstrap\ActiveForm;
             'layout' => 'horizontal',
             'enableClientValidation' => true,
             'errorSummaryCssClass' => 'error-summary alert alert-error',
-        ]
-        );
+        ]);
         ?>
 
         <?php
@@ -51,32 +50,6 @@ use yii\bootstrap\ActiveForm;
                         ],
                     ],
                 ],
-                3 => [
-                    'title' => 'Daftar Peserta',
-                    'icon' => 'glyphicon glyphicon-user',
-                    'content' => $this->render('_peserta.php',['modelPeserta' => $modelPeserta, 'form' => $form]),
-                    'buttons' => [
-                        'next' => [
-                            'title' => 'Forward',
-                            'options' => [
-                                'class' => 'disabled',
-                            ],
-                        ],
-                    ],
-                ],
-                // 4 => [
-                //     'title' => 'Daftar Soal Pelatihan',
-                //     'icon' => 'glyphicon glyphicon-book',
-                //     'content' => $this->render('_soal_jenis.php',['modelSoalJenis' => $modelSoalJenis, 'form' => $form]),
-                //     'buttons' => [
-                //         'next' => [
-                //             'title' => 'Forward',
-                //             'options' => [
-                //                 'class' => 'disabled',
-                //             ],
-                //         ],
-                //     ],
-                // ],
             ],
             'complete_content' => $this->render('_action.php'), // Optional final screen
             'start_step' => 1, // Optional, start with a specific step

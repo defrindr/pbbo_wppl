@@ -7,6 +7,7 @@ namespace app\controllers\base;
 use app\models\Action;
 use app\models\Pelatihan;
 use app\models\PelatihanLampiran;
+use app\models\Peserta;
 use app\models\PelatihanPeserta;
 use app\models\PelatihanSoalJenis;
 use app\models\search\PelatihanSearch;
@@ -84,24 +85,22 @@ class PelatihanController extends Controller
     {
         $model = new Pelatihan;
         $modelLampiran = [new PelatihanLampiran];
-        $modelPeserta = [new PelatihanPeserta];
 
         $transaction = \Yii::$app->db->beginTransaction();
 
         try {
             if ($model->load($_POST)) {
+                if(!strpos($model->forum_diskusi, "http")) {
+                    $model->forum_diskusi = "http://{$model->forum_diskusi}";
+                }
 
                 $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class);
                 Pelatihan::loadMultiple($modelLampiran, \Yii::$app->request->post());
-
-                $modelPeserta = Pelatihan::createMultiple(PelatihanPeserta::class);
-                Pelatihan::loadMultiple($modelPeserta, \Yii::$app->request->post());
 
                 if (\Yii::$app->request->isAjax) { //ajax validation
                     \Yii::$app->response->format = Response::FORMAT_JSON;
                     return ArrayHelper::merge(
                         ActiveForm::validateMultiple($modelLampiran),
-                        ActiveForm::validateMultiple($modelPeserta),
                         ActiveForm::validate($model)
                     );
                 }
@@ -109,41 +108,39 @@ class PelatihanController extends Controller
                 $model->modified_by = \Yii::$app->user->identity->id;
                 // validate all models
                 $valid = $model->validate();
+                
                 if ($valid) {
                     $model->save(); // save model untuk mendapatkan id
 
                     foreach ($modelLampiran as $i => $o) {
                         $o->scenario = "create";
                         $o->pelatihan_id = $model->id;
-                        $file = UploadedFile::getInstanceByName("PelatihanLampiran[$i][image]");
 
-                        $tmp = explode('.', $file->name);
+                        $o->image = UploadedFile::getInstanceByName("PelatihanLampiran[$i][image]");
+                        $tmp = explode('.', $o->image->name);
                         $extension = end($tmp);
+
                         $o->file = \Yii::$app->security->generateRandomString() . ".{$extension}";
                         $path = $o->getUploadedFolder() . $o->file;
-                        $file->saveAs($path);
-                    }
+                        $o->image->saveAs($path);
 
-                    foreach ($modelPeserta as $i => $o) {
-                        $o->pelatihan_id = $model->id;
+                        $modelLampiran[$i] = $o;
                     }
 
                     $valid = PelatihanLampiran::validateMultiple($modelLampiran) && $valid;
-                    $valid = PelatihanPeserta::validateMultiple($modelPeserta) && $valid;
-
                     if (!$valid) {
                         $transaction->rollback();
-                        return $this->redirect(['create']);
+                        return $this->render('create', [
+                            'model' => $model,
+                            'modelLampiran' => $modelLampiran,
+                        ]);
                     }
 
                     foreach ($modelLampiran as $i => $o) {
                         $o->save();
                     }
-
-                    foreach ($modelPeserta as $i => $o) {
-                        $o->save();
-                    }
-
+                }else{
+                    $model->addError('_exception', "Validasi gagal");
                 }
 
                 $transaction->commit();
@@ -158,7 +155,6 @@ class PelatihanController extends Controller
         return $this->render('create', [
             'model' => $model,
             'modelLampiran' => (empty($modelLampiran)) ? [new PelatihanLampiran] : $modelLampiran,
-            'modelPeserta' => (empty($modelPeserta)) ? [new PelatihanPeserta] : $modelPeserta,
         ]);
     }
 
@@ -173,9 +169,7 @@ class PelatihanController extends Controller
         $model = $this->findModel($id);
         // ambil data relasional
         $modelLampiran = $model->pelatihanLampirans;
-        $modelPeserta = $model->pelatihanPesertas;
-        $modelSoalJenis = $model->pelatihanSoalJenis;
-        // $modelSoalJenis = $model->pelatihanSoalJenis->pelatihanSoals;
+
 
         // simpan url file lama kedalam variable baru
         $oldLampiranFile = [];
@@ -187,46 +181,28 @@ class PelatihanController extends Controller
         if (count($modelLampiran) == 0) {
             $modelLampiran = [new PelatihanLampiran];
         }
-
-        if (count($modelPeserta) == 0) {
-            $modelPeserta = [new PelatihanPeserta];
-        }
-
-        if (count($modelSoalJenis) == 0) {
-            $modelSoalJenis = [new PelatihanSoalJenis];
-        }
-
+        
         $transaction = \Yii::$app->db->beginTransaction();
 
         if ($model->load($_POST)) {
+
+            if(!strpos($model->forum_diskusi, "http")) {
+                $model->forum_diskusi = "http://{$model->forum_diskusi}";
+            }
 
             // model lampiran
             $oldLampiranIDs = ArrayHelper::map($modelLampiran, 'id', 'id');
             $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class, $modelLampiran);
             Pelatihan::loadMultiple($modelLampiran, Yii::$app->request->post());
 
-            // model peserta
-            $oldPesertaIDs = ArrayHelper::map($modelPeserta, 'id', 'id');
-            $modelPeserta = Pelatihan::createMultiple(PelatihanPeserta::class, $modelPeserta);
-            Pelatihan::loadMultiple($modelPeserta, Yii::$app->request->post());
-
-            // model soal jenis
-            $oldSoalJenisIDs = ArrayHelper::map($modelSoalJenis, 'id', 'id');
-            $modelSoalJenis = Pelatihan::createMultiple(PelatihanSoalJenis::class, $modelSoalJenis);
-            Pelatihan::loadMultiple($modelSoalJenis, Yii::$app->request->post());
-
             //  check data yang dihapus
             $deletedLampiranIDs = array_diff($oldLampiranIDs, array_filter(ArrayHelper::map($modelLampiran, 'id', 'id')));
-            $deletedPesertaIDs = array_diff($oldPesertaIDs, array_filter(ArrayHelper::map($modelPeserta, 'id', 'id')));
-            $deletedSoalJenisIDs = array_diff($oldSoalJenisIDs, array_filter(ArrayHelper::map($modelSoalJenis, 'id', 'id')));
 
             // ajax validation
             if (Yii::$app->request->isAjax) {
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ArrayHelper::merge(
                     ActiveForm::validateMultiple($modelLampiran),
-                    ActiveForm::validateMultiple($modelPeserta),
-                    ActiveForm::validateMultiple($modelSoalJenis),
                     ActiveForm::validate($model)
                 );
             }
@@ -241,14 +217,6 @@ class PelatihanController extends Controller
                     // check apakah ada data yang dihapus
                     if (!empty($deletedLampiranIDs)) {
                         PelatihanLampiran::deleteAll(['id' => $deletedLampiranIDs]);
-                    }
-
-                    if (!empty($deletedPesertaIDs)) {
-                        PelatihanPeserta::deleteAll(['id' => $deletedPesertaIDs]);
-                    }
-
-                    if (!empty($deletedSoalJenisIDs)) {
-                        PelatihanSoalJenis::deleteAll(['id' => $deletedSoalJenisIDs]);
                     }
 
                     // menambahkan id pelatihan kedalam model peserta & soal
@@ -269,22 +237,9 @@ class PelatihanController extends Controller
                         }
 
                     }
-                    foreach ($modelPeserta as $i => $o) {
-                        if ($o->pelatihan_id == null) {
-                            $o->pelatihan_id = $model->id;
-                        }
-                    }
-
-                    foreach ($modelSoalJenis as $i => $o) {
-                        if ($o->pelatihan_id == null) {
-                            $o->pelatihan_id = $model->id;
-                        }
-                    }
 
                     // validasi dynamic form
                     $valid = PelatihanLampiran::validateMultiple($modelLampiran) && $valid;
-                    $valid = PelatihanPeserta::validateMultiple($modelPeserta) && $valid;
-                    $valid = PelatihanSoalJenis::validateMultiple($modelSoalJenis) && $valid;
 
                     if (!$valid) {
                         $model->addError('_exception', "Validasi gagal.");
@@ -292,21 +247,11 @@ class PelatihanController extends Controller
                         return $this->render('update', [
                             'model' => $model,
                             'modelLampiran' => $modelLampiran,
-                            'modelPeserta' => $modelPeserta,
-                            'modelSoalJenis' => $modelSoalJenis,
                         ]);
                     }
 
                     // save dynamic model
                     foreach ($modelLampiran as $i => $o) {
-                        $o->save();
-                    }
-
-                    foreach ($modelPeserta as $i => $o) {
-                        $o->save();
-                    }
-
-                    foreach ($modelSoalJenis as $i => $o) {
                         $o->save();
                     }
 
@@ -323,8 +268,6 @@ class PelatihanController extends Controller
         return $this->render('update', [
             'model' => $model,
             'modelLampiran' => $modelLampiran,
-            'modelPeserta' => $modelPeserta,
-            'modelSoalJenis' => $modelSoalJenis,
         ]);
     }
 

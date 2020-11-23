@@ -52,7 +52,7 @@ DynamicFormWidget::begin([
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    <?=$form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?>
+                    <?= $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?>
                     <?= $form->field($o, "[{$i}]nik")->textInput() ?>
                     <?= $form->field($o, "[{$i}]nama")->textInput() ?>
                     <?= $form->field($o, "[{$i}]no_telp")->textInput(['maxlength' => true]) ?>

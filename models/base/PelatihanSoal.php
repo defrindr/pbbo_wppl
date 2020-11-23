@@ -14,11 +14,13 @@ use Yii;
  * @property integer $kategori_soal_id
  * @property integer $nomor
  * @property string $soal
+ * @property string $pilihan
  * @property string $jawaban
  *
  * @property \app\models\PelatihanSoalJenis $jenis
  * @property \app\models\MasterKategoriSoal $kategoriSoal
  * @property \app\models\PelatihanSoalPesertaJawaban[] $pelatihanSoalPesertaJawabans
+ * @property \app\models\PelatihanSoalPilihan[] $pelatihanSoalPilihans
  * @property string $aliasModel
  */
 abstract class PelatihanSoal extends \yii\db\ActiveRecord
@@ -42,7 +44,7 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
         return [
             [['jenis_id', 'kategori_soal_id', 'soal'], 'required'],
             [['jenis_id', 'kategori_soal_id', 'nomor'], 'integer'],
-            [['soal', 'jawaban'], 'string'],
+            [['soal', 'pilihan', 'jawaban'], 'string'],
             [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalJenis::className(), 'targetAttribute' => ['jenis_id' => 'id']],
             [['kategori_soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterKategoriSoal::className(), 'targetAttribute' => ['kategori_soal_id' => 'id']]
         ];
@@ -59,6 +61,7 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
             'kategori_soal_id' => 'Kategori Soal ID',
             'nomor' => 'Nomor',
             'soal' => 'Soal',
+            'pilihan' => 'Pilihan',
             'jawaban' => 'Jawaban',
         ];
     }
@@ -95,6 +98,14 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
     public function getPelatihanSoalPesertaJawabans()
     {
         return $this->hasMany(\app\models\PelatihanSoalPesertaJawaban::className(), ['soal_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelatihanSoalPilihans()
+    {
+        return $this->hasMany(\app\models\PelatihanSoalPilihan::className(), ['pelatihan_soal_id' => 'id']);
     }
 
 

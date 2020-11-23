@@ -6,7 +6,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
 $hiddenTemplate = ["template" => "{input}"];
 $hiddenStyle = ["style" => "display: none"];
 
-
 DynamicFormWidget::begin([
     'widgetContainer' => 'dynamicform_wrapper_soal', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
     'widgetBody' => '.soal-items', // required: css class selector
@@ -21,7 +20,11 @@ DynamicFormWidget::begin([
         'id',
         // 'pelatihan_id',
         "jenis_id",
-        "waktu_pengerjaan",
+        "kategori_soal_id",
+        "nomor",
+        "soal",
+        "pilihan",
+        "jawaban",
         // "jumlah_soal"
     ],
 ]);
@@ -32,8 +35,6 @@ DynamicFormWidget::begin([
     <div class="panel-heading">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Daftar Soal
-            <button type="button" class="add-item btn btn-success btn-sm pull-right"><i
-                    class="glyphicon glyphicon-plus"></i> Add</button>
         </h4>
     </div>
     <div class="panel-body">
@@ -46,6 +47,9 @@ DynamicFormWidget::begin([
                 <div class="panel-heading">
                     <h3 class="panel-title pull-left">Soal</h3>
                     <div class="pull-right">
+                        
+                        <button type="button" class="add-item btn btn-success btn-xs"><i
+                            class="glyphicon glyphicon-plus"></i></button>
                         <button type="button" class="remove-item btn btn-danger btn-xs"><i
                                 class="glyphicon glyphicon-minus"></i></button>
                     </div>
@@ -53,17 +57,21 @@ DynamicFormWidget::begin([
                 </div>
                 <hr>
                 <div class="panel-body">
-                    <?= $form->field($o, "[{$i}]jenis_id")->dropdownList(
-                    \yii\helpers\ArrayHelper::map(app\models\MasterJenisSoal::find()->all(), 'id', 'nama'),
+                    <?=$form->field($o, "[{$i}]kategori_soal_id")->dropdownList(
+                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
                         [
                             'prompt' => 'Select',
-                            'disabled' => (isset($relAttributes) && isset($relAttributes['jenis_id'])),
-                        ]) ?>
-                    <?= $form->field($o, "[{$i}]waktu_pengerjaan")->textInput(['type' => 'number']) ?>
-                    <?= $this->render('_soal.php', [
-                        'model' => $model,
-                        'modelSoal' => $modelSoal
+                        ])?>
+                    <?= $form->field($o, "[{$i}]soal")->textArea() ?>
+                    <!-- <?= $form->field($o, "[{$i}]pilihan")->textInput(['placeholder' => "gunakan | untuk pemisih pilihan"]) ?> -->
+                    <?=
+                    $this->render('_soal_pilihan.php', [
+                        'modelSoal' => $o,
+                        'indexSoal' => $i,
+                        'modelSoalPilihan' => $modelSoalPilihan[$i],
+                        'form' => $form
                     ]) ?>
+                    <?= $form->field($o, "[{$i}]jawaban")->textInput(['placeholder' => "Kosongi jika type soal adalah essay"]) ?>
                 </div>
             </div>
             <?php endforeach; ?>

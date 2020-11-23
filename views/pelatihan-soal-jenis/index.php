@@ -10,7 +10,7 @@ use yii\grid\GridView;
 * @var app\models\search\PelatihanSoalJenisSearch $searchModel
 */
 
-$this->title = 'Jenis Soal Pelatihan';
+$this->title = 'Pelatihan Soal Jenis';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

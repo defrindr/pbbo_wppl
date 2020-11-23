@@ -13,24 +13,37 @@ use Yii;
  * @property integer $pelatihan_id
  * @property string $nik
  * @property string $nama
- * @property string $no_telp
  * @property string $email
- * @property string $tempat_lahir
+ * @property string $no_telp
  * @property string $tanggal_lahir
+ * @property string $tempat_lahir
  * @property integer $jenis_kelamin_id
- * @property integer $pekerjaan_id
  * @property integer $pendidikan_id
- * @property string $alamat
+ * @property integer $pekerjaan_id
  * @property integer $rt
  * @property integer $rw
+ * @property string $alamat
  * @property integer $desa_id
+ * @property string $password
+ * @property integer $peserta_konfirmasi
+ * @property integer $nilai_pretest
+ * @property integer $nilai_posttest
+ * @property integer $nilai_praktek
+ * @property string $komentar
+ * @property integer $kesibukan_pasca_pelatihan
+ * @property string $nama_usaha
+ * @property string $jenis_usaha
+ * @property string $lokasi
+ * @property string $jenis_izin_usaha
+ * @property string $nib
+ * @property integer $masa_berlaku
+ * @property integer $lanjut
  *
- * @property \app\models\Pelatihan $pelatihan
- * @property \app\models\MasterPekerjaan $pekerjaan
- * @property \app\models\MasterPekerjaan $pekerjaan0
- * @property \app\models\MasterPendidikan $pendidikan
- * @property \app\models\MasterJenisKelamin $jenisKelamin
  * @property \app\models\WilayahDesa $desa
+ * @property \app\models\MasterJenisKelamin $jenisKelamin
+ * @property \app\models\Pelatihan $pelatihan
+ * @property \app\models\MasterPendidikan $pendidikan
+ * @property \app\models\MasterPekerjaan $pekerjaan
  * @property \app\models\PelatihanSoalPeserta[] $pelatihanSoalPesertas
  * @property \app\models\PelatihanSoalPesertaJawaban[] $pelatihanSoalPesertaJawabans
  * @property \app\models\User[] $users
@@ -55,16 +68,17 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelatihan_id', 'nik', 'nama', 'no_telp', 'email', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'alamat', 'desa_id'], 'required'],
-            [['pelatihan_id', 'jenis_kelamin_id', 'pekerjaan_id', 'pendidikan_id', 'rt', 'rw', 'desa_id'], 'integer'],
-            [['nik', 'no_telp'], 'string', 'max' => 20],
-            [['nama', 'email', 'tempat_lahir', 'tanggal_lahir', 'alamat'], 'string', 'max' => 100],
-            [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
-            [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']],
-            [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']],
-            [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']],
+            [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id', 'password'], 'required'],
+            [['pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'peserta_konfirmasi', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
+            [['nik'], 'string', 'max' => 20],
+            [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
+            [['password'], 'string', 'max' => 200],
+            [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']],
             [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
-            [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']]
+            [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
+            [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']],
+            [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']]
         ];
     }
 
@@ -78,17 +92,31 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'pelatihan_id' => 'Pelatihan ID',
             'nik' => 'Nik',
             'nama' => 'Nama',
-            'no_telp' => 'No Telp',
             'email' => 'Email',
-            'tempat_lahir' => 'Tempat Lahir',
+            'no_telp' => 'No Telp',
             'tanggal_lahir' => 'Tanggal Lahir',
+            'tempat_lahir' => 'Tempat Lahir',
             'jenis_kelamin_id' => 'Jenis Kelamin ID',
-            'pekerjaan_id' => 'Pekerjaan ID',
             'pendidikan_id' => 'Pendidikan ID',
-            'alamat' => 'Alamat',
+            'pekerjaan_id' => 'Pekerjaan ID',
             'rt' => 'Rt',
             'rw' => 'Rw',
+            'alamat' => 'Alamat',
             'desa_id' => 'Desa ID',
+            'password' => 'Password',
+            'peserta_konfirmasi' => 'Peserta Konfirmasi',
+            'nilai_pretest' => 'Nilai Pretest',
+            'nilai_posttest' => 'Nilai Posttest',
+            'nilai_praktek' => 'Nilai Praktek',
+            'komentar' => 'Komentar',
+            'kesibukan_pasca_pelatihan' => 'Kesibukan Pasca Pelatihan',
+            'nama_usaha' => 'Nama Usaha',
+            'jenis_usaha' => 'Jenis Usaha',
+            'lokasi' => 'Lokasi',
+            'jenis_izin_usaha' => 'Jenis Izin Usaha',
+            'nib' => 'Nib',
+            'masa_berlaku' => 'Masa Berlaku',
+            'lanjut' => 'Lanjut',
         ];
     }
 
@@ -99,45 +127,26 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     {
         return array_merge(parent::attributeHints(), [
             'pelatihan_id' => 'pelatihan yang sedang diikuti',
-            'no_telp' => 'nomer telepon',
-            'email' => 'alamat surel',
-            'jenis_kelamin_id' => 'jenis kelamin',
-            'pekerjaan_id' => 'pekerjaan saat ini',
-            'pendidikan_id' => 'pendidikan terakhir yang ditempuh',
-            'alamat' => 'alamat domisili',
+            'peserta_konfirmasi' => 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
+            'nilai_pretest' => 'nilai max 100',
+            'nilai_posttest' => 'nilai max 100',
+            'nilai_praktek' => 'nilai max 100',
+            'nama_usaha' => 'isi jika ada',
+            'jenis_usaha' => 'isi jika ada',
+            'lokasi' => 'isi jika ada',
+            'jenis_izin_usaha' => 'isi jika ada',
+            'nib' => 'isi jika ada',
+            'masa_berlaku' => 'dalam bulan, jika ada',
+            'lanjut' => '0 = berhenti, 1 = lanjut ke pelatihan berikutnya',
         ]);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihan()
+    public function getDesa()
     {
-        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPekerjaan()
-    {
-        return $this->hasOne(\app\models\MasterPekerjaan::className(), ['id' => 'pekerjaan_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPekerjaan0()
-    {
-        return $this->hasOne(\app\models\MasterPekerjaan::className(), ['id' => 'pekerjaan_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPendidikan()
-    {
-        return $this->hasOne(\app\models\MasterPendidikan::className(), ['id' => 'pendidikan_id']);
+        return $this->hasOne(\app\models\WilayahDesa::className(), ['id' => 'desa_id']);
     }
 
     /**
@@ -151,9 +160,25 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDesa()
+    public function getPelatihan()
     {
-        return $this->hasOne(\app\models\WilayahDesa::className(), ['id' => 'desa_id']);
+        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPendidikan()
+    {
+        return $this->hasOne(\app\models\MasterPendidikan::className(), ['id' => 'pendidikan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPekerjaan()
+    {
+        return $this->hasOne(\app\models\MasterPekerjaan::className(), ['id' => 'pekerjaan_id']);
     }
 
     /**
