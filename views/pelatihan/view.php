@@ -90,12 +90,19 @@ $this->params['breadcrumbs'][] = 'View';
 
             <hr/>
 
-            <?=Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
-    [
-        'class' => 'btn btn-danger',
-        'data-confirm' => '' . 'Are you sure to delete this item?' . '',
-        'data-method' => 'post',
-    ]);?>
+            <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-danger',
+                    'data-confirm' => '' . 'Are you sure to delete this item?' . '',
+                    'data-method' => 'post',
+                ]);?>
+                
+            <?= Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan', ['ajukan', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-primary',
+                    'data-confirm' => '' . 'Yakin ingin mengajukan pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+                    'data-method' => 'post',
+                ]);?>
             <?php $this->endBlock();?>
 
 

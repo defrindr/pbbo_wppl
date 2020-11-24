@@ -167,6 +167,11 @@ class PelatihanController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+        if($model->status_id != 1) {
+            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
+            return $this->goBack();
+        }
         // ambil data relasional
         $modelLampiran = $model->pelatihanLampirans;
 

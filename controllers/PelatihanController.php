@@ -23,6 +23,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionAddPeserta($id)
     {
         $model = $this->findModel($id);
+        if($model->status_id != 1) {
+            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
+            return $this->goBack();
+        }
         $modelPeserta = $model->pelatihanPesertas;
         $transaction = Yii::$app->db->beginTransaction();
         if (count($modelPeserta) < 1) {
@@ -106,6 +110,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionAddSoal($id)
     {
         $model = $this->findModel($id);
+        if($model->status_id != 1) {
+            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
+            return $this->goBack();
+        }
         $modelSoalJenis = new PelatihanSoalJenis;
         $modelSoal = [new PelatihanSoal];
         $modelSoalPilihan = [[new PelatihanSoalPilihan]];
@@ -225,11 +233,13 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         ]);
     }
 
-    
-
     public function actionUpdateSoal($id)
     {
         $modelSoalJenis = PelatihanSoalJenis::findOne($id);
+        if($model->status_id != 1) {
+            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
+            return $this->goBack();
+        }
         $model = $modelSoalJenis->pelatihan;
         $modelSoal = $modelSoalJenis->pelatihanSoals;
         $modelSoalPilihan = [];
@@ -369,6 +379,26 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
 
     }
+
+    
+    public function actionAjukan($id)
+    {
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 1])->one();
+        if($model) {
+            try{
+                $model->status_id = 2;
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Pelatihan berhasil diajukan');
+            }catch(\Throwable $e){
+                Yii::$app->session->setFlash('error', 'Pelatihan gagal diajukan');
+            }
+            return $this->goBack();
+        }
+        
+        Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan / Pelatihan sudah diajukan');
+        return $this->goBack();
+    }
+
 
     public function findModelJenis($parent_id, $id)
     {
