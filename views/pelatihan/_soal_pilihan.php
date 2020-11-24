@@ -23,33 +23,24 @@ DynamicFormWidget::begin([
 ?>
 
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h6>
-            Daftar Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan)
+<table class="table table-hover">
+    <tbody class="soal-pilihan-items">
+        <?php foreach ($modelSoalPilihan as $i => $o): ?>
+        <tr class="item item-soal-pilihan">
+            <td>
+                <?=$form->field($o, "[{$indexSoal}][{$i}]pilihan", ["template" => "<div class='col-md-2'></div><div class='col-md-6'>{input}</div>"])->textInput()?>
+            </td>
+            <td>
+                <div class="pull-right">
+                    <button type="button" class="remove-item-pilihan btn btn-danger btn-xs"><i
+                            class="glyphicon glyphicon-minus"></i></button>
+                    <button type="button" class="add-item-pilihan btn btn-success btn-xs"><i
+                            class="glyphicon glyphicon-plus"></i> Add</button>
+                </div>
 
-            <div class="pull-right">
-                <button type="button" class="add-item-pilihan btn btn-success btn-xs"><i
-                    class="glyphicon glyphicon-plus"></i> Add</button>
-            </div>
-        </h6>
-    </div>
-    <div class="panel-body">
-        <div class="container-items soal-pilihan-items">
-            <!-- widgetBody -->
-
-            <?php foreach ($modelSoalPilihan as $i => $o): ?>
-            <div class="item item-soal-pilihan">
-                <h6>
-                    <div class="pull-right">
-                        <button type="button" class="remove-item-pilihan btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
-                    </div>
-                </h6>
-                <?=$form->field($o, "[{$indexSoal}][{$i}]pilihan")->textInput()?>
-            </div>
-            <?php endforeach;?>
-        </div>
-    </div>
-</div><!-- .panel -->
-
+            </td>
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+</table>
 <?php DynamicFormWidget::end()?>

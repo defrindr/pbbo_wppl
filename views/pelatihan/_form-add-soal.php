@@ -28,7 +28,11 @@ use yii\bootstrap\ActiveForm;
  */
 
 ?>
-
+<style>
+    .form-group {
+        margin: 0!important;
+    }
+</style>
 <div class="box box-info">
     <div class="box-body">
         <?php $form = ActiveForm::begin([

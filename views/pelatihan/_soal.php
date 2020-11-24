@@ -31,24 +31,23 @@ DynamicFormWidget::begin([
 ?>
 
 
-<div class="panel panel-default">
+<!-- <div class="panel panel-default">
     <div class="panel-heading">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Daftar Soal
         </h4>
     </div>
-    <div class="panel-body">
-        <div>
+    <div class="panel-body"> -->
             <!-- widgetBody -->
 
             <?php foreach ($modelSoal as $i => $o): ?>
-            <div class="item panel">
+            <div class="item panel table-responsive ">
                 <!-- widgetItem -->
-                <table class="table table-responsive table-hover">
+                <table class="table table-hover">
                     <thead>
                         <!-- <th> Tipe Soal </th> -->
                         <th> Soal </th>
-                        <th> Pilihan </th>
+                        <th> Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan) </th>
                         <th> Jawaban </th>
                         <th>
                             <button type="button" class="add-item btn btn-success btn-xs"><i
@@ -56,16 +55,16 @@ DynamicFormWidget::begin([
                         </th>
                     </thead>
                     <tbody class="container-items soal-items">
-                        <tr class="item item-soal">
-                            <td>
-                                <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
-                                \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
-                                [
-                                    'prompt' => 'Select',
-                                ])?>
-                                <?= $form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea() ?>
+                        <tr class="item-soal">
+                            <td style="min-width: 30vw;">
+                                    <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
+                                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
+                                        [
+                                            'prompt' => 'Select',
+                                        ])?>
+                                        <?= $form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea() ?>
                             </td>
-                            <td>
+                            <td  style="min-width: 35vw;">
                             <?=
                                 $this->render('_soal_pilihan.php', [
                                     'modelSoal' => $o,
@@ -74,7 +73,7 @@ DynamicFormWidget::begin([
                                     'form' => $form
                                 ]) ?>
                             </td>
-                            <td>
+                            <td  style="min-width: 35vw;">
                                 <?= $form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"]) ?>
                             </td>
                             <td>
@@ -87,8 +86,8 @@ DynamicFormWidget::begin([
                 </table>
             </div>
             <?php endforeach; ?>
-        </div>
-    </div>
-</div><!-- .panel -->
+        <!-- </div>
+    </div> -->
+<!-- </div>.panel -->
 
 <?php DynamicFormWidget::end() ?>
