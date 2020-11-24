@@ -365,7 +365,8 @@ CREATE TABLE `pelatihan_soal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_soal` (`id`, `jenis_id`, `kategori_soal_id`, `nomor`, `soal`, `pilihan`, `jawaban`) VALUES
-(16,	8,	1,	1,	'2+2 = ?',	NULL,	'4');
+(18,	27,	1,	1,	'12',	NULL,	'4'),
+(20,	8,	1,	1,	'2+2 = ?',	NULL,	'4');
 
 DROP TABLE IF EXISTS `pelatihan_soal_jenis`;
 CREATE TABLE `pelatihan_soal_jenis` (
@@ -382,7 +383,8 @@ CREATE TABLE `pelatihan_soal_jenis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_soal_jenis` (`id`, `jenis_id`, `pelatihan_id`, `waktu_pengerjaan`, `jumlah_soal`) VALUES
-(8,	1,	37,	60,	0);
+(8,	1,	37,	60,	1),
+(27,	1,	37,	3,	1);
 
 DROP TABLE IF EXISTS `pelatihan_soal_peserta`;
 CREATE TABLE `pelatihan_soal_peserta` (
@@ -417,7 +419,7 @@ DROP TABLE IF EXISTS `pelatihan_soal_pilihan`;
 CREATE TABLE `pelatihan_soal_pilihan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pelatihan_soal_id` int(11) NOT NULL,
-  `pilihan` int(11) NOT NULL,
+  `pilihan` text DEFAULT NULL,
   `flag` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `pelatihan_soal_id` (`pelatihan_soal_id`),
@@ -425,7 +427,8 @@ CREATE TABLE `pelatihan_soal_pilihan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_soal_pilihan` (`id`, `pelatihan_soal_id`, `pilihan`, `flag`) VALUES
-(18,	16,	2,	1);
+(20,	18,	'',	1),
+(24,	20,	'',	1);
 
 DROP TABLE IF EXISTS `pelatihan_status`;
 CREATE TABLE `pelatihan_status` (
@@ -668,4 +671,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-11-23 02:35:45
+-- 2020-11-24 09:47:35

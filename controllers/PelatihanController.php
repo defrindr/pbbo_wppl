@@ -152,20 +152,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $modelSoal[$i] = $o;
                     }
 
+
                     // validasi dynamic form
                     $valid = PelatihanSoal::validateMultiple($modelSoal) && $valid;
-                    if (isset($_POST['PelatihanSoalPilihan'][0][0])) {
-                        foreach ($_POST['PelatihanSoalPilihan'] as $indexSoal => $pilihans) {
-                            foreach ($pilihans as $indexPilihan => $pilihan) {
-                                $data['PelatihanSoalPilihan'] = $pilihan;
-                                $modelPilihan = new PelatihanSoalPilihan();
-                                $modelPilihan->load($data);
-                                $modelPilihan->pelatihan_soal_id = $model->id;
-                                $valid = $modelPilihan->validate();
-                                $modelSoalPilihan[$indexSoal][$indexPilihan] = $modelPilihan;
-                            }
-                        }
-                    }
 
                     if (!$valid) {
                         $model->addError('_exception', "Validasi gagal.");
@@ -177,16 +166,47 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                             'modelSoal' => $modelSoal,
                         ]);
                     }
-
+                    
+                    
                     // save dynamic model
                     foreach ($modelSoal as $i => $o) {
                         $o->save();
+                    }
+
+                    if (isset($_POST['PelatihanSoalPilihan'][0][0])) {
+                        foreach ($modelSoal as $indexSoal => $soals) {
+                            foreach ($_POST['PelatihanSoalPilihan'][$indexSoal] as $indexPilihan => $pilihan) {
+                                $data['PelatihanSoalPilihan'] = $pilihan;
+                                $modelPilihan = new PelatihanSoalPilihan();
+                                $modelPilihan->load($data);
+                                $modelPilihan->pelatihan_soal_id = $soals->id;
+                                $valid = $modelPilihan->validate();
+                                $modelSoalPilihan[$indexSoal][$indexPilihan] = $modelPilihan;
+                            }
+                        }
+                    }
+                    
+                    if (!$valid) {
+                        $model->addError('_exception', "Validasi gagal.");
+                        $transaction->rollback();
+                        return $this->render('update', [
+                            'model' => $model,
+                            'modelSoalJenis' => $modelSoalJenis,
+                            'modelSoalPilihan' => $modelSoalPilihan,
+                            'modelSoal' => $modelSoal,
+                        ]);
+                    }
+                    
+                    // save dynamic model
+                    foreach ($modelSoal as $i => $o) {
                         foreach ($modelSoalPilihan[$i] as $indexPilihan => $modelPilihan) {
                             $modelPilihan->pelatihan_soal_id = $o->id;
                             $modelPilihan->save();
                         }
                     }
 
+                    $modelSoalJenis->jumlah_soal = count($modelSoalJenis->pelatihanSoals);
+                    $modelSoalJenis->save();
                 }
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -324,6 +344,8 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     }
 
 
+                    $modelSoalJenis->jumlah_soal = count($modelSoalJenis->pelatihanSoals);
+                    $modelSoalJenis->save();
                 }
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);

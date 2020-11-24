@@ -38,41 +38,53 @@ DynamicFormWidget::begin([
         </h4>
     </div>
     <div class="panel-body">
-        <div class="container-items soal-items">
+        <div>
             <!-- widgetBody -->
 
             <?php foreach ($modelSoal as $i => $o): ?>
-            <div class="item item-soal panel panel-default">
+            <div class="item panel">
                 <!-- widgetItem -->
-                <div class="panel-heading">
-                    <h3 class="panel-title pull-left">Soal</h3>
-                    <div class="pull-right">
-                        
-                        <button type="button" class="add-item btn btn-success btn-xs"><i
-                            class="glyphicon glyphicon-plus"></i></button>
-                        <button type="button" class="remove-item btn btn-danger btn-xs"><i
-                                class="glyphicon glyphicon-minus"></i></button>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <hr>
-                <div class="panel-body">
-                    <?=$form->field($o, "[{$i}]kategori_soal_id")->dropdownList(
-                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
-                        [
-                            'prompt' => 'Select',
-                        ])?>
-                    <?= $form->field($o, "[{$i}]soal")->textArea() ?>
-                    <!-- <?= $form->field($o, "[{$i}]pilihan")->textInput(['placeholder' => "gunakan | untuk pemisih pilihan"]) ?> -->
-                    <?=
-                    $this->render('_soal_pilihan.php', [
-                        'modelSoal' => $o,
-                        'indexSoal' => $i,
-                        'modelSoalPilihan' => $modelSoalPilihan[$i],
-                        'form' => $form
-                    ]) ?>
-                    <?= $form->field($o, "[{$i}]jawaban")->textInput(['placeholder' => "Kosongi jika type soal adalah essay"]) ?>
-                </div>
+                <table class="table table-responsive table-hover">
+                    <thead>
+                        <!-- <th> Tipe Soal </th> -->
+                        <th> Soal </th>
+                        <th> Pilihan </th>
+                        <th> Jawaban </th>
+                        <th>
+                            <button type="button" class="add-item btn btn-success btn-xs"><i
+                                class="glyphicon glyphicon-plus"></i></button>
+                        </th>
+                    </thead>
+                    <tbody class="container-items soal-items">
+                        <tr class="item item-soal">
+                            <td>
+                                <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
+                                \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
+                                [
+                                    'prompt' => 'Select',
+                                ])?>
+                                <?= $form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea() ?>
+                            </td>
+                            <td>
+                            <?=
+                                $this->render('_soal_pilihan.php', [
+                                    'modelSoal' => $o,
+                                    'indexSoal' => $i,
+                                    'modelSoalPilihan' => $modelSoalPilihan[$i],
+                                    'form' => $form
+                                ]) ?>
+                            </td>
+                            <td>
+                                <?= $form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"]) ?>
+                            </td>
+                            <td>
+                                <button type="button" class="remove-item btn btn-danger btn-xs"><i
+                                    class="glyphicon glyphicon-minus"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
             </div>
             <?php endforeach; ?>
         </div>

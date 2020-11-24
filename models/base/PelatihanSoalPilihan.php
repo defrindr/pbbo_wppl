@@ -11,7 +11,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $pelatihan_soal_id
- * @property integer $pilihan
+ * @property string $pilihan
  * @property integer $flag
  *
  * @property \app\models\PelatihanSoal $pelatihanSoal
@@ -36,8 +36,9 @@ abstract class PelatihanSoalPilihan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelatihan_soal_id', 'pilihan'], 'required'],
-            [['pelatihan_soal_id', 'pilihan', 'flag'], 'integer'],
+            [['pelatihan_soal_id'], 'required'],
+            [['pelatihan_soal_id', 'flag'], 'integer'],
+            [['pilihan'], 'string'],
             [['pelatihan_soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoal::className(), 'targetAttribute' => ['pelatihan_soal_id' => 'id']]
         ];
     }
