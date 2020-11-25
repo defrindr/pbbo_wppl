@@ -90,7 +90,7 @@ class PelatihanController extends Controller
 
         try {
             if ($model->load($_POST)) {
-                if(!strpos($model->forum_diskusi, "http")) {
+                if(!preg_match("/https?/",$model->forum_diskusi)) {
                     $model->forum_diskusi = "http://{$model->forum_diskusi}";
                 }
 
@@ -191,8 +191,7 @@ class PelatihanController extends Controller
         $transaction = \Yii::$app->db->beginTransaction();
 
         if ($model->load($_POST)) {
-
-            if(!strpos($model->forum_diskusi, "http")) {
+            if(!preg_match("/https?/",$model->forum_diskusi)) {
                 $model->forum_diskusi = "http://{$model->forum_diskusi}";
             }
 

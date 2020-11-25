@@ -35,7 +35,7 @@ abstract class PelatihanStatus extends \yii\db\ActiveRecord
     {
         return [
             [['nama'], 'required'],
-            [['nama'], 'string', 'max' => 50]
+            [['nama', 'role_id'], 'string', 'max' => 50]
         ];
     }
 

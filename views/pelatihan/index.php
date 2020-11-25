@@ -60,14 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'pelaksana_id',
             'value' => function ($model) {
                 if ($rel = $model->pelaksana) {
-                    return Html::a($rel->name, ['user/view', 'id' => $rel->id], ['data-pjax' => 0]);
+                    return $rel->name;
                 } else {
                     return '';
                 }
             },
             'format' => 'raw',
         ],
-        'modified_by',
+        // 'modified_by',
         /*'tanggal_selesai'*/
         /*'modified_at'*/
         [
