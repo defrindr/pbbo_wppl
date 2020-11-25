@@ -105,6 +105,7 @@ class PelatihanController extends Controller
                     );
                 }
 
+                $model->unique_id = Yii::$app->security->generateRandomString(32);
                 $model->modified_by = \Yii::$app->user->identity->id;
                 // validate all models
                 $valid = $model->validate();

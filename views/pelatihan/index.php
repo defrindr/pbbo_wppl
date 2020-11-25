@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'tingkat_id',
             'value' => function ($model) {
                 if ($rel = $model->tingkat) {
-                    return Html::a($rel->id, ['pelatihan-tingkat/view', 'id' => $rel->id], ['data-pjax' => 0]);
+                    return $rel->nama;
                 } else {
                     return '';
                 }

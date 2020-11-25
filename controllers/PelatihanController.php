@@ -33,9 +33,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $modelPeserta = [new PelatihanPeserta()];
         }
 
-        if (RoleType::disallow($model)) {
-            throw new NotFoundHttpException();
-        }
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
 
         if ($_POST) {
             // model lampiran
@@ -117,6 +115,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         $modelSoalJenis = new PelatihanSoalJenis;
         $modelSoal = [new PelatihanSoal];
         $modelSoalPilihan = [[new PelatihanSoalPilihan]];
+
         if (RoleType::disallow($model)) {
             throw new NotFoundHttpException();
         }
@@ -380,10 +379,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
     }
 
-    
     public function actionAjukan($id)
     {
         $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 1])->one();
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
         if($model) {
             try{
                 $model->status_id = 2;
@@ -397,6 +396,44 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         
         Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan / Pelatihan sudah diajukan');
         return $this->goBack();
+    }
+    
+    public function actionSetujui($id)
+    {
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 2])->one();
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if($model) {
+            try{
+                $model->status_id = 3;
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Pelatihan berhasil disetujui');
+            }catch(\Throwable $e){
+                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
+            }
+            return $this->goBack();
+        }
+        
+        Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan / Pelatihan sudah disutujui');
+        return $this->goBack();
+    }
+    
+    public function actionAjukanMonev($id)
+    {
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 3])->one();
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+            
+        if($_POST){
+            try{
+                $model->status_id = 4;
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Pelatihan berhasil disetujui');
+            }catch(\Throwable $e){
+                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
+            }
+        }
+        return $this->render('form-upload-monev',[
+            'model' => $model
+        ]);
     }
 
 

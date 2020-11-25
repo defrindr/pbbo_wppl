@@ -72,7 +72,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     {
         return [
             [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'pelaksana_id', 'modified_by'], 'required'],
-            [['latar_belakang', 'tujuan'], 'string'],
+            [['latar_belakang', 'tujuan', 'unique_id'], 'string'],
             [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
             [['tingkat_id', 'status_id', 'pelaksana_id', 'modified_by'], 'integer'],
             [['nama'], 'string', 'max' => 200],
@@ -90,12 +90,13 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'unique_id' => 'Unique ID',
             'nama' => 'Nama',
             'latar_belakang' => 'Latar Belakang',
             'tujuan' => 'Tujuan',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
-            'tingkat_id' => 'Tingkat ID',
+            'tingkat_id' => 'Tingkat    ',
             'status_id' => 'Status ID',
             'forum_diskusi' => 'Forum Diskusi',
             'pelaksana_id' => 'Pelaksana ID',

@@ -3,7 +3,7 @@ namespace app\components;
 
 class RoleType {
     const SA = 1;
-    const PEMATERI = 4;
+    const PEMATERI = 2;
 
 
     public static function disallow($model){

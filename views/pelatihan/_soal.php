@@ -6,6 +6,15 @@ use wbraganca\dynamicform\DynamicFormWidget;
 $hiddenTemplate = ["template" => "{input}"];
 $hiddenStyle = ["style" => "display: none"];
 
+
+$js = <<< JS
+    let pilihan = document.querySelectorAll('.dynamicform_wrapper_soal_pilihan');
+    console.log(pilihan);
+JS;
+
+$this->registerJs($js);
+
+
 DynamicFormWidget::begin([
     'widgetContainer' => 'dynamicform_wrapper_soal', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
     'widgetBody' => '.soal-items', // required: css class selector
@@ -89,5 +98,4 @@ DynamicFormWidget::begin([
         <!-- </div>
     </div> -->
 <!-- </div>.panel -->
-
 <?php DynamicFormWidget::end() ?>
