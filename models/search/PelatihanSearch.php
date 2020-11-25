@@ -42,6 +42,10 @@ class PelatihanSearch extends Pelatihan
     public function search($params)
     {
         $query = Pelatihan::find()->where(['flag' => 1]);
+        $user = Yii::$app->user->identity;
+        if(RoleType::SA != $user->role_id){
+            $query->AndWhere(['pelaksana_id' => $user->id]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
