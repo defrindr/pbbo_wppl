@@ -5,8 +5,6 @@
 namespace app\models\base;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the base-model class for table "pelatihan".
@@ -25,12 +23,17 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $jumlah_target
  * @property string $sasaran_wilayah
  * @property string $hasil_pelaksanaan_pelatihan
+ * @property string $dasar_pelaksanaan
+ * @property string $absensi_kehadiran
+ * @property string $rekapitulasi_nilai
+ * @property string $sertifikat
+ * @property string $materi_pelatihan
  * @property integer $pelaksana_id
+ * @property string $created_at
+ * @property integer $created_by
  * @property string $modified_at
  * @property integer $modified_by
  * @property integer $flag
- * @property string $created_at
- * @property integer $created_by
  *
  * @property \app\models\PelatihanTingkat $tingkat
  * @property \app\models\User $pelaksana
@@ -56,33 +59,16 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => BlameableBehavior::className(),
-                'updatedByAttribute' => false,
-            ],
-            [
-                'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => false,
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'kriteria', 'jumlah_target', 'sasaran_wilayah', 'pelaksana_id', 'modified_by'], 'required'],
-            [['latar_belakang', 'tujuan'], 'string'],
-            [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
-            [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'modified_by', 'flag'], 'integer'],
+            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'kriteria', 'jumlah_target', 'sasaran_wilayah', 'pelaksana_id', 'created_by', 'modified_by'], 'required'],
+            [['latar_belakang', 'tujuan', 'hasil_pelaksanaan_pelatihan', 'dasar_pelaksanaan'], 'string'],
+            [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'modified_at'], 'safe'],
+            [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'created_by', 'modified_by', 'flag'], 'integer'],
             [['unique_id'], 'string', 'max' => 32],
             [['nama'], 'string', 'max' => 200],
-            [['forum_diskusi', 'kriteria', 'sasaran_wilayah', 'hasil_pelaksanaan_pelatihan'], 'string', 'max' => 100],
+            [['forum_diskusi', 'kriteria', 'sasaran_wilayah', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat', 'materi_pelatihan'], 'string', 'max' => 100],
             [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
             [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']]
@@ -109,6 +95,11 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'jumlah_target' => 'Jumlah Target',
             'sasaran_wilayah' => 'Sasaran Wilayah',
             'hasil_pelaksanaan_pelatihan' => 'Hasil Pelaksanaan Pelatihan',
+            'dasar_pelaksanaan' => 'Dasar Pelaksanaan',
+            'absensi_kehadiran' => 'Absensi Kehadiran',
+            'rekapitulasi_nilai' => 'Rekapitulasi Nilai',
+            'sertifikat' => 'Sertifikat',
+            'materi_pelatihan' => 'Materi Pelatihan',
             'pelaksana_id' => 'Pelaksana ID',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
