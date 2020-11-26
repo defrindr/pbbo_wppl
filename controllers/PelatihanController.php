@@ -10,10 +10,12 @@ use app\models\PelatihanSoal;
 use app\models\PelatihanSoalJenis;
 use app\models\PelatihanSoalPilihan;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use yii\web\UploadedFile;
 
 /**
  * This is the class for controller "PelatihanController".
@@ -445,5 +447,45 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         }
 
         throw new NotFoundHttpException();
+    }
+
+    public function actionUpdateKehadiran($id){
+        $model = $this->findModel($id);
+        if(RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
+        if($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
+        if($_POST){
+            $transaction = Yii::$app->db->beginTransaction();
+            $selection = (array)Yii::$app->request->post('selection');
+            $hadir = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, 'id' => $selection])->all();
+            $tidak_hadir = PelatihanPeserta::find()->where(['and', ['pelatihan_id' => $model->id], ['not in', 'id', $selection]])->all();
+            
+
+            foreach($hadir as $participant){
+                $participant->kehadiran = 1;
+                $participant->save();
+            }
+
+            foreach($tidak_hadir as $participant){
+                $participant->kehadiran = 0;
+                $participant->save();
+            }
+
+            $transaction->commit();
+            Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah');
+            return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+        }
+
+        $dataProvider =  new \yii\data\ActiveDataProvider([
+            'query' => $model->getPelatihanPesertas(),
+            'pagination' => [
+                'pageSize' => 999999,
+                'pageParam' => 'page-pelatihanpesertas',
+            ],
+        ]);
+
+        return $this->render('list-kehadiran',[
+            'dataProvider' => $dataProvider,
+            'model' => $model
+        ]);
     }
 }
