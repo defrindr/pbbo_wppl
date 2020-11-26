@@ -168,7 +168,7 @@ class PelatihanController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
+        $uniqueId = $model->unique_id;
         if($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
@@ -194,7 +194,9 @@ class PelatihanController extends Controller
             if(!preg_match("/https?/",$model->forum_diskusi)) {
                 $model->forum_diskusi = "http://{$model->forum_diskusi}";
             }
-
+            if($model->unique_id == null) $model->unique_id = Yii::$app->security->generateRandomString(32);
+            else $model->unique_id = $uniqueId;
+            
             // model lampiran
             $oldLampiranIDs = ArrayHelper::map($modelLampiran, 'id', 'id');
             $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class, $modelLampiran);
@@ -260,6 +262,12 @@ class PelatihanController extends Controller
                         $o->save();
                     }
 
+                }else{
+                    Yii::$app->session->setFlash("error", "Validasi tidak sesuai");
+                    return $this->render('update', [
+                        'model' => $model,
+                        'modelLampiran' => $modelLampiran,
+                    ]);
                 }
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
