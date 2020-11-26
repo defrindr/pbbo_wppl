@@ -121,6 +121,7 @@ function nikSearch(btn){
 
 
     var url = "'.Url::to(["/api/pelatihan/find-peserta-by-nik"]).'";
+    console.log("input[btnId=" + $(btn).attr("btnId") + "]");
     var data = {
         nik : $("input[btnId=" + $(btn).attr("btnId") + "]").val(),
     }
@@ -156,7 +157,7 @@ function nikSearch(btn){
                     });
 
                 }else{
-                    console.log(model + "-" +  attribute + entryjs + "=>" + entryjs);
+                    // console.log(model + "-" +  attribute + entryjs + "=>" + entryjs);
                     $("#"  + model + "-" +  attribute + entryjs).val(result[entryjs]).trigger("change");
                 }
 
