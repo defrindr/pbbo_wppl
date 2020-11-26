@@ -58,4 +58,16 @@ class Pelatihan extends BasePelatihan
 
         return $models;
     }
+
+    public function getUploadedFolder(){
+        $pathFolder = Yii::getAlias("@webroot/uploads/berkas_pelatihan/") ;
+        !file_exists($pathFolder)? mkdir($pathFolder, 0777, true) :false;
+        return $pathFolder;
+    }
+
+    public function getUploadedUrlFolder(){
+        $urlFolder = "uploads/berkas_pelatihan/" ;
+        return $urlFolder;
+    }
+    
 }

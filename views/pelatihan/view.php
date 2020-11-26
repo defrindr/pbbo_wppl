@@ -107,9 +107,9 @@ $this->params['breadcrumbs'][] = 'View';
                         'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
                         'data-method' => 'post',
                     ]);
-            // }else if($model->status_id==3 && $model->pelaksana_id == \Yii::$app->user->identity->role_id) {
-            }else if($model->status_id==3) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan Monev', ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
+            }else if(($model->status_id==3 || $model->status_id = 4) && $model->pelaksana_id == \Yii::$app->user->identity->role_id) {
+            // }else if($model->status_id==3) {
+                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
             }
             ?>
             <?php $this->endBlock();?>

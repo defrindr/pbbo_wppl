@@ -19,15 +19,41 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin([
             'id' => 'PelatihanLampiran',
             'layout' => 'horizontal',
+            // "options" => ['enctype' => "multipart/form-data"],
             'enableClientValidation' => true,
             'errorSummaryCssClass' => 'error-summary alert alert-error',
         ]);
         ?>
-			<?=$form->field($model, 'id', ["template" => "{input}"])->hiddenInput()?>
-			<?=$form->field($model, 'hasil_pelaksanaan_pelatihan')->textarea()?>
-			<?=$form->field($model, 'sertifikat')->fileInput()?>
-			<?=$form->field($model, 'rekapitulasi_nilai')->fileInput()?>
-			<?=$form->field($model, 'absensi_kehadiran')->fileInput()?>
+			<?php //$form->field($model, 'id', ["template" => "{input}"])->hiddenInput()?>
+            <?=$form->field($model, 'hasil_pelaksanaan_pelatihan')->textarea(['required' => true])?>
+            <?=$form->field($model, 'dasar_pelaksanaan')->textarea(['required' => true])?>
+			<?=$form->field($model, 'sertifikat')->fileInput(($model->sertifikat) ? [] : ['required' =>  true])?>
+            <?php if($model->sertifikat): ?>
+                <div class="form-group">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <?= Html::a("Lampiran Template Sertifikat", ["{$model->getUploadedFolder()}/{$model->sertifikat}"]) ?>
+                    </div>
+                </div>
+            <?php endif ?>
+			<?=$form->field($model, 'rekapitulasi_nilai')->fileInput(($model->rekapitulasi_nilai) ? [] : ['required' =>  true])?>
+            <?php if($model->rekapitulasi_nilai): ?>
+                <div class="form-group">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <?= Html::a("Lampiran Rekapitulasi Nilai", ["{$model->getUploadedFolder()}/{$model->rekapitulasi_nilai}"]) ?>
+                    </div>
+                </div>
+            <?php endif ?>
+			<?=$form->field($model, 'absensi_kehadiran')->fileInput(($model->absensi_kehadiran) ? [] : ['required' =>  true])?>
+            <?php if($model->absensi_kehadiran): ?>
+                <div class="form-group">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <?= Html::a("Lampiran Absensi Kehadiran", ["{$model->getUploadedFolder()}/{$model->absensi_kehadiran}"]) ?>
+                    </div>
+                </div>
+            <?php endif ?>
             <hr/>
         <?php echo $form->errorSummary($model); ?>
         <div class="row">

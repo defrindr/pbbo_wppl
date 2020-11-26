@@ -237,11 +237,11 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionUpdateSoal($id)
     {
         $modelSoalJenis = PelatihanSoalJenis::findOne($id);
+        $model = $modelSoalJenis->pelatihan;
         if($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
         }
-        $model = $modelSoalJenis->pelatihan;
         $modelSoal = $modelSoalJenis->pelatihanSoals;
         $modelSoalPilihan = [];
         
@@ -418,19 +418,57 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan / Pelatihan sudah disutujui');
         return $this->goBack();
     }
+
+    public function uploadFile($file, $suffix, $dir, $url){
+        $tmp = explode('.', $file->name);
+        $filename = "{$suffix}_";
+        $extension = end($tmp);
+        $filename .= \Yii::$app->security->generateRandomString() . ".{$extension}";
+        $path = $dir . $filename;
+        $file->saveAs($path);
+        return $url.$filename;
+    }
     
     public function actionAjukanMonev($id)
     {
-        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 3])->one();
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => [3,4]])->one();
+        if($model == false){
+            Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan');
+            return $this->redirect(['/pelatihan/view', 'id' => $id]);
+        }
+        $oldStatus = $model->status_id;
+        $oldSertifikat = $model->sertifikat;
+        $oldRekapitulasiNilai = $model->rekapitulasi_nilai;
+        $oldAbsensiKehadiran = $model->absensi_kehadiran;
+
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
-            
-        if($_POST){
+        if($model->load($_POST)){
             try{
-                $model->status_id = 4;
-                $model->save();
-                Yii::$app->session->setFlash('success', 'Pelatihan berhasil disetujui');
+                $transaction = Yii::$app->db->beginTransaction();
+                $sertifikat = UploadedFile::getInstance($model, "sertifikat");
+                $rekapitulasi_nilai = UploadedFile::getInstance($model, "rekapitulasi_nilai");
+                $absensi_kehadiran = UploadedFile::getInstance($model, "absensi_kehadiran");
+                if($model->status_id == 3) $valid = ($sertifikat != null && $model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null && $rekapitulasi_nilai != null && $absensi_kehadiran != null);
+                else $valid = ($model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
+                if($valid){
+                    if($sertifikat) $model->sertifikat = $this->uploadFile($sertifikat, "sertifikat", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    else $model->sertifikat = $oldSertifikat;
+                    if($rekapitulasi_nilai) $model->rekapitulasi_nilai = $this->uploadFile($rekapitulasi_nilai, "rekapitulasi_nilai", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    else $model->rekapitulasi_nilai = $oldRekapitulasiNilai;
+                    if($absensi_kehadiran) $model->absensi_kehadiran = $this->uploadFile($absensi_kehadiran, "absensi_kehadiran", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    else $model->absensi_kehadiran = $oldAbsensiKehadiran;
+
+                    if($model->status_id == 3) $model->status_id = 4;
+                    $model->save();
+                    $transaction->commit();
+                    if($oldStatus == 3) Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ajukan');
+                    else Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ubah');
+                    return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+                }else{
+                    Yii::$app->session->setFlash('error', 'Data gagal di validasi.');
+                }
             }catch(\Throwable $e){
-                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
+                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui'.$e);
             }
         }
         return $this->render('form-upload-monev',[
