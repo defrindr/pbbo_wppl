@@ -25,7 +25,7 @@ use Yii;
  * @property string $alamat
  * @property integer $desa_id
  * @property string $password
- * @property integer $peserta_konfirmasi
+ * @property integer $kehadiran
  * @property integer $nilai_pretest
  * @property integer $nilai_posttest
  * @property integer $nilai_praktek
@@ -46,7 +46,6 @@ use Yii;
  * @property \app\models\MasterPekerjaan $pekerjaan
  * @property \app\models\PelatihanSoalPeserta[] $pelatihanSoalPesertas
  * @property \app\models\PelatihanSoalPesertaJawaban[] $pelatihanSoalPesertaJawabans
- * @property \app\models\User[] $users
  * @property string $aliasModel
  */
 abstract class PelatihanPeserta extends \yii\db\ActiveRecord
@@ -69,7 +68,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     {
         return [
             [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id', 'password'], 'required'],
-            [['pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'peserta_konfirmasi', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
             [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
@@ -104,7 +103,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'alamat' => 'Alamat',
             'desa_id' => 'Desa ID',
             'password' => 'Password',
-            'peserta_konfirmasi' => 'Peserta Konfirmasi',
+            'kehadiran' => 'Kehadiran',
             'nilai_pretest' => 'Nilai Pretest',
             'nilai_posttest' => 'Nilai Posttest',
             'nilai_praktek' => 'Nilai Praktek',
@@ -127,16 +126,17 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     {
         return array_merge(parent::attributeHints(), [
             'pelatihan_id' => 'pelatihan yang sedang diikuti',
-            'peserta_konfirmasi' => 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
+            'kehadiran' => 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
             'nilai_pretest' => 'nilai max 100',
             'nilai_posttest' => 'nilai max 100',
-            'nilai_praktek' => 'nilai max 100',
+            'nilai_praktek' => 'nilai max 100, diinput pemateri',
+            'komentar' => 'masukkan dari pemateri',
             'nama_usaha' => 'isi jika ada',
             'jenis_usaha' => 'isi jika ada',
             'lokasi' => 'isi jika ada',
             'jenis_izin_usaha' => 'isi jika ada',
             'nib' => 'isi jika ada',
-            'masa_berlaku' => 'dalam bulan, jika ada',
+            'masa_berlaku' => 'masa berlaku usaha dalam bulan, jika ada',
             'lanjut' => '0 = berhenti, 1 = lanjut ke pelatihan berikutnya',
         ]);
     }
@@ -195,14 +195,6 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function getPelatihanSoalPesertaJawabans()
     {
         return $this->hasMany(\app\models\PelatihanSoalPesertaJawaban::className(), ['peserta_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsers()
-    {
-        return $this->hasMany(\app\models\User::className(), ['peserta_pelatihan_id' => 'id']);
     }
 
 

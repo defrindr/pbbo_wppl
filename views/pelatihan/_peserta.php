@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+use dmstr\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use wbraganca\dynamicform\DynamicFormWidget;
 
@@ -52,8 +54,24 @@ DynamicFormWidget::begin([
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    <?= $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?>
-                    <?= $form->field($o, "[{$i}]nik")->textInput() ?>
+                    <!-- <?php // $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?> -->
+                    <?= $form->field($o, "[{$i}]nik")->widget(\app\components\NikFinder::class, [
+                            "pilihan" => [
+                                'nama',
+                                'no_telp',
+                                'email',
+                                'tempat_lahir',
+                                'tanggal_lahir',
+                                'jenis_kelamin_id',
+                                'pekerjaan_id',
+                                'pendidikan_id',
+                                'alamat',
+                                'rt',
+                                'rw',
+                                'desa_id',
+                            ],
+                            'otherModel' => $o,
+                        ]) ?>
                     <?= $form->field($o, "[{$i}]nama")->textInput() ?>
                     <?= $form->field($o, "[{$i}]no_telp")->textInput(['maxlength' => true]) ?>
                     <?= $form->field($o, "[{$i}]email")->textInput(['maxlength' => true]) ?>
@@ -108,4 +126,38 @@ DynamicFormWidget::begin([
     </div>
 </div><!-- .panel -->
 
+<?php
+$this->registerJs('
+
+    $(".dynamicform_wrapper_peserta").on("afterInsert", function(e, item_orang) {
+        console.log("afterInsert");
+
+        var btn = $(".btn-searc-nik");
+        var id = btn.length-1;
+        var prepare_attr = "["+id+"]nik";
+        $(item_orang).find(btn).attr("btnId", btn.attr("btnId"));
+        $(item_orang).find(btn).attr("attribute", prepare_attr);
+        $(item_orang).find(btn).attr("timestamp", e.timeStamp);
+
+
+        var iAttribute = $(".input_attribute");
+        $(item_orang).find(iAttribute).each(function(i, obj){
+            $(obj).attr("marker", $(obj).attr("marker"));
+        });
+
+        var input = $(".input-nik");
+        $(item_orang).find(input).attr("btnId", input.attr("btnId"));
+
+        jQuery(".pilih_tanggal")
+            .datepicker({"dateFormat":"yy-mm-dd","changeMonth":true,"changeYear":true});
+    });
+
+    $(".dynamicform_wrapper_peserta").on("beforeDelete", function(e, item_orang) {
+        if (! confirm("Are you sure you want to delete this item?")) {
+            return true;
+        }
+    });
+');
+
+?>
 <?php DynamicFormWidget::end() ?>

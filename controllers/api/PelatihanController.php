@@ -3,13 +3,19 @@
 namespace app\controllers\api;
 
 /**
-* This is the class for REST controller "PelatihanController".
-*/
+ * This is the class for REST controller "PelatihanController".
+ */
 
-use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
+use app\models\PelatihanPeserta;
 
 class PelatihanController extends \yii\rest\ActiveController
 {
-public $modelClass = 'app\models\Pelatihan';
+    public $modelClass = 'app\models\Pelatihan';
+
+    public function actionFindPesertaByNik()
+    {
+        if (\Yii::$app->user) {
+            return PelatihanPeserta::searchByNIK($_GET['nik']);
+        }
+    }
 }

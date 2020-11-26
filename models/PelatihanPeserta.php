@@ -40,4 +40,33 @@ class PelatihanPeserta extends BasePelatihanPeserta
         $model = Pelatihan::find()->where(['in', 'id', $list]);
         return $model;
     }
+
+    public static function searchByNIK($nik){
+        $model = PelatihanPeserta::findOne(['nik' => $nik]);
+
+        if($model){
+            $model = $model->toArray();
+            unset($model['pelatihan_id']);
+            unset($model['password']);
+            unset($model['kehadiran']);
+            unset($model['nilai_pretest']);
+            unset($model['nilai_posttest']);
+            unset($model['nilai_praktek']);
+            unset($model['komentar']);
+            unset($model['kesibukan_pasca_pelatihan']);
+            unset($model['nama_usaha']);
+            unset($model['jenis_usaha']);
+            unset($model['lokasi']);
+            unset($model['jenis_izin_usaha']);
+            unset($model['nib']);
+            unset($model['masa_berlaku']);
+            unset($model['lanjut']);
+    
+            $model['message'] = "data-found";
+        }else{
+            $model['message'] = "data-not-found";
+        }
+
+        return $model;
+    }
 }
