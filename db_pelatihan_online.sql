@@ -5,10 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-SET NAMES utf8mb4;
-
-DROP DATABASE IF EXISTS `db_pelatihan_online`;
-CREATE DATABASE `db_pelatihan_online` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `db_pelatihan_online`;
 
 DROP TABLE IF EXISTS `action`;
@@ -67,7 +63,15 @@ INSERT INTO `action` (`id`, `controller_id`, `action_id`, `name`) VALUES
 (55,	'pelatihan',	'add-peserta',	'Add Peserta'),
 (56,	'pelatihan',	'add-soal',	'Add Soal'),
 (57,	'pelatihan',	'update-soal',	'Update Soal'),
-(58,	'pelatihan',	'approve',	'Approve');
+(58,	'pelatihan',	'approve',	'Approve'),
+(59,	'pelatihan',	'ajukan',	'Ajukan'),
+(60,	'pelatihan',	'setujui',	'Setujui'),
+(61,	'pelatihan',	'ajukan-monev',	'Ajukan Monev'),
+(62,	'pelatihan',	'find-peserta-by-nik',	'Find Peserta By Nik'),
+(63,	'pelatihan',	's-update-kehadiran',	'S Update Kehadiran'),
+(64,	'pelatihan',	'update-kehadiran',	'Update Kehadiran');
+
+SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `master_jenis_kelamin`;
 CREATE TABLE `master_jenis_kelamin` (
@@ -259,6 +263,7 @@ INSERT INTO `menu` (`id`, `name`, `controller`, `action`, `icon`, `order`, `pare
 DROP TABLE IF EXISTS `pelatihan`;
 CREATE TABLE `pelatihan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `unique_id` varchar(32) NOT NULL DEFAULT '',
   `nama` varchar(200) NOT NULL COMMENT 'nama pelatihan',
   `latar_belakang` text NOT NULL,
   `tujuan` text NOT NULL,
@@ -267,10 +272,19 @@ CREATE TABLE `pelatihan` (
   `tingkat_id` int(11) NOT NULL COMMENT 'tingkat pelatihan',
   `status_id` int(11) NOT NULL DEFAULT 1,
   `forum_diskusi` varchar(100) NOT NULL DEFAULT '-' COMMENT 'link forum diskusi , ex : link grup whatsapp, telegram, discord',
+  `kriteria` varchar(100) NOT NULL,
+  `jumlah_target` int(11) NOT NULL,
+  `sasaran_wilayah` varchar(100) NOT NULL,
+  `hasil_pelaksanaan_pelatihan` text DEFAULT NULL,
+  `dasar_pelaksanaan` text DEFAULT NULL,
+  `absensi_kehadiran` varchar(100) DEFAULT NULL,
+  `rekapitulasi_nilai` varchar(100) DEFAULT NULL,
+  `sertifikat` varchar(100) DEFAULT NULL,
+  `materi_pelatihan` varchar(100) DEFAULT NULL,
   `pelaksana_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_by` int(11) NOT NULL,
-  `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `modified_by` int(11) NOT NULL,
   `flag` int(11) NOT NULL DEFAULT 1 COMMENT '0 = deleted , 1 = active',
   PRIMARY KEY (`id`),
@@ -282,8 +296,10 @@ CREATE TABLE `pelatihan` (
   CONSTRAINT `pelatihan_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `pelatihan_status` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan` (`id`, `nama`, `latar_belakang`, `tujuan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `pelaksana_id`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
-(37,	'React',	'-',	'-',	'2020-11-04',	'2020-11-22',	1,	1,	'http://http://http://http://t.me/defrindr',	2,	'2020-11-22 10:24:31',	1,	'0000-00-00 00:00:00',	1,	1);
+INSERT INTO `pelatihan` (`id`, `unique_id`, `nama`, `latar_belakang`, `tujuan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `kriteria`, `jumlah_target`, `sasaran_wilayah`, `hasil_pelaksanaan_pelatihan`, `dasar_pelaksanaan`, `absensi_kehadiran`, `rekapitulasi_nilai`, `sertifikat`, `materi_pelatihan`, `pelaksana_id`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
+(37,	'TcOg1ojTJ3EajfzVncviUSp7YyngafEp',	'React',	'-',	'-',	'2020-11-04',	'2020-11-22',	1,	3,	'http://t.me/defrindr',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2020-11-26 14:09:59',	1,	'0000-00-00 00:00:00',	1,	1),
+(39,	'',	'React',	'-',	'-',	'2020-11-25',	'2020-11-25',	1,	2,	'http://1t.me/defrindr',	'',	0,	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2020-11-25 06:53:31',	1,	'0000-00-00 00:00:00',	1,	1),
+(40,	'6ULT4RVWk35RNygdBtXNmecH1LTEm32A',	'Bola',	'-',	'-',	'2020-11-25',	'2020-11-03',	1,	1,	'http://t.me/defrindr',	'-',	1000,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	'2020-11-26 05:46:25',	1,	'2020-11-25 06:17:08',	1,	1);
 
 DROP TABLE IF EXISTS `pelatihan_lampiran`;
 CREATE TABLE `pelatihan_lampiran` (
@@ -298,7 +314,9 @@ CREATE TABLE `pelatihan_lampiran` (
 
 INSERT INTO `pelatihan_lampiran` (`id`, `pelatihan_id`, `judul_lampiran`, `file`) VALUES
 (7,	37,	'Proposal Kegiatan 2',	'8L6Aoz4GPMw2FGMEh0TZUgciaS9TMBpw.docx'),
-(9,	37,	'Lampiran Proposal Kegiatan 1',	'Mq01QOgFAvp_XyhJLiJT1lqmoHh7DE4_.docx');
+(9,	37,	'Lampiran Proposal Kegiatan 1',	'Mq01QOgFAvp_XyhJLiJT1lqmoHh7DE4_.docx'),
+(10,	39,	'Proposal Kegiatan',	'a0LqB4pWRjb0CZMLnqI-6cceVtRPjKyu.png'),
+(11,	40,	'Proposal Kegiatan',	'jG5sc8q4plATU52p1GMdWoZ8P4haIiQP.docx');
 
 DROP TABLE IF EXISTS `pelatihan_peserta`;
 CREATE TABLE `pelatihan_peserta` (
@@ -318,7 +336,7 @@ CREATE TABLE `pelatihan_peserta` (
   `alamat` text NOT NULL,
   `desa_id` int(11) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `peserta_konfirmasi` int(11) NOT NULL DEFAULT 0 COMMENT 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
+  `kehadiran` int(11) NOT NULL DEFAULT 0 COMMENT 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
   `nilai_pretest` int(11) DEFAULT NULL COMMENT 'nilai max 100',
   `nilai_posttest` int(11) DEFAULT NULL COMMENT 'nilai max 100',
   `nilai_praktek` int(11) DEFAULT NULL COMMENT 'nilai max 100, diinput pemateri',
@@ -345,8 +363,10 @@ CREATE TABLE `pelatihan_peserta` (
   CONSTRAINT `pelatihan_peserta_ibfk_9` FOREIGN KEY (`pekerjaan_id`) REFERENCES `master_pekerjaan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan_peserta` (`id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `password`, `peserta_konfirmasi`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
-(16,	37,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'10/29/2020',	'ponorgo',	1,	4,	17,	11,	1,	'Ponorogo',	1,	'10/29/2020',	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
+INSERT INTO `pelatihan_peserta` (`id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `password`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
+(17,	40,	'2020',	'Ronaldo Wati',	'defrindr@gmail.com',	'-',	'11/03/2020',	'Ponorogo',	1,	4,	6,	12,	12,	'Ponorogo',	1,	'11/03/2020',	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(18,	37,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'10/29/2020',	'ponorgo',	1,	4,	17,	11,	1,	'Ponorogo',	1,	'10/29/2020',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(19,	37,	'2020',	'Ronaldo Wati',	'defrindr@gmail.com',	'-',	'11/03/2020',	'Ponorogo',	1,	4,	6,	12,	12,	'Ponorogo',	1,	'11/03/2020',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
 
 DROP TABLE IF EXISTS `pelatihan_soal`;
 CREATE TABLE `pelatihan_soal` (
@@ -366,7 +386,7 @@ CREATE TABLE `pelatihan_soal` (
 
 INSERT INTO `pelatihan_soal` (`id`, `jenis_id`, `kategori_soal_id`, `nomor`, `soal`, `pilihan`, `jawaban`) VALUES
 (18,	27,	1,	1,	'12',	NULL,	'4'),
-(20,	8,	1,	1,	'2+2 = ?',	NULL,	'4');
+(23,	8,	1,	1,	'2+2 = ?',	NULL,	'4');
 
 DROP TABLE IF EXISTS `pelatihan_soal_jenis`;
 CREATE TABLE `pelatihan_soal_jenis` (
@@ -428,20 +448,25 @@ CREATE TABLE `pelatihan_soal_pilihan` (
 
 INSERT INTO `pelatihan_soal_pilihan` (`id`, `pelatihan_soal_id`, `pilihan`, `flag`) VALUES
 (20,	18,	'',	1),
-(24,	20,	'',	1);
+(29,	23,	'',	1),
+(30,	23,	'',	1);
 
 DROP TABLE IF EXISTS `pelatihan_status`;
 CREATE TABLE `pelatihan_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
+  `role_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_id` (`role_id`),
+  CONSTRAINT `pelatihan_status_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan_status` (`id`, `nama`) VALUES
-(1,	'Proses Pelengkapan Data'),
-(2,	'Menunggu'),
-(3,	'Di Setujui'),
-(4,	'Ditolak');
+INSERT INTO `pelatihan_status` (`id`, `nama`, `role_id`) VALUES
+(1,	'Proses Pelengkapan Data',	2),
+(2,	'Menunggu',	1),
+(3,	'Di Setujui',	2),
+(4,	'Monev',	1),
+(5,	'Selesai',	NULL);
 
 DROP TABLE IF EXISTS `pelatihan_tingkat`;
 CREATE TABLE `pelatihan_tingkat` (
@@ -526,48 +551,52 @@ INSERT INTO `role_action` (`id`, `role_id`, `action_id`) VALUES
 (160,	2,	31),
 (161,	2,	32),
 (162,	2,	33),
-(400,	1,	12),
-(401,	1,	13),
-(402,	1,	14),
-(403,	1,	15),
-(404,	1,	17),
-(405,	1,	18),
-(406,	1,	19),
-(407,	1,	20),
-(408,	1,	21),
-(409,	1,	22),
-(410,	1,	23),
-(411,	1,	24),
-(412,	1,	25),
-(413,	1,	26),
-(414,	1,	27),
-(415,	1,	28),
-(416,	1,	29),
-(417,	1,	30),
-(418,	1,	31),
-(419,	1,	32),
-(420,	1,	33),
-(421,	1,	55),
-(422,	1,	56),
-(423,	1,	57),
-(424,	1,	58),
-(425,	1,	36),
-(426,	1,	37),
-(427,	1,	38),
-(428,	1,	39),
-(429,	1,	40),
-(430,	1,	46),
-(431,	1,	47),
-(432,	1,	48),
-(433,	1,	49),
-(434,	1,	42),
-(435,	1,	43),
-(436,	1,	44),
-(437,	1,	45),
-(438,	1,	51),
-(439,	1,	52),
-(440,	1,	53),
-(441,	1,	54);
+(666,	1,	12),
+(667,	1,	13),
+(668,	1,	14),
+(669,	1,	15),
+(670,	1,	17),
+(671,	1,	18),
+(672,	1,	19),
+(673,	1,	20),
+(674,	1,	21),
+(675,	1,	22),
+(676,	1,	23),
+(677,	1,	24),
+(678,	1,	25),
+(679,	1,	26),
+(680,	1,	27),
+(681,	1,	28),
+(682,	1,	29),
+(683,	1,	30),
+(684,	1,	31),
+(685,	1,	32),
+(686,	1,	33),
+(687,	1,	55),
+(688,	1,	56),
+(689,	1,	57),
+(690,	1,	58),
+(691,	1,	59),
+(692,	1,	60),
+(693,	1,	61),
+(694,	1,	64),
+(695,	1,	36),
+(696,	1,	37),
+(697,	1,	38),
+(698,	1,	39),
+(699,	1,	40),
+(700,	1,	46),
+(701,	1,	47),
+(702,	1,	48),
+(703,	1,	49),
+(704,	1,	42),
+(705,	1,	43),
+(706,	1,	44),
+(707,	1,	45),
+(708,	1,	51),
+(709,	1,	52),
+(710,	1,	53),
+(711,	1,	54);
 
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu` (
@@ -593,12 +622,12 @@ INSERT INTO `role_menu` (`id`, `role_id`, `menu_id`) VALUES
 (85,	2,	4),
 (86,	2,	5),
 (87,	2,	6),
-(133,	1,	1),
-(134,	1,	2),
-(135,	1,	3),
-(136,	1,	4),
-(137,	1,	5),
-(138,	1,	6);
+(169,	1,	1),
+(170,	1,	2),
+(171,	1,	3),
+(172,	1,	4),
+(173,	1,	5),
+(174,	1,	6);
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -619,7 +648,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role_id`, `photo_url`, `peserta_pelatihan_id`, `last_login`, `last_logout`) VALUES
-(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	NULL,	'2020-11-21 14:10:48',	'2015-12-16 22:35:47'),
+(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	NULL,	'2020-11-26 15:35:06',	'2020-11-26 15:34:58'),
 (2,	'dinas_pendidikan',	'f0b171542f1bebedf72dbd45edc4755f',	'Dinas Pendidikan',	2,	'default.png',	NULL,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `wilayah_desa`;
@@ -671,4 +700,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-11-24 09:47:35
+-- 2020-11-26 14:19:18
