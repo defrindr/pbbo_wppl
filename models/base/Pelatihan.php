@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * This is the base-model class for table "pelatihan".
  *
  * @property integer $id
+ * @property string $unique_id
  * @property string $nama
  * @property string $latar_belakang
  * @property string $tujuan
@@ -20,9 +21,14 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $tingkat_id
  * @property integer $status_id
  * @property string $forum_diskusi
+ * @property string $kriteria
+ * @property integer $jumlah_target
+ * @property string $sasaran_wilayah
+ * @property string $hasil_pelaksanaan_pelatihan
  * @property integer $pelaksana_id
  * @property string $modified_at
  * @property integer $modified_by
+ * @property integer $flag
  * @property string $created_at
  * @property integer $created_by
  *
@@ -32,7 +38,6 @@ use yii\behaviors\TimestampBehavior;
  * @property \app\models\PelatihanLampiran[] $pelatihanLampirans
  * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
  * @property \app\models\PelatihanSoalJenis[] $pelatihanSoalJenis
- * @property \app\models\PelatihanSoalPilihanGanda[] $pelatihanSoalPilihanGandas
  * @property string $aliasModel
  */
 abstract class Pelatihan extends \yii\db\ActiveRecord
@@ -55,11 +60,11 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => BlameableBehavior::class,
+                'class' => BlameableBehavior::className(),
                 'updatedByAttribute' => false,
             ],
             [
-                'class' => TimestampBehavior::class,
+                'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => false,
             ],
         ];
@@ -71,15 +76,16 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'pelaksana_id', 'modified_by'], 'required'],
-            [['latar_belakang', 'tujuan', 'unique_id'], 'string'],
+            [['nama', 'latar_belakang', 'tujuan', 'tanggal_mulai', 'tingkat_id', 'kriteria', 'jumlah_target', 'sasaran_wilayah', 'pelaksana_id', 'modified_by'], 'required'],
+            [['latar_belakang', 'tujuan'], 'string'],
             [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
-            [['tingkat_id', 'status_id', 'pelaksana_id', 'modified_by'], 'integer'],
+            [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'modified_by', 'flag'], 'integer'],
+            [['unique_id'], 'string', 'max' => 32],
             [['nama'], 'string', 'max' => 200],
-            [['forum_diskusi'], 'string', 'max' => 100],
-            [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::class, 'targetAttribute' => ['tingkat_id' => 'id']],
-            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::class, 'targetAttribute' => ['pelaksana_id' => 'id']],
-            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::class, 'targetAttribute' => ['status_id' => 'id']]
+            [['forum_diskusi', 'kriteria', 'sasaran_wilayah', 'hasil_pelaksanaan_pelatihan'], 'string', 'max' => 100],
+            [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
+            [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
+            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']]
         ];
     }
 
@@ -96,14 +102,19 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'tujuan' => 'Tujuan',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
-            'tingkat_id' => 'Tingkat    ',
+            'tingkat_id' => 'Tingkat ID',
             'status_id' => 'Status ID',
             'forum_diskusi' => 'Forum Diskusi',
+            'kriteria' => 'Kriteria',
+            'jumlah_target' => 'Jumlah Target',
+            'sasaran_wilayah' => 'Sasaran Wilayah',
+            'hasil_pelaksanaan_pelatihan' => 'Hasil Pelaksanaan Pelatihan',
             'pelaksana_id' => 'Pelaksana ID',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'modified_at' => 'Modified At',
             'modified_by' => 'Modified By',
+            'flag' => 'Flag',
         ];
     }
 
@@ -116,6 +127,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'nama' => 'nama pelatihan',
             'tingkat_id' => 'tingkat pelatihan',
             'forum_diskusi' => 'link forum diskusi , ex : link grup whatsapp, telegram, discord',
+            'flag' => '0 = deleted , 1 = active',
         ]);
     }
 
@@ -124,7 +136,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getTingkat()
     {
-        return $this->hasOne(\app\models\PelatihanTingkat::class, ['id' => 'tingkat_id']);
+        return $this->hasOne(\app\models\PelatihanTingkat::className(), ['id' => 'tingkat_id']);
     }
 
     /**
@@ -132,7 +144,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelaksana()
     {
-        return $this->hasOne(\app\models\User::class, ['id' => 'pelaksana_id']);
+        return $this->hasOne(\app\models\User::className(), ['id' => 'pelaksana_id']);
     }
 
     /**
@@ -140,7 +152,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getStatus()
     {
-        return $this->hasOne(\app\models\PelatihanStatus::class, ['id' => 'status_id']);
+        return $this->hasOne(\app\models\PelatihanStatus::className(), ['id' => 'status_id']);
     }
 
     /**
@@ -148,7 +160,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanLampirans()
     {
-        return $this->hasMany(\app\models\PelatihanLampiran::class, ['pelatihan_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanLampiran::className(), ['pelatihan_id' => 'id']);
     }
 
     /**
@@ -156,7 +168,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanPesertas()
     {
-        return $this->hasMany(\app\models\PelatihanPeserta::class, ['pelatihan_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanPeserta::className(), ['pelatihan_id' => 'id']);
     }
 
     /**
@@ -164,15 +176,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
      */
     public function getPelatihanSoalJenis()
     {
-        return $this->hasMany(\app\models\PelatihanSoalJenis::class, ['pelatihan_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPelatihanSoalPilihanGandas()
-    {
-        return $this->hasMany(\app\models\PelatihanSoalPilihanGanda::class, ['pelatihan_soal_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanSoalJenis::className(), ['pelatihan_id' => 'id']);
     }
 
 
