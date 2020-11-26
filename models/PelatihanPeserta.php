@@ -33,7 +33,7 @@ class PelatihanPeserta extends BasePelatihanPeserta
     }
 
     public function getPesertaIkut(){
-        $list_pelatihan = PelatihanPeserta::find()->where(['nik' => $this->nik])->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')->select('pelatihan.id')->asArray()->all();
+        $list_pelatihan = PelatihanPeserta::find()->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')->where(['nik' => $this->nik,'pelatihan_peserta.kehadiran' => 1])->select('pelatihan.id')->asArray()->all();
         $list = [];
 
         foreach($list_pelatihan as $i) array_push($list, $i['id']);
