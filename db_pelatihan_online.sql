@@ -69,7 +69,8 @@ INSERT INTO `action` (`id`, `controller_id`, `action_id`, `name`) VALUES
 (61,	'pelatihan',	'ajukan-monev',	'Ajukan Monev'),
 (62,	'pelatihan',	'find-peserta-by-nik',	'Find Peserta By Nik'),
 (63,	'pelatihan',	's-update-kehadiran',	'S Update Kehadiran'),
-(64,	'pelatihan',	'update-kehadiran',	'Update Kehadiran');
+(64,	'pelatihan',	'update-kehadiran',	'Update Kehadiran'),
+(65,	'pelatihan',	'setujui-monev',	'Setujui Monev');
 
 SET NAMES utf8mb4;
 
@@ -297,7 +298,7 @@ CREATE TABLE `pelatihan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan` (`id`, `unique_id`, `nama`, `latar_belakang`, `tujuan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `kriteria`, `jumlah_target`, `sasaran_wilayah`, `hasil_pelaksanaan_pelatihan`, `dasar_pelaksanaan`, `absensi_kehadiran`, `rekapitulasi_nilai`, `sertifikat`, `materi_pelatihan`, `pelaksana_id`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
-(37,	'TcOg1ojTJ3EajfzVncviUSp7YyngafEp',	'React',	'-',	'-',	'2020-11-04',	'2020-11-22',	1,	3,	'http://t.me/defrindr',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2020-11-26 14:09:59',	1,	'0000-00-00 00:00:00',	1,	1),
+(37,	'TcOg1ojTJ3EajfzVncviUSp7YyngafEp',	'React',	'-',	'-',	'2020-11-04',	'2020-11-22',	1,	5,	'http://t.me/defrindr',	'-',	1,	'-',	'-',	'-',	'uploads/berkas_pelatihan/absensi_kehadiran_eyxZemx3fZIdxzl-8rbOBZuRiMTTog54.docx',	'uploads/berkas_pelatihan/rekapitulasi_nilai_dMk3_fRn59dMbmE-8VvcXDbejWyCeE6e.docx',	'uploads/berkas_pelatihan/sertifikat_JOHPajMmK3Ny_HJI2AOBaYSUMs0tnCpB.docx',	NULL,	1,	'2020-11-27 02:02:36',	1,	'0000-00-00 00:00:00',	1,	1),
 (39,	'',	'React',	'-',	'-',	'2020-11-25',	'2020-11-25',	1,	2,	'http://1t.me/defrindr',	'',	0,	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2020-11-25 06:53:31',	1,	'0000-00-00 00:00:00',	1,	1),
 (40,	'6ULT4RVWk35RNygdBtXNmecH1LTEm32A',	'Bola',	'-',	'-',	'2020-11-25',	'2020-11-03',	1,	1,	'http://t.me/defrindr',	'-',	1000,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	'2020-11-26 05:46:25',	1,	'2020-11-25 06:17:08',	1,	1);
 
@@ -365,7 +366,7 @@ CREATE TABLE `pelatihan_peserta` (
 
 INSERT INTO `pelatihan_peserta` (`id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `password`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
 (17,	40,	'2020',	'Ronaldo Wati',	'defrindr@gmail.com',	'-',	'11/03/2020',	'Ponorogo',	1,	4,	6,	12,	12,	'Ponorogo',	1,	'11/03/2020',	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
-(18,	37,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'10/29/2020',	'ponorgo',	1,	4,	17,	11,	1,	'Ponorogo',	1,	'10/29/2020',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(18,	37,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'10/29/2020',	'ponorgo',	1,	4,	17,	11,	1,	'Ponorogo',	1,	'10/29/2020',	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
 (19,	37,	'2020',	'Ronaldo Wati',	'defrindr@gmail.com',	'-',	'11/03/2020',	'Ponorogo',	1,	4,	6,	12,	12,	'Ponorogo',	1,	'11/03/2020',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
 
 DROP TABLE IF EXISTS `pelatihan_soal`;
@@ -551,52 +552,53 @@ INSERT INTO `role_action` (`id`, `role_id`, `action_id`) VALUES
 (160,	2,	31),
 (161,	2,	32),
 (162,	2,	33),
-(666,	1,	12),
-(667,	1,	13),
-(668,	1,	14),
-(669,	1,	15),
-(670,	1,	17),
-(671,	1,	18),
-(672,	1,	19),
-(673,	1,	20),
-(674,	1,	21),
-(675,	1,	22),
-(676,	1,	23),
-(677,	1,	24),
-(678,	1,	25),
-(679,	1,	26),
-(680,	1,	27),
-(681,	1,	28),
-(682,	1,	29),
-(683,	1,	30),
-(684,	1,	31),
-(685,	1,	32),
-(686,	1,	33),
-(687,	1,	55),
-(688,	1,	56),
-(689,	1,	57),
-(690,	1,	58),
-(691,	1,	59),
-(692,	1,	60),
-(693,	1,	61),
-(694,	1,	64),
-(695,	1,	36),
-(696,	1,	37),
-(697,	1,	38),
-(698,	1,	39),
-(699,	1,	40),
-(700,	1,	46),
-(701,	1,	47),
-(702,	1,	48),
-(703,	1,	49),
-(704,	1,	42),
-(705,	1,	43),
-(706,	1,	44),
-(707,	1,	45),
-(708,	1,	51),
-(709,	1,	52),
-(710,	1,	53),
-(711,	1,	54);
+(712,	1,	12),
+(713,	1,	13),
+(714,	1,	14),
+(715,	1,	15),
+(716,	1,	17),
+(717,	1,	18),
+(718,	1,	19),
+(719,	1,	20),
+(720,	1,	21),
+(721,	1,	22),
+(722,	1,	23),
+(723,	1,	24),
+(724,	1,	25),
+(725,	1,	26),
+(726,	1,	27),
+(727,	1,	28),
+(728,	1,	29),
+(729,	1,	30),
+(730,	1,	31),
+(731,	1,	32),
+(732,	1,	33),
+(733,	1,	55),
+(734,	1,	56),
+(735,	1,	57),
+(736,	1,	58),
+(737,	1,	59),
+(738,	1,	60),
+(739,	1,	61),
+(740,	1,	65),
+(741,	1,	64),
+(742,	1,	36),
+(743,	1,	37),
+(744,	1,	38),
+(745,	1,	39),
+(746,	1,	40),
+(747,	1,	46),
+(748,	1,	47),
+(749,	1,	48),
+(750,	1,	49),
+(751,	1,	42),
+(752,	1,	43),
+(753,	1,	44),
+(754,	1,	45),
+(755,	1,	51),
+(756,	1,	52),
+(757,	1,	53),
+(758,	1,	54);
 
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu` (
@@ -622,12 +624,12 @@ INSERT INTO `role_menu` (`id`, `role_id`, `menu_id`) VALUES
 (85,	2,	4),
 (86,	2,	5),
 (87,	2,	6),
-(169,	1,	1),
-(170,	1,	2),
-(171,	1,	3),
-(172,	1,	4),
-(173,	1,	5),
-(174,	1,	6);
+(175,	1,	1),
+(176,	1,	2),
+(177,	1,	3),
+(178,	1,	4),
+(179,	1,	5),
+(180,	1,	6);
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -700,4 +702,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-11-26 14:19:18
+-- 2020-11-27 02:25:26
