@@ -49,7 +49,7 @@ DynamicFormWidget::begin([
     <div class="panel-body"> -->
             <!-- widgetBody -->
 
-            <?php foreach ($modelSoal as $i => $o): ?>
+            
             <div class="item panel table-responsive ">
                 <!-- widgetItem -->
                 <table class="table table-hover">
@@ -64,6 +64,7 @@ DynamicFormWidget::begin([
                         </th>
                     </thead>
                     <tbody class="container-items soal-items">
+                        <?php foreach ($modelSoal as $i => $o): ?>
                         <tr class="item-soal">
                             <td style="min-width: 30vw;">
                                     <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
@@ -90,11 +91,10 @@ DynamicFormWidget::begin([
                                     class="glyphicon glyphicon-minus"></i></button>
                             </td>
                         </tr>
+                        <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
-            <?php endforeach; ?>
         <!-- </div>
     </div> -->
 <!-- </div>.panel -->
