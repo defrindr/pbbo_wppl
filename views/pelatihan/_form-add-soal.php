@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = 'Edit';
 ?>
 
 <p>
-    <?=Html::a('<i class="fa fa-eye-open"></i> Lihat', ['view', 'id' => $model->id], ['class' => 'btn btn-default'])?>
+    <?=Html::a('<i class="fa fa-eye-open"></i> Kembali', ['view', 'id' => $model->id], ['class' => 'btn btn-default'])?>
 </p>
 
 <?php
