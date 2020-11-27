@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
-                        <?= Html::a("Lampiran Template Sertifikat", ["{$model->getUploadedFolder()}/{$model->sertifikat}"]) ?>
+                        <?= Html::a("Lampiran Template Sertifikat", ["{$model->getUploadedUrlFolder()}{$model->sertifikat}"]) ?>
                     </div>
                 </div>
             <?php endif ?>
@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
-                        <?= Html::a("Lampiran Rekapitulasi Nilai", ["{$model->getUploadedFolder()}/{$model->rekapitulasi_nilai}"]) ?>
+                        <?= Html::a("Lampiran Rekapitulasi Nilai", ["{$model->getUploadedUrlFolder()}{$model->rekapitulasi_nilai}"]) ?>
                     </div>
                 </div>
             <?php endif ?>
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
-                        <?= Html::a("Lampiran Absensi Kehadiran", ["{$model->getUploadedFolder()}/{$model->absensi_kehadiran}"]) ?>
+                        <?= Html::a("Lampiran Absensi Kehadiran", ["{$model->getUploadedUrlFolder()}{$model->absensi_kehadiran}"]) ?>
                     </div>
                 </div>
             <?php endif ?>
