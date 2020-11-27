@@ -1,7 +1,14 @@
 <?php
 
     $exist = [];
-    $modelCheckExist = app\models\PelatihanSoalJenis::find()->where(['pelatihan_id' => $modelSoalJenis->pelatihan_id])->select('jenis_id')->all();
+
+    $modelCheckExist = app\models\PelatihanSoalJenis::find()->where(['pelatihan_id' => $model->id]);
+    
+    if($modelSoalJenis->jenis_id != null){
+        $modelCheckExist->andWhere(['!=', 'id', $modelSoalJenis->id]);
+    }
+    
+    $modelCheckExist = $modelCheckExist->select('jenis_id')->all();
     foreach($modelCheckExist as $data){
         array_push($exist, $data->jenis_id);
     }

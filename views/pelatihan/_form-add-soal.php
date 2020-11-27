@@ -7,7 +7,7 @@ use yii\helpers\Html;
  * @var app\models\Pelatihan $model
  */
 
-$this->title = 'Soal ' . $model->nama . ', ' . 'Edit';
+$this->title = 'Soal ' . $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Pelatihan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => (string) $model->nama, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Edit';
@@ -52,6 +52,7 @@ use yii\bootstrap\ActiveForm;
                     'icon' => 'glyphicon glyphicon-book',
                     'content' => $this->render('_soal_jenis.php',[
                         'modelSoalJenis' => $modelSoalJenis,
+                        'model' => $model,
                         'form' => $form,
                     ]),
                     'buttons' => [
@@ -69,6 +70,7 @@ use yii\bootstrap\ActiveForm;
                     'content' => $this->render('_soal.php',[
                         'modelSoal' => $modelSoal, 
                         'modelSoalPilihan' => $modelSoalPilihan, 
+                        'model' => $model,
                         'form' => $form,
                     ]),
                     'buttons' => [
