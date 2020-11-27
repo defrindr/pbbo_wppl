@@ -21,7 +21,17 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
+        ],
+        'school'=>[
+            'class'=>'yii\web\User',
+            'identityClass' => 'app\models\PelatihanPeserta',
+            'enableAutoLogin' => false,
+            'authTimeout' => 60*30,
+            'loginUrl' => ['peserta/login'],
+            'identityCookie' => [
+                'name' => '_panelSchool',
+            ]	
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -67,6 +77,7 @@ $config = [
             // Disable r= routes
             'enablePrettyUrl' => true,
             'rules' => array(
+                'posttest/<unique_id:\w+>' => 'posttest/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
