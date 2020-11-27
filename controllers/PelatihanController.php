@@ -425,8 +425,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         $extension = end($tmp);
         $filename .= \Yii::$app->security->generateRandomString() . ".{$extension}";
         $path = $dir . $filename;
-        $file->saveAs($path);
-        return $url.$filename;
+        if($file->saveAs($path)) return $url.$filename;
     }
     
     public function actionAjukanMonev($id)
@@ -468,12 +467,31 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     Yii::$app->session->setFlash('error', 'Data gagal di validasi.');
                 }
             }catch(\Throwable $e){
-                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui'.$e);
+                Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
             }
         }
         return $this->render('form-upload-monev',[
             'model' => $model
         ]);
+    }
+
+    public function actionSetujuiMonev($id){
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 4])->one();
+        if($model == false){
+            throw new NotFoundHttpException();
+        }
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+
+        if($_POST){
+            try{
+                $model->status_id = 5; // status selesai
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Monev Pelatihan berhasil disetujui');
+            }catch(\Throwable $th){
+                Yii::$app->session->setFlash('error', 'Monev Pelatihan gagal disetujui');
+            }
+        }
+        return $this->redirect(['pelatihan/view', 'id' => $model->id]);
     }
 
 

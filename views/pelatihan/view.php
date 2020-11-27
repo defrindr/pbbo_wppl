@@ -1,5 +1,6 @@
 <?php
 
+use app\components\RoleType;
 use app\models\PelatihanLampiran;
 use app\models\PelatihanSoalJenis;
 use dmstr\bootstrap\Tabs;
@@ -77,6 +78,38 @@ $this->params['breadcrumbs'][] = 'View';
                             :
                             '<span class="label label-warning">?</span>'),
                     ],
+                    [
+                        'attribute' => 'dasar_pelaksanaan',
+                        'visible' => ($model->status_id >= 4)
+                    ],
+                    [
+                        'attribute' => 'hasil_pelaksanaan_pelatihan',
+                        'visible' => ($model->status_id >= 4)
+                    ],
+                    [
+                        'attribute' => 'sertifikat',
+                        'visible' => ($model->status_id >= 4),
+                        'value' => function($model){
+                            return "<a href='".Yii::$app->request->baseUrl."/".$model->sertifikat."'>Download Template Sertifikat</a>";
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'rekapitulasi_nilai',
+                        'visible' => ($model->status_id >= 4),
+                        'value' => function($model){
+                            return "<a href='".Yii::$app->request->baseUrl."/".$model->rekapitulasi_nilai."'>Download Rekapitulasi Nilai</a>";
+                        },
+                        'format' => 'html'
+                    ],
+                    [
+                        'attribute' => 'absensi_kehadiran',
+                        'visible' => ($model->status_id >= 4),
+                        'value' => function($model){
+                            return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
+                        },
+                        'format' => 'html'
+                    ],
                     // 'created_at',
                     // 'created_by',
                     // 'modified_at',
@@ -86,6 +119,11 @@ $this->params['breadcrumbs'][] = 'View';
             ]);?>
 
             <hr/>
+            
+            <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Sertifikat', ["/$model->sertifikat"],
+                [
+                    'class' => 'btn btn-danger',
+                ]);?>
 
             <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
                 [
@@ -107,9 +145,16 @@ $this->params['breadcrumbs'][] = 'View';
                         'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
                         'data-method' => 'post',
                     ]);
-            }else if(($model->status_id==3 || $model->status_id = 4) && $model->pelaksana_id == \Yii::$app->user->identity->role_id) {
-            // }else if($model->status_id==3) {
+            }else if(($model->status_id==3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
                 echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
+            }
+            if($model->status_id == 4 && \Yii::$app->user->identity->role_id == RoleType::SA) {
+                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui Monev', ['setujui-monev', 'id' => $model->id], [    
+                    'class' => 'btn btn-success',
+                    'style' => "margin-left: 5px",
+                    'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+                    'data-method' => 'post',
+                ]);
             }
             ?>
             <?php $this->endBlock();?>
