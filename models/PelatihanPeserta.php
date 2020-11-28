@@ -47,7 +47,7 @@ class PelatihanPeserta extends BasePelatihanPeserta
         if($model){
             $model = $model->toArray();
             unset($model['pelatihan_id']);
-            unset($model['password']);
+            unset($model['user_id']);
             unset($model['kehadiran']);
             unset($model['nilai_pretest']);
             unset($model['nilai_posttest']);

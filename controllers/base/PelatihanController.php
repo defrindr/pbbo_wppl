@@ -4,7 +4,9 @@
 
 namespace app\controllers\base;
 
+use app\components\RoleType;
 use app\models\Action;
+use app\models\base\Role;
 use app\models\Pelatihan;
 use app\models\PelatihanLampiran;
 use app\models\Peserta;
@@ -45,6 +47,23 @@ class PelatihanController extends Controller
      */
     public function actionIndex()
     {
+        $user = Yii::$app->user->identity;
+        if($user->role_id == RoleType::PESERTA){
+            $list_user = [];
+            $model_user = PelatihanPeserta::find()->where(['user_id' => $user->id])->select('pelatihan_id')->distinct()->all();
+            foreach($model_user as $o){
+                array_push($list_user, $o->pelatihan_id);
+            }
+            $model = Pelatihan::find()->where(['and', ['in', 'id', $list_user], ['>=', 'status_id', 3 ]])->all();
+            Tabs::clearLocalStorage();
+
+            Url::remember();
+            \Yii::$app->session['__crudReturnUrl'] = null;
+            $this->layout = "../layouts-peserta/main";
+            return $this->render('index_peserta', [
+                'model' => $model
+            ]);
+        }
         $searchModel = new PelatihanSearch;
         $dataProvider = $searchModel->search($_GET);
 
@@ -90,6 +109,9 @@ class PelatihanController extends Controller
 
         try {
             if ($model->load($_POST)) {
+                if(Yii::$app->user->identity->role_id != RoleType::SA){
+                    $model->pelaksana_id = Yii::$app->user->identity->id;
+                }
                 if(!preg_match("/https?/",$model->forum_diskusi)) {
                     $model->forum_diskusi = "http://{$model->forum_diskusi}";
                 }
@@ -106,10 +128,11 @@ class PelatihanController extends Controller
                 }
 
                 $model->unique_id = Yii::$app->security->generateRandomString(32);
+                $model->created_by = \Yii::$app->user->identity->id;
                 $model->modified_by = \Yii::$app->user->identity->id;
                 // validate all models
                 $valid = $model->validate();
-                
+
                 if ($valid) {
                     $model->save(); // save model untuk mendapatkan id
 

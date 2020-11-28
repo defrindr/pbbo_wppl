@@ -10,6 +10,7 @@ use Yii;
  * This is the base-model class for table "pelatihan_peserta".
  *
  * @property integer $id
+ * @property integer $user_id
  * @property integer $pelatihan_id
  * @property string $nik
  * @property string $nama
@@ -24,7 +25,6 @@ use Yii;
  * @property integer $rw
  * @property string $alamat
  * @property integer $desa_id
- * @property string $password
  * @property integer $kehadiran
  * @property integer $nilai_pretest
  * @property integer $nilai_posttest
@@ -41,6 +41,7 @@ use Yii;
  *
  * @property \app\models\WilayahDesa $desa
  * @property \app\models\MasterJenisKelamin $jenisKelamin
+ * @property \app\models\User $user
  * @property \app\models\Pelatihan $pelatihan
  * @property \app\models\MasterPendidikan $pendidikan
  * @property \app\models\MasterPekerjaan $pekerjaan
@@ -67,14 +68,14 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id', 'password'], 'required'],
-            [['pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id'], 'required'],
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
             [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
-            [['password'], 'string', 'max' => 200],
             [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']],
             [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
             [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']],
             [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']]
@@ -88,6 +89,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'user_id' => 'User ID',
             'pelatihan_id' => 'Pelatihan ID',
             'nik' => 'Nik',
             'nama' => 'Nama',
@@ -102,7 +104,6 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'rw' => 'Rw',
             'alamat' => 'Alamat',
             'desa_id' => 'Desa ID',
-            'password' => 'Password',
             'kehadiran' => 'Kehadiran',
             'nilai_pretest' => 'Nilai Pretest',
             'nilai_posttest' => 'Nilai Posttest',
@@ -155,6 +156,14 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function getJenisKelamin()
     {
         return $this->hasOne(\app\models\MasterJenisKelamin::className(), ['id' => 'jenis_kelamin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
     }
 
     /**

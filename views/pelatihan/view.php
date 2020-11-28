@@ -119,12 +119,6 @@ $this->params['breadcrumbs'][] = 'View';
             ]);?>
 
             <hr/>
-            
-            <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Sertifikat', ["/$model->sertifikat"],
-                [
-                    'class' => 'btn btn-danger',
-                ]);?>
-
             <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
                 [
                     'class' => 'btn btn-danger',
@@ -139,7 +133,7 @@ $this->params['breadcrumbs'][] = 'View';
                         'data-method' => 'post',
                     ]);
             }else if($model->status_id==2 && \app\components\RoleType::SA == \Yii::$app->user->identity->role_id) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan', ['setujui', 'id' => $model->id],
+                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui', ['setujui', 'id' => $model->id],
                     [
                         'class' => 'btn btn-primary',
                         'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',

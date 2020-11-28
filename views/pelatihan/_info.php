@@ -1,3 +1,7 @@
+<?php
+use app\components\RoleType;
+
+?>
 
 			<?=$form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display: none'])?>
 			<?=$form->field($model, 'nama')->textInput(['maxlength' => true])?>
@@ -27,11 +31,16 @@
                     'disabled' => (isset($relAttributes) && isset($relAttributes['tingkat_id'])),
                 ]
             );?>
-			<?=$form->field($model, 'forum_diskusi')->textInput(['maxlength' => true])?>
-			<?= $form->field($model, 'pelaksana_id')->dropDownList(
-                \yii\helpers\ArrayHelper::map(app\models\User::find()->all(), 'id', 'name'),
-                [
-                    'prompt' => 'Select',
-                    'disabled' => (isset($relAttributes) && isset($relAttributes['pelaksana_id'])),
-                ]
-            );?>
+            <?=$form->field($model, 'forum_diskusi')->textInput(['maxlength' => true])?>
+            
+            <?php
+            if(Yii::$app->user->identity->role_id == RoleType::SA):
+                echo $form->field($model, 'pelaksana_id')->dropDownList(
+                    \yii\helpers\ArrayHelper::map(app\models\User::find()->all(), 'id', 'name'),
+                    [
+                        'prompt' => 'Select',
+                        'disabled' => (isset($relAttributes) && isset($relAttributes['pelaksana_id'])),
+                    ]
+                );
+            endif;
+            ?>

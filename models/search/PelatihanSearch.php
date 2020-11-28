@@ -49,7 +49,7 @@ class PelatihanSearch extends Pelatihan
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
         ]);
 
         $this->load($params);

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\RoleType;
 use app\models\base\PelatihanSoalPilihan as BasePelatihanSoalPilihan;
+use app\models\base\User;
 use app\models\Pelatihan;
 use app\models\PelatihanPeserta;
 use app\models\PelatihanSoal;
@@ -22,15 +23,25 @@ use yii\web\UploadedFile;
  */
 class PelatihanController extends \app\controllers\base\PelatihanController
 {
+
+    public function actionDetail($unique_id){
+        $model = Pelatihan::findOne(['unique_id' => $unique_id]);
+        if($model == []) return $model;
+        return $this->render('detail',[
+            'model' => $model
+        ]);
+    }
+
     public function actionAddPeserta($id)
     {
+        $transaction = Yii::$app->db->beginTransaction();
         $model = $this->findModel($id);
         if($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
         }
+
         $modelPeserta = $model->pelatihanPesertas;
-        $transaction = Yii::$app->db->beginTransaction();
         if (count($modelPeserta) < 1) {
             $modelPeserta = [new PelatihanPeserta()];
         }
@@ -44,7 +55,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             Pelatihan::loadMultiple($modelPeserta, Yii::$app->request->post());
 
             //  check data yang dihapus
-            $deletedLampiranIDs = array_diff($oldLampiranIDs, array_filter(ArrayHelper::map($modelPeserta, 'id', 'id')));
+            $deletedPesertaIDs = array_diff($oldLampiranIDs, array_filter(ArrayHelper::map($modelPeserta, 'id', 'id')));
 
             // ajax validation
             if (Yii::$app->request->isAjax) {
@@ -63,14 +74,13 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $model->save(); // save model untuk mendapatkan id
 
                     // check apakah ada data yang dihapus
-                    if (!empty($deletedLampiranIDs)) {
-                        PelatihanPeserta::deleteAll(['id' => $deletedLampiranIDs]);
+                    if (!empty($deletedPesertaIDs)) {
+                        PelatihanPeserta::deleteAll(['id' => $deletedPesertaIDs]);
                     }
 
                     // menambahkan id pelatihan kedalam model peserta & soal
                     foreach ($modelPeserta as $i => $o) {
                         $o->pelatihan_id = $model->id;
-                        $o->password = $o->tanggal_lahir;
                         $modelPeserta[$i] = $o;
                     }
 
@@ -88,6 +98,19 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
                     // save dynamic model
                     foreach ($modelPeserta as $i => $o) {
+                        $checkUser = \app\models\User::findOne(['username' => $o->nik]);
+                        if($checkUser == []) {
+                            $newUser = new User();
+                            $newUser->username = $o->nik;
+                            $newUser->name = $o->nama;
+                            $newUser->password = md5($o->tanggal_lahir);
+                            $newUser->role_id = 3;
+        
+                            $newUser->save();
+                            $checkUser = $newUser;
+                        }
+        
+                        $o->user_id = $checkUser->id; //get user id
                         $o->save();
                     }
 

@@ -4,6 +4,7 @@ namespace app\components;
 class RoleType {
     const SA = 1;
     const PEMATERI = 2;
+    const PESERTA = 3;
 
 
     public static function disallow($model){

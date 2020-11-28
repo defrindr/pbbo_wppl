@@ -70,10 +70,10 @@
 					<img src="<?= \Yii::$app->request->baseUrl. "/uploads/error_image.png" ?>">
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12 box_error">
-					<h1>404 PAGE NOT FOUND </h1>
+					<h1><?= $content ?> </h1>
 					<h2>Ohhh snap...</h2>
 					<p class="error_text">Something went wrong, Please call Administrator.</p>
-					<a href="index.html">Go to home page.</a>
+					<a href="#">Go to home page.</a>
 					<div class="ball"></div>
 				</div>
 			</div>
