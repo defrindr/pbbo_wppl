@@ -4,7 +4,7 @@
 use app\models\Setting;
 use app\models\Barang;
 use app\models\StokBarang;
-$this->title = 'Daftar Pelatihan';
+$this->title = 'Pelatihan : '. $model->nama;
 
 //$tableData = array_diff($tableData,$stk);
 ?>
@@ -36,23 +36,19 @@ $this->title = 'Daftar Pelatihan';
 
     <?php } ?>
 
-    <?php if(count($model)) : ?>
-        <?php foreach($model as $o):
-            $status = ((strtotime(date('Y-m-d')) > strtotime($o->tanggal_mulai)) && (strtotime(date('Y-m-d')) < strtotime($o->tanggal_selesai))) ? 1 : 0;
-            ?>
+    <?php if(count($model)) :
+            foreach($model->getPelatihanSoalJenis()->all() as $o): ?>
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
-            <div class="small-box <?= ($status) ? "bg-aqua" : "bg-red" ?>">
+            <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h3><?= $o->nama ?></h3>
-
-                    <p><?= date("d F Y", strtotime($o->tanggal_mulai)) ?> s/d <?= date("d F Y", strtotime($o->tanggal_selesai)) ?></p>
+                    <h3><?= $o->jenis->nama ?></h3>
+                    <p>Waktu : <?= $o->waktu_pengerjaan ?> Menit</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <?php var_dump($model);die; ?>
-                <a href="<?= ($status)  ? \yii\helpers\Url::to(["/pelatihan/detail", "unique_id" => $model->unique_id]) : "#" ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="<?= \yii\helpers\Url::to([(($o->jenis_id == 1)) ? "/pretest" : '/posttest', "unique_id" => $model->unique_id]) ?>" class="small-box-footer">Mulai</a>
             </div>
         </div>
         <!-- ./col -->
