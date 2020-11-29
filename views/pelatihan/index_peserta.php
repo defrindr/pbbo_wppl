@@ -53,7 +53,7 @@ $this->title = 'Daftar Pelatihan';
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <?= Html::a('More info <i class="fa fa-arrow-circle-right"></i>',["detail", "unique_id" => $o->unique_id],['class' => 'small-box-footer']) ?>
+                <?= Html::a('More info <i class="fa fa-arrow-circle-right"></i>',["detail-pelatihan/$o->unique_id"],['class' => 'small-box-footer']) ?>
             </div>
         </div>
         <!-- ./col -->
