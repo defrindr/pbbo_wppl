@@ -16,6 +16,7 @@ use yii\helpers\Html;
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
+        <!-- /.search form -->
 
     </section>
 
