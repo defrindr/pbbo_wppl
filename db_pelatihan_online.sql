@@ -307,8 +307,8 @@ CREATE TABLE `pelatihan` (
 INSERT INTO `pelatihan` (`id`, `unique_id`, `nama`, `latar_belakang`, `tujuan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `kriteria`, `jumlah_target`, `sasaran_wilayah`, `hasil_pelaksanaan_pelatihan`, `dasar_pelaksanaan`, `absensi_kehadiran`, `rekapitulasi_nilai`, `sertifikat`, `materi_pelatihan`, `pelaksana_id`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
 (37,	'TcOg1ojTJ3EajfzVncviUSp7YyngafEp',	'React',	'-',	'-',	'2020-11-04',	'2020-11-22',	1,	1,	'http://t.me/defrindr',	'-',	1,	'-',	'-',	'-',	'uploads/berkas_pelatihan/absensi_kehadiran_eyxZemx3fZIdxzl-8rbOBZuRiMTTog54.docx',	'uploads/berkas_pelatihan/rekapitulasi_nilai_dMk3_fRn59dMbmE-8VvcXDbejWyCeE6e.docx',	'uploads/berkas_pelatihan/sertifikat_JOHPajMmK3Ny_HJI2AOBaYSUMs0tnCpB.docx',	NULL,	1,	'2020-11-27 10:47:15',	1,	'0000-00-00 00:00:00',	1,	1),
 (39,	'',	'React',	'-',	'-',	'2020-11-25',	'2020-11-25',	1,	2,	'http://1t.me/defrindr',	'',	0,	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	'2020-11-25 06:53:31',	1,	'0000-00-00 00:00:00',	1,	1),
-(40,	'6ULT4RVWk35RNygdBtXNmecH1LTEm32A',	'Bola',	'-',	'-',	'2020-11-25',	'2020-11-30',	1,	5,	'http://t.me/defrindr',	'-',	1000,	'-',	'-',	'-',	'uploads/berkas_pelatihan/absensi_kehadiran_HjIjYgcp5lXgbMkjknWYyxsOztj0gzAt.docx',	'uploads/berkas_pelatihan/rekapitulasi_nilai_xI88JlIfEH2W8-tYEpaDKxCjThBCBNjA.docx',	'uploads/berkas_pelatihan/sertifikat_hg_QeXwe0vXrnIXrMIIBXO8ELd0N5Hst.docx',	NULL,	2,	'2020-11-29 09:04:59',	1,	'2020-11-25 06:17:08',	1,	1),
-(41,	'3qBUyxImSr5HQB31L1ip4RPndeMPNxRi',	'Piano',	'=',	'=',	'2020-11-25',	'2020-11-28',	1,	1,	'http://1t.me/defrindr',	'-',	4,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	'2020-11-28 02:10:35',	2,	'2020-11-28 02:10:35',	2,	1);
+(40,	'6ULT4RVWk35RNygdBtXNmecH1LTEm32A',	'Bola',	'-',	'-',	'2020-11-25',	'2020-11-30',	1,	5,	'http://t.me/defrindr',	'-',	1000,	'-',	'-',	'-',	'uploads/berkas_pelatihan/absensi_kehadiran_HjIjYgcp5lXgbMkjknWYyxsOztj0gzAt.docx',	'uploads/berkas_pelatihan/rekapitulasi_nilai_xI88JlIfEH2W8-tYEpaDKxCjThBCBNjA.docx',	'uploads/berkas_pelatihan/sertifikat_hg_QeXwe0vXrnIXrMIIBXO8ELd0N5Hst.docx',	NULL,	2,	'2020-11-29 12:08:12',	1,	'2020-11-25 06:17:08',	1,	1),
+(41,	'3qBUyxImSr5HQB31L1ip4RPndeMPNxRi',	'Piano',	'=',	'=',	'2020-11-25',	'2020-11-28',	1,	1,	'http://1t.me/defrindr',	'-',	4,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	'2020-11-29 11:57:31',	2,	'2020-11-28 02:10:35',	1,	1);
 
 DROP TABLE IF EXISTS `pelatihan_lampiran`;
 CREATE TABLE `pelatihan_lampiran` (
@@ -390,6 +390,7 @@ CREATE TABLE `pelatihan_soal` (
   `soal` text NOT NULL,
   `pilihan` text DEFAULT NULL,
   `jawaban` text DEFAULT NULL COMMENT 'jawaban dari sistem',
+  `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `jenis_id` (`jenis_id`),
   KEY `kategori_soal_id` (`kategori_soal_id`),
@@ -397,12 +398,12 @@ CREATE TABLE `pelatihan_soal` (
   CONSTRAINT `pelatihan_soal_ibfk_3` FOREIGN KEY (`jenis_id`) REFERENCES `pelatihan_soal_jenis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan_soal` (`id`, `unique_id`, `jenis_id`, `kategori_soal_id`, `nomor`, `soal`, `pilihan`, `jawaban`) VALUES
-(45,	'',	29,	1,	1,	'coba',	NULL,	'4'),
-(46,	'DdXfFTBNNiOL12KyKAN5qXOqS8Ij9kSFxZR1za5vaEk5eiAIge',	28,	3,	1,	'test',	NULL,	''),
-(50,	'6O_Ugn_yCmgTyOgsdq8sv1H-k3rf1h96amWI3MY9wwZJDXxlbm',	30,	1,	1,	'Siapa Aku',	NULL,	'Manusia'),
-(51,	'rYnh13KqYN18dzn6bVpKJsBqGf4mxQzMOpN7mTwq6I5y6k89VC',	30,	4,	1,	'yang bukan perlengkapan dapur adalah',	NULL,	'kuas|seruling'),
-(52,	'SZ28_CTWmCMEJaSPKtG8GFNCwDILhhS33QRXw1C4pjLq5Y-BZj',	30,	3,	1,	'Warna Kesukaanku adalah',	NULL,	'biru');
+INSERT INTO `pelatihan_soal` (`id`, `unique_id`, `jenis_id`, `kategori_soal_id`, `nomor`, `soal`, `pilihan`, `jawaban`, `order`) VALUES
+(54,	'BGJXUuDVQkqe5GX7PP1Ebi369NPgyhyASLHoXyUE976aLezbuN',	29,	1,	1,	'coba',	NULL,	'4',	1),
+(55,	'FmEOj-HA8HBnDu71QfdM4bvpbU9THJidf2xP6tUKOz_l9HaUY0',	30,	1,	1,	'Siapa Aku',	NULL,	'Manusia',	1),
+(56,	'EgxfksZ8GLiTLYeExdQlnBan8Qf6_ZNuDKaNJ7dpa1WVwCXfMH',	30,	4,	1,	'yang bukan perlengkapan dapur adalah',	NULL,	'kuas|seruling',	2),
+(57,	'QbsE_uQrz9JXXaYHHhUN6krLxmd_EiD2nSnLiZy9er6KseKXME',	30,	3,	1,	'Warna Kesukaanku adalah',	NULL,	'biru',	3),
+(58,	'WNVQCgjxwCZbIwWG7oXCQlxqmK1navHjBaDzWAjBqCQBtI7sMo',	28,	3,	1,	'test',	NULL,	'',	1);
 
 DROP TABLE IF EXISTS `pelatihan_soal_jenis`;
 CREATE TABLE `pelatihan_soal_jenis` (
@@ -439,15 +440,15 @@ CREATE TABLE `pelatihan_soal_peserta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_soal_peserta` (`id`, `peserta_id`, `jenis_soal`, `selesai`, `waktu_mulai`, `waktu_selesai`) VALUES
-(10,	26,	28,	0,	'2020-11-29 14:33:53',	'2020-11-29 15:33:53'),
-(11,	26,	30,	0,	'2020-11-29 16:12:29',	'2020-11-30 16:12:29');
+(11,	26,	30,	0,	'2020-11-29 16:12:29',	'2020-11-30 16:12:29'),
+(12,	26,	28,	0,	'2020-11-29 23:24:10',	'2020-11-30 00:24:10');
 
 DROP TABLE IF EXISTS `pelatihan_soal_peserta_jawaban`;
 CREATE TABLE `pelatihan_soal_peserta_jawaban` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `peserta_id` int(11) NOT NULL,
   `soal_id` int(11) NOT NULL,
-  `jabawan` text NOT NULL COMMENT 'jawaban peserta',
+  `jawaban` text NOT NULL COMMENT 'jawaban peserta',
   PRIMARY KEY (`id`),
   KEY `peserta_id` (`peserta_id`),
   KEY `soal_id` (`soal_id`),
@@ -455,6 +456,10 @@ CREATE TABLE `pelatihan_soal_peserta_jawaban` (
   CONSTRAINT `pelatihan_soal_peserta_jawaban_ibfk_2` FOREIGN KEY (`soal_id`) REFERENCES `pelatihan_soal` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `pelatihan_soal_peserta_jawaban` (`id`, `peserta_id`, `soal_id`, `jawaban`) VALUES
+(1,	26,	56,	'kuas|seruling'),
+(2,	26,	55,	'Manusia'),
+(3,	26,	57,	'test');
 
 DROP TABLE IF EXISTS `pelatihan_soal_pilihan`;
 CREATE TABLE `pelatihan_soal_pilihan` (
@@ -468,18 +473,18 @@ CREATE TABLE `pelatihan_soal_pilihan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_soal_pilihan` (`id`, `pelatihan_soal_id`, `pilihan`, `flag`) VALUES
-(91,	45,	'1',	1),
-(92,	45,	'2',	1),
-(93,	45,	'4',	1),
-(94,	46,	'',	1),
-(103,	50,	'Manusia',	1),
-(104,	50,	'Robot',	1),
-(105,	50,	'Obat Nyamuk',	1),
-(106,	51,	'kuas',	1),
-(107,	51,	'seruling',	1),
-(108,	51,	'garpu',	1),
-(109,	51,	'wajan',	1),
-(110,	52,	'',	1);
+(114,	54,	'1',	1),
+(115,	54,	'2',	1),
+(116,	54,	'4',	1),
+(117,	55,	'Manusia',	1),
+(118,	55,	'Robot',	1),
+(119,	55,	'Obat Nyamuk',	1),
+(120,	56,	'kuas',	1),
+(121,	56,	'seruling',	1),
+(122,	56,	'garpu',	1),
+(123,	56,	'wajan',	1),
+(124,	57,	'',	1),
+(125,	58,	'',	1);
 
 DROP TABLE IF EXISTS `pelatihan_status`;
 CREATE TABLE `pelatihan_status` (
@@ -677,9 +682,9 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role_id`, `photo_url`, `last_login`, `last_logout`) VALUES
-(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-11-29 16:53:38',	'2020-11-29 15:47:35'),
+(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-11-29 19:07:02',	'2020-11-29 19:08:30'),
 (2,	'dinas_pendidikan',	'f0b171542f1bebedf72dbd45edc4755f',	'Dinas Pendidikan',	2,	'default.png',	'2020-11-28 10:03:41',	'2020-11-28 10:07:33'),
-(3,	'1912',	'7d075590d614e32721b829d13641273c',	'Defri Indra Mahardika',	3,	NULL,	'2020-11-29 15:47:40',	'2020-11-29 16:53:29'),
+(3,	'1912',	'7d075590d614e32721b829d13641273c',	'Defri Indra Mahardika',	3,	NULL,	'2020-11-29 20:21:47',	'2020-11-29 19:06:55'),
 (4,	'2020',	'017e94164d8a30d3de2c4ba810859265',	'Endah Kustianingsih',	3,	NULL,	NULL,	NULL);
 
 DROP TABLE IF EXISTS `wilayah_desa`;
@@ -731,4 +736,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-11-29 10:06:47
+-- 2020-11-29 16:50:14
