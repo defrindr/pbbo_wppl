@@ -59,7 +59,7 @@ class PelatihanController extends Controller
 
             Url::remember();
             \Yii::$app->session['__crudReturnUrl'] = null;
-            $this->layout = "../layouts-peserta/main";
+            // $this->layout = "../layouts-peserta/main";
             return $this->render('index_peserta', [
                 'model' => $model
             ]);
