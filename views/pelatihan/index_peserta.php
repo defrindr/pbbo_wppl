@@ -14,31 +14,31 @@ $this->title = 'Daftar Pelatihan';
 <div class="site-index">
 
     <div class="row">
-      <?php if($outl == TRUE && $stk != NULL){ ?>
+        <?php if($outl == TRUE && $stk != NULL){ ?>
         <style>
-        .content {
-            min-height: 0px;
-            padding-top: 5px;
-            margin-right: auto;
-            margin-left: auto;
-            padding-left: 15px;
-            padding-right: 15px;
-        }
+            .content {
+                min-height: 0px;
+                padding-top: 5px;
+                margin-right: auto;
+                margin-left: auto;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
         </style>
         <div class="content">
-        <div class="alert alert-warning alert-dismissible">
+            <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4><i class="icon fa fa-warning"></i> Info!</h4>
                 <?php foreach($stk as $i => $s){
                     $dat = Barang::find()->where(['id' => $s['id_barang']])->one();
                     echo 'Barang : '.$dat->nama.', Stok dibawah '.$min.'<hr>';
               }; ?>
-              </div>
             </div>
+        </div>
 
-    <?php } ?>
+        <?php } ?>
 
-    <?php if(count($model)) : ?>
+        <?php if(count($model)) : ?>
         <?php foreach($model as $o):
             $status = ((strtotime(date('Y-m-d')) > strtotime($o->tanggal_mulai)) && (strtotime(date('Y-m-d')) < strtotime($o->tanggal_selesai))) ? 1 : 0;
             ?>
@@ -48,7 +48,8 @@ $this->title = 'Daftar Pelatihan';
                 <div class="inner">
                     <h3><?= $o->nama ?></h3>
 
-                    <p><?= date("d F Y", strtotime($o->tanggal_mulai)) ?> s/d <?= date("d F Y", strtotime($o->tanggal_selesai)) ?></p>
+                    <p><?= date("d F Y", strtotime($o->tanggal_mulai)) ?> s/d
+                        <?= date("d F Y", strtotime($o->tanggal_selesai)) ?></p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
@@ -58,7 +59,15 @@ $this->title = 'Daftar Pelatihan';
         </div>
         <!-- ./col -->
         <?php endforeach ?>
-    <?php endif ?>
+        <?php else: ?>
+        <div class="col-lg-6 col-xs-12">
+            <div class="box box-danger">
+                <div class="box-body">
+                    Anda belum Mengikuti Pelatihan Apapun
+                </div>
+            </div>
+        </div>
+        <?php endif ?>
     </div>
 
 </div>

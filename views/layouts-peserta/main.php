@@ -41,10 +41,10 @@ $pluginAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/a
     <?= $this->render(
         'left.php',
         [
+            'list_id_soal' => $this->context->list_id_soal,
             'directoryAsset' => $directoryAsset,
             'pluginAsset' => $pluginAsset,
-        ]
-    )
+        ])
     ?>
 
     <?= $this->render(

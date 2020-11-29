@@ -1,10 +1,10 @@
 <?php
 
 $this->title = (strpos($model->nama, "latihan") ? $model->nama : "Pelatihan {$model->nama}");
+
 $this->registerJs('
 // Set the date we re counting down to
 var countDownDate = new Date("'. $pelatihan_soal_peserta->waktu_selesai. '").getTime();
-console.log(countDownDate);
 // Update the count down every 1 second
 var x = setInterval(function() {
 
@@ -35,62 +35,39 @@ var x = setInterval(function() {
     location.reload();
     document.getElementById("countdown").innerHTML = "EXPIRED";
   }
-}, 1000);');
+}, 1000);
+
+let list_id_soal = '. json_encode($this->context->list_id_soal). ';
+
+$(document).ready(function(){
+    requestSoal(list_id_soal[0].unique_id);
+});
+
+function handleChangeSoal(ev){
+    let index = $(ev).data("soal");
+    updateJawaban();
+    requestSoal(list_id_soal[index].unique_id);
+}
+
+const requestSoal = (unique) => {
+    let container = document.querySelector("#soal-container");
+    fetch("'. \yii\helpers\Url::to(['/posttest/request-soal/']).'/"+unique).then(response => response.text()).then(response => {
+        container.innerHTML = response;
+    });
+}
+
+const updateJawaban = () => {
+    $.ajax({
+        url: "'. \yii\helpers\Url::to(['posttest/post-answer']). '",
+        method: "POST",
+        data: $("#form-soal").serialize()
+    });
+}
+
+', yii\web\View::POS_END, "loadSoal");
 ?>
+
 <div class="mt-5">
-    <form action="<?= \yii\helpers\Url::to(["/pretest/finish/$model->unique_id"]) ?>" method="post">
-    <?php 
-    $index_soal = 1;
-    foreach($soals as $soal): ?>
-    <div class="container box box-primary mt-2">
-        <div class="box-header">
-            <h4>
-                <?= $index_soal ."). ". $soal->soal ?>
-            </h4>
-        </div>
-        <div class="box-body">
-            <?php if($soal->kategori_soal_id == 1): // multiple choices ?>
-                <?php foreach($soal->pelatihanSoalPilihans as $pilihan) : ?>
-                <div class="form-group">
-                    <input type="Radio" name="<?= $soal->id ?>" id="soal-<?= $soal->id ?>" value="<?= $pilihan->pilihan ?>">
-                    <label class="form-check-label" for="soal-<?= $soal->id ?>">
-                        <?= $pilihan->pilihan ?>
-                    </label>
-                    </div>
-                <?php endforeach ?>
-                
-            <?php elseif($soal->kategori_soal_id == 2):  // essay?>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <textarea name="<?= $soal->id ?>" id="soal-<?= $soal->id ?>" cols="30" rows="10" class="form-control" placeholder="Jawaban Anda"></textarea>
-                    </div>
-                </div>
-                
-            <?php elseif($soal->kategori_soal_id == 3): // short answer ?>
-                <?php foreach($soal->pelatihanSoalPilihans as $pilihan) : ?>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <input type="text" name="<?= $soal->id ?>" id="soal-<?= $soal->id ?>" value="" class="form-control" placeholder="Jawaban Anda">
-                    </div>
-                <?php endforeach ?>
-                
-            <?php elseif($soal->kategori_soal_id == 4): // checkbox?>
-                <?php foreach($soal->pelatihanSoalPilihans as $pilihan) : ?>
-                <div class="form-group">
-                    <input type="checkbox" name="<?= $soal->id ?>[]" id="soal-<?= $soal->id ?>" value="<?= $pilihan->pilihan ?>">
-                    <label class="form-check-label" for="soal-<?= $soal->id ?>">
-                        <?= $pilihan->pilihan ?>
-                    </label>
-                    </div>
-                <?php endforeach ?>
-                
-            <?php endif ?>
-            <?php $index_soal++ ?>
-        </div>
+    <div class="container box box-primary mt-2" id="soal-container">
     </div>
-    <?php endforeach ?>
-    <button class="btn btn-primary" name="finish">
-        Selesai
-    </button>
-    </form>
 </div>

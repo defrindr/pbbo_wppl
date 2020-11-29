@@ -12,7 +12,7 @@ use Yii;
  * @property integer $id
  * @property integer $peserta_id
  * @property integer $soal_id
- * @property string $jabawan
+ * @property string $jawaban
  *
  * @property \app\models\PelatihanPeserta $peserta
  * @property \app\models\PelatihanSoal $soal
@@ -37,9 +37,9 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['peserta_id', 'soal_id', 'jabawan'], 'required'],
+            [['peserta_id', 'soal_id', 'jawaban'], 'required'],
             [['peserta_id', 'soal_id'], 'integer'],
-            [['jabawan'], 'string'],
+            [['jawaban'], 'string'],
             [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']],
             [['soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoal::className(), 'targetAttribute' => ['soal_id' => 'id']]
         ];
@@ -54,7 +54,7 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
             'id' => 'ID',
             'peserta_id' => 'Peserta ID',
             'soal_id' => 'Soal ID',
-            'jabawan' => 'Jabawan',
+            'jawaban' => 'Jawaban',
         ];
     }
 
@@ -64,7 +64,7 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
     public function attributeHints()
     {
         return array_merge(parent::attributeHints(), [
-            'jabawan' => 'jawaban peserta',
+            'jawaban' => 'jawaban peserta',
         ]);
     }
 

@@ -186,6 +186,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     }
 
                     foreach ($modelSoal as $i => $o) {
+                        $o->order = $i+1;
                         $o->jenis_id = $modelSoalJenis->id;
                         $modelSoal[$i] = $o;
                         if($o->unique_id == null) $o->unique_id = \Yii::$app->security->generateRandomString(50);
@@ -326,6 +327,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     }
 
                     foreach ($modelSoal as $i => $o) {
+                        $o->order = $i+1;
                         $o->jenis_id = $modelSoalJenis->id;
                         $o->unique_id = \Yii::$app->security->generateRandomString(50);
                         $modelSoal[$i] = $o;

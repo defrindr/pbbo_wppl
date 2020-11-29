@@ -2,6 +2,9 @@
 namespace app\controllers;
 
 use app\models\PelatihanPeserta;
+use app\models\PelatihanSoalPesertaJawaban;
+use app\models\PelatihanSoal;
+use app\models\PelatihanSoalJenis;
 use app\models\LoginPesertaForm;
 use app\models\Pelatihan;
 use app\models\PelatihanSoalPeserta;
@@ -10,29 +13,70 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class PretestController extends Controller {
-    public function actionFinish($unique_id = null){
-        $this->layout  =  '../layouts-peserta/not-found';
-        if($unique_id == null) return $this->render('not-found');
-        $model = Pelatihan::find()->where(['unique_id' => $unique_id])->one();
-        if($model == [])  return $this->render('not-found');
-        $user = \Yii::$app->user->identity;
-        $model_jenis_soal = $model->getPelatihanSoalJenis()->where(['jenis_id' => 1])->one();
-        if($model_jenis_soal == []) return $this->render('not-found',[
-            'error' => 'Soal belum tersedia'
-        ]);
-        if(!isset($user)) return $this->redirect(['/site/login']);
-        $model_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user])->one();
-        if($model_peserta == []) return $this->render('not-found', [
-            'error' => "Anda tidak terdaftar pada pelatihan ini"
-        ]);
+    public $list_id_soal;
 
-        if($_POST){
+    public function actionPostAnswer(){
+        $user = Yii::$app->user->identity;
+        $unique_id = $_POST['soal_id'];
+        $jawaban = isset($_POST['jawaban']) ? $_POST['jawaban'] : "";
+        if(strtolower(gettype($jawaban)) == "array") $jawaban = implode("|", $jawaban);
+        if(($unique_id && $user) == false) return $this->render('not-found');
 
+        $pelatihan_soal = PelatihanSoal::findOne(['unique_id' => $unique_id]);
+        if($pelatihan_soal == null) return $this->render('not-found');
+
+        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => 1]);
+        if($pelatihan_soal_jenis == null) return $this->render('not-found');
+
+        $peserta = PelatihanPeserta::findOne(['user_id' => $user->id, 'pelatihan_id' => $pelatihan_soal_jenis->pelatihan_id]);
+        if($peserta == null) return $this->render('not-found');
+
+        $soal_peserta = PelatihanSoalPeserta::findOne(['jenis_soal' => $pelatihan_soal->jenis_id, 'peserta_id' => $peserta->id]);
+        if($soal_peserta == null) return $this->render('not-found');
+        
+        // check apakah waktu masih tersisa atau tidak 
+        $waktu_sekarang = strtotime(date("Y-m-d H:i:s"));
+        if($waktu_sekarang > strtotime($soal_peserta->waktu_selesai)) return $this->render('not-found', [
+            'error' => "Anda telah kehabisan waktu"
+        ]);
+        
+        $soal_jawaban_peserta = PelatihanSoalPesertaJawaban::findOne(['peserta_id' => $peserta->id, 'soal_id' => $pelatihan_soal->id]);
+        if($soal_jawaban_peserta == null){
+            $soal_jawaban_peserta = new PelatihanSoalPesertaJawaban();
+            $soal_jawaban_peserta->peserta_id = $peserta->id;
+            $soal_jawaban_peserta->soal_id = $pelatihan_soal->id;
         }
-
-        $this->layout  =  '../layouts-peserta/not-found';
-        return $this->render('not-found');
+        
+        $soal_jawaban_peserta->jawaban = $jawaban;
+        $soal_jawaban_peserta->save();
     }
+
+    public function actionRequestSoal($unique_id){
+        $user = Yii::$app->user->identity;
+        if($unique_id == null || $user == null) return $this->render('not-found');
+        $pelatihan_soal = PelatihanSoal::findOne(['unique_id' => $unique_id]);
+        if($pelatihan_soal == null) return $this->render('not-found');
+        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => 1]);
+        if($pelatihan_soal_jenis == null) return $this->render('not-found');
+        $peserta = PelatihanPeserta::findOne(['user_id' => $user->id, 'pelatihan_id' => $pelatihan_soal_jenis->pelatihan_id]);
+        if($peserta == null) return $this->render('not-found');
+        $soal_peserta = PelatihanSoalPeserta::findOne(['jenis_soal' => $pelatihan_soal->jenis_id, 'peserta_id' => $peserta->id]);
+        if($soal_peserta == null) return $this->render('not-found');
+
+        // check apakah waktu masih tersisa atau tidak 
+        $waktu_sekarang = strtotime(date("Y-m-d H:i:s"));
+        if($waktu_sekarang > strtotime($soal_peserta->waktu_selesai)) return $this->render('not-found', [
+            'error' => "Anda telah kehabisan waktu"
+        ]);
+
+        $total_soal = PelatihanSoal::find()->where(['jenis_id' => $pelatihan_soal_jenis])->count();
+        $this->list_id_soal = $pelatihan_soal_jenis->getPelatihanSoals()->select(['unique_id'])->asArray()->all();
+        return $this->renderPartial('_soal.php',[
+            'soal' => $pelatihan_soal,
+            'total_soal' => $total_soal
+        ]);
+    }
+
 
     public function actionIndex($unique_id = null){
         $this->layout  =  '../layouts-peserta/not-found';
@@ -80,6 +124,7 @@ class PretestController extends Controller {
         ]);
 
         $soals = $model_jenis_soal->getPelatihanSoals()->all();
+        $this->list_id_soal = $model_jenis_soal->getPelatihanSoals()->select(['unique_id'])->asArray()->all();$this->list_id_soal = $model_jenis_soal->getPelatihanSoals()->select(['unique_id'])->asArray()->all();
         $this->layout  =  '../layouts-peserta/main';
         return $this->render('template-soal',[
             'soals' => $soals,
