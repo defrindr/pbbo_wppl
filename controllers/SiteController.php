@@ -122,10 +122,6 @@ class SiteController extends Controller
             $user->last_login = new Expression("NOW()");
             $user->save();
 
-            if($user->role_id == 3){
-                return $this->redirect(['/pretest', 'unique_id' => 'TcOg1ojTJ3EajfzVncviUSp7YyngafEp']);
-            }
-
             return $this->goBack();
         }
         return $this->render('login', [
