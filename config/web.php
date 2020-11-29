@@ -7,10 +7,7 @@ $config = [
     'name' => 'Pelatihan Online',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    // 'aliases' => [
-    //     '@bower' => '@vendor/bower-asset',
-    //     '@npm'   => '@vendor/npm-asset',
-    // ],
+    'timeZone' => 'Asia/Jakarta',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -67,10 +64,11 @@ $config = [
             // Disable r= routes
             'enablePrettyUrl' => true,
             'rules' => array(
-                'posttest/login' => 'posttest/login',
+                '/detail-pelatihan/<unique_id:\w+>' => 'pelatihan/detail',
                 'posttest/<unique_id:\w+>' => 'posttest/index',
-                'pretest/login' => 'pretest/login',
                 'pretest/<unique_id:\w+>' => 'pretest/index',
+                'posttest/finish/<unique_id:\w+>' => 'posttest/finish',
+                'pretest/finish/<unique_id:\w+>' => 'pretest/finish',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
