@@ -26,7 +26,13 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
     public function actionDetail($unique_id){
         $model = Pelatihan::findOne(['unique_id' => $unique_id]);
-        if($model == []) return $model;
+        $waktu_sekarang = strtotime(date('Y-m-d'));
+        $lebih_tgl_mulai = $waktu_sekarang > strtotime($model->tanggal_mulai);
+        $kurang_tgl_selesai = $waktu_sekarang < strtotime($model->tanggal_selesai);
+        if( ($lebih_tgl_mulai && $kurang_tgl_selesai) == false){
+            Yii::$app->session->setFlash('error', 'Pelatihan ini belum mulai / sudah berakhir.');
+            return $this->goBack();
+        }
         return $this->render('detail',[
             'model' => $model
         ]);
@@ -182,6 +188,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     foreach ($modelSoal as $i => $o) {
                         $o->jenis_id = $modelSoalJenis->id;
                         $modelSoal[$i] = $o;
+                        if($o->unique_id == null) $o->unique_id = \Yii::$app->security->generateRandomString(50);
                     }
 
 
@@ -320,6 +327,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
                     foreach ($modelSoal as $i => $o) {
                         $o->jenis_id = $modelSoalJenis->id;
+                        $o->unique_id = \Yii::$app->security->generateRandomString(50);
                         $modelSoal[$i] = $o;
                     }
                     
@@ -340,7 +348,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     }
                     
                     
-                    // save dynamic model
+                    // save dynamic model soal
                     foreach ($modelSoal as $i => $o) {
                         $o->save();
                     }
