@@ -14,32 +14,36 @@ use yii\widgets\Pjax;
  * @var app\models\Pelatihan $model
  */
 
-$this->title = 'Pelatihan ' . $model->id;
+$this->title = 'Pelatihan ' . $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'Pelatihan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => (string) $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'View';
 ?>
 <div class="giiant-crud pelatihan-view">
 
+
+    <?php if($model->status_id < 2) : ?>
     <!-- menu buttons -->
     <p class='pull-left'>
         <?=Html::a('<span class="glyphicon glyphicon-pencil"></span> ' . 'Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-info'])?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Peserta', ['add-peserta', 'id' => $model->id], ['class' => 'btn btn-success'])?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Soal', ['add-soal', 'id' => $model->id], ['class' => 'btn btn-success'])?>
     </p>
+    
     <p class="pull-right">
         <?=Html::a('<span class="glyphicon glyphicon-list"></span> ' . 'Daftar Pelatihan', ['index'], ['class' => 'btn btn-default'])?>
     </p>
+    <?php endif ?>
 
     <div class="clearfix"></div>
 
     <!-- flash message -->
     <?php if (\Yii::$app->session->getFlash('deleteError') !== null): ?>
-        <span class="alert alert-info alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-            <?=\Yii::$app->session->getFlash('deleteError')?>
-        </span>
+        <?=\Yii::$app->session->getFlash('deleteError')?>
+    </span>
     <?php endif;?>
 
     <div class="box box-info">
@@ -108,7 +112,7 @@ $this->params['breadcrumbs'][] = 'View';
                         'value' => function($model){
                             return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
                         },
-                        'format' => 'html'
+                        'format' => 'raw'
                     ],
                     // 'created_at',
                     // 'created_by',
@@ -118,7 +122,7 @@ $this->params['breadcrumbs'][] = 'View';
                 ],
             ]);?>
 
-            <hr/>
+            <hr />
             <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
                 [
                     'class' => 'btn btn-danger',
@@ -155,9 +159,9 @@ $this->params['breadcrumbs'][] = 'View';
 
 
 
-<?php $this->beginBlock('PelatihanLampirans');?>
-<?php Pjax::begin(['id' => 'pjax-PelatihanLampirans', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanLampirans ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
-<?='<div class="table-responsive">'
+            <?php $this->beginBlock('PelatihanLampirans');?>
+            <?php Pjax::begin(['id' => 'pjax-PelatihanLampirans', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanLampirans ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
+            <?='<div class="table-responsive">'
 . \yii\grid\GridView::widget([
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider([
@@ -199,18 +203,18 @@ $this->params['breadcrumbs'][] = 'View';
     ],
 ])
 . '</div>'?>
-<?php Pjax::end()?>
-<?php $this->endBlock()?>
+            <?php Pjax::end()?>
+            <?php $this->endBlock()?>
 
 
-<?php $this->beginBlock('PelatihanPesertas');?>
-<?php if($model->status_id == 3) : ?>
-<div style="padding :5px 0">
-    <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'List Kehadiran', ['update-kehadiran', 'id' => $model->id], ['class' => 'btn btn-success'])?>
-</div>
-<?php endif ?>
-<?php Pjax::begin(['id' => 'pjax-PelatihanPesertas', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanPesertas ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
-<?='<div class="table-responsive">'
+            <?php $this->beginBlock('PelatihanPesertas');?>
+            <?php if($model->status_id == 3) : ?>
+            <div style="padding :5px 0">
+                <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'List Kehadiran', ['update-kehadiran', 'id' => $model->id], ['class' => 'btn btn-success'])?>
+            </div>
+            <?php endif ?>
+            <?php Pjax::begin(['id' => 'pjax-PelatihanPesertas', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanPesertas ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
+            <?='<div class="table-responsive">'
 . \yii\grid\GridView::widget([
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider([
@@ -277,13 +281,13 @@ $this->params['breadcrumbs'][] = 'View';
     ],
 ])
 . '</div>'?>
-<?php Pjax::end()?>
-<?php $this->endBlock()?>
+            <?php Pjax::end()?>
+            <?php $this->endBlock()?>
 
 
-<?php $this->beginBlock('PelatihanSoalJenis');?>
-<?php Pjax::begin(['id' => 'pjax-PelatihanSoalJenis', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanSoalJenis ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
-<?='<div class="table-responsive">'
+            <?php $this->beginBlock('PelatihanSoalJenis');?>
+            <?php Pjax::begin(['id' => 'pjax-PelatihanSoalJenis', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanSoalJenis ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
+            <?='<div class="table-responsive">'
 . \yii\grid\GridView::widget([
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider([
@@ -332,8 +336,8 @@ $this->params['breadcrumbs'][] = 'View';
     ],
 ])
 . '</div>'?>
-<?php Pjax::end()?>
-<?php $this->endBlock()?>
+            <?php Pjax::end()?>
+            <?php $this->endBlock()?>
 
 
             <?=Tabs::widget(
@@ -341,7 +345,7 @@ $this->params['breadcrumbs'][] = 'View';
                     'id' => 'relation-tabs',
                     'encodeLabels' => false,
                     'items' => [[
-                        'label' => '<b class=""># ' . $model->id . '</b>',
+                        'label' => '<b class=""># ' . $model->nama . '</b>',
                         'content' => $this->blocks['app\models\Pelatihan'],
                         'active' => true,
                     ], [
