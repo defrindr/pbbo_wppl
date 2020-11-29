@@ -2,6 +2,14 @@
 use yii\widgets\Breadcrumbs;
 use dmstr\widgets\Alert;
 
+$this->registerCss('
+.timer_style {
+    font-size: 18px;
+}
+.content-header>.breadcrumb{
+    top: 10px;
+}
+');
 ?>
 <div class="content-wrapper">
     <section class="content-header">
@@ -20,13 +28,12 @@ use dmstr\widgets\Alert;
                 } ?>
             </h1>
         <?php } ?>
-
-        <?=
-        Breadcrumbs::widget(
-            [
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]
-        ) ?>
+        <ul class="breadcrumb">
+            <li class="timer_style">
+                <i class="fa fa-clock-o" style="margin-right: 5px;"></i>
+                <span id='countdown'></span>
+            </li>
+        </ul>
     </section>
 
     <section class="content">
