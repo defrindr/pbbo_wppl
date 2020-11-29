@@ -11,10 +11,12 @@ use Yii;
  *
  * @property integer $id
  * @property integer $peserta_id
+ * @property integer $jenis_soal
  * @property string $waktu_mulai
- * @property integer $waktu_selesai
+ * @property string $waktu_selesai
  *
  * @property \app\models\PelatihanPeserta $peserta
+ * @property \app\models\PelatihanSoalJenis $jenisSoal
  * @property string $aliasModel
  */
 abstract class PelatihanSoalPeserta extends \yii\db\ActiveRecord
@@ -36,10 +38,11 @@ abstract class PelatihanSoalPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['peserta_id', 'waktu_mulai', 'waktu_selesai'], 'required'],
-            [['peserta_id', 'waktu_selesai'], 'integer'],
-            [['waktu_mulai'], 'safe'],
-            [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']]
+            [['peserta_id', 'jenis_soal', 'waktu_mulai', 'waktu_selesai'], 'required'],
+            [['peserta_id', 'jenis_soal'], 'integer'],
+            [['waktu_mulai', 'waktu_selesai'], 'safe'],
+            [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']],
+            [['jenis_soal'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalJenis::className(), 'targetAttribute' => ['jenis_soal' => 'id']]
         ];
     }
 
@@ -51,6 +54,7 @@ abstract class PelatihanSoalPeserta extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'peserta_id' => 'Peserta ID',
+            'jenis_soal' => 'Jenis Soal',
             'waktu_mulai' => 'Waktu Mulai',
             'waktu_selesai' => 'Waktu Selesai',
         ];
@@ -62,6 +66,14 @@ abstract class PelatihanSoalPeserta extends \yii\db\ActiveRecord
     public function getPeserta()
     {
         return $this->hasOne(\app\models\PelatihanPeserta::className(), ['id' => 'peserta_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getJenisSoal()
+    {
+        return $this->hasOne(\app\models\PelatihanSoalJenis::className(), ['id' => 'jenis_soal']);
     }
 
 

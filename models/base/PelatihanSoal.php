@@ -10,6 +10,7 @@ use Yii;
  * This is the base-model class for table "pelatihan_soal".
  *
  * @property integer $id
+ * @property string $unique_id
  * @property integer $jenis_id
  * @property integer $kategori_soal_id
  * @property integer $nomor
@@ -17,8 +18,8 @@ use Yii;
  * @property string $pilihan
  * @property string $jawaban
  *
- * @property \app\models\PelatihanSoalJenis $jenis
  * @property \app\models\MasterKategoriSoal $kategoriSoal
+ * @property \app\models\PelatihanSoalJenis $jenis
  * @property \app\models\PelatihanSoalPesertaJawaban[] $pelatihanSoalPesertaJawabans
  * @property \app\models\PelatihanSoalPilihan[] $pelatihanSoalPilihans
  * @property string $aliasModel
@@ -42,11 +43,12 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['jenis_id', 'kategori_soal_id', 'soal'], 'required'],
+            [['unique_id', 'jenis_id', 'kategori_soal_id', 'soal'], 'required'],
             [['jenis_id', 'kategori_soal_id', 'nomor'], 'integer'],
             [['soal', 'pilihan', 'jawaban'], 'string'],
-            [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalJenis::className(), 'targetAttribute' => ['jenis_id' => 'id']],
-            [['kategori_soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterKategoriSoal::className(), 'targetAttribute' => ['kategori_soal_id' => 'id']]
+            [['unique_id'], 'string', 'max' => 50],
+            [['kategori_soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterKategoriSoal::className(), 'targetAttribute' => ['kategori_soal_id' => 'id']],
+            [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalJenis::className(), 'targetAttribute' => ['jenis_id' => 'id']]
         ];
     }
 
@@ -57,6 +59,7 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'unique_id' => 'Unique ID',
             'jenis_id' => 'Jenis ID',
             'kategori_soal_id' => 'Kategori Soal ID',
             'nomor' => 'Nomor',
@@ -79,17 +82,17 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getJenis()
+    public function getKategoriSoal()
     {
-        return $this->hasOne(\app\models\PelatihanSoalJenis::className(), ['id' => 'jenis_id']);
+        return $this->hasOne(\app\models\MasterKategoriSoal::className(), ['id' => 'kategori_soal_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getKategoriSoal()
+    public function getJenis()
     {
-        return $this->hasOne(\app\models\MasterKategoriSoal::className(), ['id' => 'kategori_soal_id']);
+        return $this->hasOne(\app\models\PelatihanSoalJenis::className(), ['id' => 'jenis_id']);
     }
 
     /**
