@@ -313,15 +313,17 @@ $this->params['breadcrumbs'][] = 'View';
             'label' => '<b class=""># ' . $model->nik . '</b>',
             'content' => $this->blocks['app\models\PelatihanPeserta'],
             'active' => true,
-        ], [
-            'content' => $this->blocks['PelatihanSoalPesertas'],
-            'label' => '<small>Pelatihan Soal Pesertas <span class="badge badge-default">' . count($model->getPelatihanSoalPesertas()->asArray()->all()) . '</span></small>',
-            'active' => false,
-        ], [
-            'content' => $this->blocks['PelatihanSoalPesertaJawabans'],
-            'label' => '<small>Pelatihan Soal Peserta Jawabans <span class="badge badge-default">' . count($model->getPelatihanSoalPesertaJawabans()->asArray()->all()) . '</span></small>',
-            'active' => false,
-        ], [
+        ],
+        //  [
+        //     'content' => $this->blocks['PelatihanSoalPesertas'],
+        //     'label' => '<small>Pelatihan Soal Pesertas <span class="badge badge-default">' . count($model->getPelatihanSoalPesertas()->asArray()->all()) . '</span></small>',
+        //     'active' => false,
+        // ], [
+        //     'content' => $this->blocks['PelatihanSoalPesertaJawabans'],
+        //     'label' => '<small>Pelatihan Soal Peserta Jawabans <span class="badge badge-default">' . count($model->getPelatihanSoalPesertaJawabans()->asArray()->all()) . '</span></small>',
+        //     'active' => false,
+        // ], 
+        [
             'content' => $this->blocks['PelatihanPesertIkuts'],
             'label' => '<small>Pelatihan yang Pernah Diikuti <span class="badge badge-default">' . $model->getPesertaIkut()->count() . '</span></small>',
             'active' => false,
