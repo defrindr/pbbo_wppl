@@ -8,35 +8,11 @@ use yii\helpers\Html;
 
 $this->title = 'Daftar Pelatihan';
 
-//$tableData = array_diff($tableData,$stk);
 ?>
 
 <div class="site-index">
 
     <div class="row">
-        <?php if($outl == TRUE && $stk != NULL){ ?>
-        <style>
-            .content {
-                min-height: 0px;
-                padding-top: 5px;
-                margin-right: auto;
-                margin-left: auto;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-        </style>
-        <div class="content">
-            <div class="alert alert-warning alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i> Info!</h4>
-                <?php foreach($stk as $i => $s){
-                    $dat = Barang::find()->where(['id' => $s['id_barang']])->one();
-                    echo 'Barang : '.$dat->nama.', Stok dibawah '.$min.'<hr>';
-              }; ?>
-            </div>
-        </div>
-
-        <?php } ?>
 
         <?php if(count($model)) : ?>
         <?php foreach($model as $o):
