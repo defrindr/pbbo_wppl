@@ -439,8 +439,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         if($model) {
             try{
                 $model->status_id = 3;
-                $model->save();
-                Yii::$app->session->setFlash('success', 'Pelatihan berhasil disetujui');
+                $model->validate();
+                if($model->save()){
+                    Yii::$app->session->setFlash('success', 'Pelatihan berhasil disetujui');
+                }else{
+                    Yii::$app->session->setFlash('success', 'Pelatihan gagal disetujui');
+                }
             }catch(\Throwable $e){
                 Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
             }
@@ -574,6 +578,44 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         return $this->render('list-kehadiran',[
             'dataProvider' => $dataProvider,
             'model' => $model
+        ]);
+    }
+
+    public function actionUpdateNilaiPraktek($id){
+        $model = $this->findModel(['id' => $id]);
+        if(RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
+        if($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
+        $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => 1]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $peserta,
+            'pagination' => [
+                'pageSize' => 999999,
+                'pageParam' => 'page-pelatihanpesertas',
+            ],
+        ]);
+        
+        $transaction = Yii::$app->db->beginTransaction();
+        if($_POST){
+            foreach($_POST['PelatihanPeserta'] as $index => $value){
+                $modelPeserta = PelatihanPeserta::findOne(['id' => $index]);
+                $modelPeserta->nilai_praktek = $value['nilai_praktek'];
+                $valid = $modelPeserta->validate();
+                if($valid == false) {
+                    $transaction->rollBack();
+                    return $this->render('update_nilai_praktek.php', [
+                        "model" => $model,
+                        "dataProvider" => $dataProvider,
+                    ]);
+                }
+                $modelPeserta->save();
+                $transaction->commit();
+                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('update_nilai_praktek.php', [
+            "model" => $model,
+            "dataProvider" => $dataProvider,
         ]);
     }
 }
