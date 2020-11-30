@@ -5,7 +5,7 @@
 namespace app\controllers\base;
 
 use app\components\RoleType;
-use app\components\TingkatPelatihan;
+use app\components\Constant;
 use app\models\Action;
 use app\models\base\Role;
 use app\models\Pelatihan;
@@ -131,7 +131,7 @@ class PelatihanController extends Controller
                 $model->unique_id = Yii::$app->security->generateRandomString(32);
                 $model->created_by = \Yii::$app->user->identity->id;
                 $model->modified_by = \Yii::$app->user->identity->id;
-                $model->tingkat_id = TingkatPelatihan::DASAR;
+                $model->tingkat_id = Constant::PELATIHAN_DASAR;
                 // validate all models
                 $valid = $model->validate();
 
@@ -149,7 +149,7 @@ class PelatihanController extends Controller
                         $o->file = \Yii::$app->security->generateRandomString() . ".{$extension}";
                         $path = $o->getUploadedFolder() . $o->file;
                         $o->image->saveAs($path);
-                        
+
                         $modelLampiran[$i] = $o;
                     }
 

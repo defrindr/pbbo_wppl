@@ -1,6 +1,8 @@
 <?php
 
-    $exist = [];
+use app\components\Constant;
+
+$exist = [Constant::SOAL_JENIS_PRAKTEK]; // BY DEFAULT PRAKTEK IS HIDDEN
 
     $modelCheckExist = app\models\PelatihanSoalJenis::find()->where(['pelatihan_id' => $model->id]);
     

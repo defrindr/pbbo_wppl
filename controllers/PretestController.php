@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\Constant;
 use app\models\PelatihanPeserta;
 use app\models\PelatihanSoalPesertaJawaban;
 use app\models\PelatihanSoal;
@@ -25,7 +26,7 @@ class PretestController extends Controller {
         $pelatihan_soal = PelatihanSoal::findOne(['unique_id' => $unique_id]);
         if($pelatihan_soal == null) return $this->render('not-found');
 
-        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => 1]);
+        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => Constant::SOAL_JENIS_PRETEST]);
         if($pelatihan_soal_jenis == null) return $this->render('not-found');
 
         $peserta = PelatihanPeserta::findOne(['user_id' => $user->id, 'pelatihan_id' => $pelatihan_soal_jenis->pelatihan_id]);
@@ -56,7 +57,7 @@ class PretestController extends Controller {
         if($unique_id == null || $user == null) return $this->render('not-found');
         $pelatihan_soal = PelatihanSoal::findOne(['unique_id' => $unique_id]);
         if($pelatihan_soal == null) return $this->render('not-found');
-        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => 1]);
+        $pelatihan_soal_jenis = PelatihanSoalJenis::findOne(['id' => $pelatihan_soal->jenis_id, 'jenis_id' => Constant::SOAL_JENIS_PRETEST]);
         if($pelatihan_soal_jenis == null) return $this->render('not-found');
         $peserta = PelatihanPeserta::findOne(['user_id' => $user->id, 'pelatihan_id' => $pelatihan_soal_jenis->pelatihan_id]);
         if($peserta == null) return $this->render('not-found');
@@ -88,7 +89,7 @@ class PretestController extends Controller {
         $model = Pelatihan::find()->where(['unique_id' => $unique_id])->one();
         if($model == [])  return $this->render('not-found');
         $user = \Yii::$app->user->identity;
-        $model_jenis_soal = $model->getPelatihanSoalJenis()->where(['jenis_id' => 1])->one();
+        $model_jenis_soal = $model->getPelatihanSoalJenis()->where(['jenis_id' => Constant::SOAL_JENIS_PRETEST])->one();
         if($model_jenis_soal == []) return $this->render('not-found',[
             'error' => 'Soal belum tersedia'
         ]);

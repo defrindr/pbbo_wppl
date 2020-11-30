@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\Constant;
 use Yii;
 use \app\models\base\PelatihanPeserta as BasePelatihanPeserta;
 use yii\helpers\ArrayHelper;
@@ -33,7 +34,7 @@ class PelatihanPeserta extends BasePelatihanPeserta
     }
 
     public function getPesertaIkut(){
-        $list_pelatihan = PelatihanPeserta::find()->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')->where(['nik' => $this->nik,'pelatihan_peserta.kehadiran' => 1])->select('pelatihan.id')->asArray()->all();
+        $list_pelatihan = PelatihanPeserta::find()->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')->where(['nik' => $this->nik,'pelatihan_peserta.kehadiran' => Constant::KEHADIRAN_HADIR])->select('pelatihan.id')->asArray()->all();
         $list = [];
 
         foreach($list_pelatihan as $i) array_push($list, $i['id']);
