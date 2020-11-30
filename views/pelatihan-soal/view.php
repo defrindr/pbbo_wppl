@@ -147,7 +147,7 @@ $this->params['breadcrumbs'][] = 'View';
     },
     'format' => 'raw',
 ],
-        'jabawan:ntext',
+        'jawaban:ntext',
 ]
 ])
  . '</div>' ?>
