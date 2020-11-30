@@ -104,6 +104,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
                     // save dynamic model
                     foreach ($modelPeserta as $i => $o) {
+                        $o->tanggal_lahir = date('Y-m-d', strtotime($o->tanggal_lahir));
                         $checkUser = \app\models\User::findOne(['username' => $o->nik]);
                         if($checkUser == []) {
                             $newUser = new User();
