@@ -5,6 +5,7 @@
 namespace app\controllers\base;
 
 use app\components\RoleType;
+use app\components\TingkatPelatihan;
 use app\models\Action;
 use app\models\base\Role;
 use app\models\Pelatihan;
@@ -130,6 +131,7 @@ class PelatihanController extends Controller
                 $model->unique_id = Yii::$app->security->generateRandomString(32);
                 $model->created_by = \Yii::$app->user->identity->id;
                 $model->modified_by = \Yii::$app->user->identity->id;
+                $model->tingkat_id = TingkatPelatihan::DASAR;
                 // validate all models
                 $valid = $model->validate();
 
@@ -147,7 +149,7 @@ class PelatihanController extends Controller
                         $o->file = \Yii::$app->security->generateRandomString() . ".{$extension}";
                         $path = $o->getUploadedFolder() . $o->file;
                         $o->image->saveAs($path);
-
+                        
                         $modelLampiran[$i] = $o;
                     }
 
@@ -161,10 +163,14 @@ class PelatihanController extends Controller
                     }
 
                     foreach ($modelLampiran as $i => $o) {
-                        $o->save();
+                        $o->save(0);
                     }
                 }else{
                     $model->addError('_exception', "Validasi gagal");
+                    return $this->render('create', [
+                        'model' => $model,
+                        'modelLampiran' => (empty($modelLampiran)) ? [new PelatihanLampiran] : $modelLampiran,
+                    ]);
                 }
 
                 $transaction->commit();
