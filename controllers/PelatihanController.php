@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Constant;
 use app\components\RoleType;
 use app\models\base\PelatihanSoalPilihan as BasePelatihanSoalPilihan;
 use app\models\base\User;
@@ -26,9 +27,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
     public function actionDetail($unique_id){
         $model = Pelatihan::findOne(['unique_id' => $unique_id]);
-        $waktu_sekarang = strtotime(date('Y-m-d'));
-        $lebih_tgl_mulai = $waktu_sekarang > strtotime($model->tanggal_mulai);
-        $kurang_tgl_selesai = $waktu_sekarang < strtotime($model->tanggal_selesai);
+        $waktu_sekarang = strtotime(date('Y-m-d H:i:s'));
+        $lebih_tgl_mulai = $waktu_sekarang >= strtotime($model->tanggal_mulai);
+        $kurang_tgl_selesai = $waktu_sekarang <= strtotime($model->tanggal_selesai);
         if( ($lebih_tgl_mulai && $kurang_tgl_selesai) == false){
             Yii::$app->session->setFlash('error', 'Pelatihan ini belum mulai / sudah berakhir.');
             return $this->goBack();
@@ -155,6 +156,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         $transaction = Yii::$app->db->beginTransaction();
 
         if ($modelSoalJenis->load($_POST)) {
+            $checkSoalJenis = PelatihanSoalJenis::findOne(['pelatihan_id' => $model->id, 'jenis_id' => $modelSoalJenis->jenis_id]);
+            if($checkSoalJenis){
+                Yii::$app->session->setFlash('error', "Soal {$checkSoalJenis->jenis->nama} telah ada, tidak bisa menambahkannya lagi.");
+                return $this->goBack();
+            }
+
             // model lampiran
             $oldSoalIDs = ArrayHelper::map($modelSoal, 'id', 'id');
             $modelSoal = Pelatihan::createMultiple(PelatihanSoal::class, $modelSoal);
@@ -410,7 +417,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
     public function actionAjukan($id)
     {
-        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 1])->one();
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_PELENGKAPAN_DATA])->one();
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
         if($model) {
             try{
@@ -429,7 +436,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     
     public function actionSetujui($id)
     {
-        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 2])->one();
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_MENUNGGU_PERSETUJUAN])->one();
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
         if($model) {
             try{
@@ -461,7 +468,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     
     public function actionAjukanMonev($id)
     {
-        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => [3,4]])->one();
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => [Constant::STATUS_DISETUJUI, Constant::STATUS_PENGAJUAN_MONEV]])->one();
         if($model == false){
             Yii::$app->session->setFlash('error', 'Pelatihan tidak ditemukan');
             return $this->redirect(['/pelatihan/view', 'id' => $id]);
@@ -507,7 +514,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     }
 
     public function actionSetujuiMonev($id){
-        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 4])->one();
+        $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_PENGAJUAN_MONEV])->one();
         if($model == false){
             throw new NotFoundHttpException();
         }
@@ -579,7 +586,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         $model = $this->findModel(['id' => $id]);
         if(RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
         if($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
-        $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => 1]);
+        $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => Constant::KEHADIRAN_HADIR]);
         if($peserta->count() == 0){
             Yii::$app->session->setFlash('error',"Setidaknnya harus ada peserta yang hadir dalam pelatihan.");
             return $this->redirect(['view','id' => $id]);
