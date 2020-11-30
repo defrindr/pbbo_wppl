@@ -395,7 +395,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         }
                     }
 
-                    $modelSoalJenis->jumlah_soal = count($modelSoalJenis->pelatihanSoals);
+                    $modelSoalJenis->jumlah_soal = count($modelSoal);
                     $modelSoalJenis->save();
                 }
                 $transaction->commit();
