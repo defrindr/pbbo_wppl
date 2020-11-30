@@ -69,6 +69,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['nilai_pretest', 'nilai_posttest', 'nilai_praktek'], 'integer', 'max' => 100, 'min' => 0],
             [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id'], 'required'],
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
