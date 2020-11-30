@@ -55,7 +55,7 @@ abstract class PelatihanStatus extends \yii\db\ActiveRecord
      */
     public function getPelatihans()
     {
-        return $this->hasMany(\app\models\Pelatihan::className(), ['status_id' => 'id']);
+        return $this->hasMany(\app\models\Pelatihan::class, ['status_id' => 'id']);
     }
 
 
