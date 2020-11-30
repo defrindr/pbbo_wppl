@@ -408,12 +408,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         ]);
     }
 
-
-    public function actionApprove($id)
-    {
-
-    }
-
     public function actionAjukan($id)
     {
         $model = Pelatihan::find()->where(['id' => $id, 'status_id' => 1])->one();
@@ -530,7 +524,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         }
         return $this->redirect(['pelatihan/view', 'id' => $model->id]);
     }
-
 
     public function findModelJenis($parent_id, $id)
     {
