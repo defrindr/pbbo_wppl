@@ -16,7 +16,7 @@ $this->title = 'Daftar Pelatihan';
 
         <?php if(count($model)) : ?>
         <?php foreach($model as $o):
-            $status = ((strtotime(date('Y-m-d')) > strtotime($o->tanggal_mulai)) && (strtotime(date('Y-m-d')) < strtotime($o->tanggal_selesai))) ? 1 : 0;
+            $status = ((strtotime(date('Y-m-d H:i:s')) >= strtotime($o->tanggal_mulai)) && (strtotime(date('Y-m-d H:i:s')) <= strtotime($o->tanggal_selesai))) ? 1 : 0;
             ?>
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
