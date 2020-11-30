@@ -68,6 +68,6 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
     }
 
     public function getPelatihanPesertas(){
-        $this->hasMany(\app\models\PelatihanPeserta::class, ['id' => 'user_id']);
+        return $this->hasMany(\app\models\PelatihanPeserta::class, ['user_id' => 'id']);
     }
 }
