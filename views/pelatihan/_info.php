@@ -22,7 +22,7 @@ use app\components\RoleType;
                     ]
                 ])?>
             <?=$form->field($model, 'kriteria')->textInput()?>
-            <?=$form->field($model, 'jumlah_target')->textInput(['type' => 'number'])?>
+            <?=$form->field($model, 'jumlah_target')->textInput(['type' => 'number', 'min' => 1])?>
             <?=$form->field($model, 'sasaran_wilayah')->textInput()?>
 			<?= $form->field($model, 'tingkat_id')->dropDownList(
                 \yii\helpers\ArrayHelper::map(app\models\PelatihanTingkat::find()->all(), 'id', 'nama'),
