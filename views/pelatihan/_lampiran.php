@@ -63,7 +63,11 @@ DynamicFormWidget::begin([
                             'accept' => 'application/msword,application/vnd.ms-excel'
                         ],
                         'pluginOptions' => [
-                            'maxSize' => 3000
+                            'maxSize' => 3000,
+                            'showPreview' => false,
+                            'showCaption' => true,
+                            'showRemove' => true,
+                            'showUpload' => false
                         ],
                     ])?>
                     <div class="col-md-6 col-md-offset-3">
