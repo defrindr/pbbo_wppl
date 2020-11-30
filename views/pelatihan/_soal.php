@@ -1,19 +1,9 @@
-<?php 
-use yii\bootstrap\ActiveForm;
+<?php
 use wbraganca\dynamicform\DynamicFormWidget;
-
+use yii\bootstrap\ActiveForm;
 
 $hiddenTemplate = ["template" => "{input}"];
 $hiddenStyle = ["style" => "display: none"];
-
-
-$js = <<< JS
-    let pilihan = document.querySelectorAll('.dynamicform_wrapper_soal_pilihan');
-    console.log(pilihan);
-JS;
-
-$this->registerJs($js);
-
 
 DynamicFormWidget::begin([
     'widgetContainer' => 'dynamicform_wrapper_soal', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
@@ -39,63 +29,58 @@ DynamicFormWidget::begin([
 ]);
 ?>
 
+<div class="item panel table-responsive ">
+    <!-- widgetItem -->
+    <table class="table table-hover">
+        <thead>
+            <!-- <th> Tipe Soal </th> -->
+            <th> Soal </th>
+            <th> Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan) </th>
+            <th> Jawaban </th>
+            <th>
+                <button type="button" class="add-item btn btn-success btn-xs"><i
+                        class="glyphicon glyphicon-plus"></i></button>
+            </th>
+        </thead>
+        <tbody class="container-items soal-items">
+            <?php foreach ($modelSoal as $i => $o): ?>
+            <tr class="item-soal">
+                <td style="min-width: 30vw;">
+                    <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
+                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
+                        [
+                            'prompt' => 'Select',
+                        ])?>
+                    <?=$form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea()?>
+                </td>
+                <td style="min-width: 35vw;">
+                    <?=
+                    $this->render('_soal_pilihan.php', [
+                        'modelSoal' => $o,
+                        'indexSoal' => $i,
+                        'modelSoalPilihan' => $modelSoalPilihan[$i],
+                        'form' => $form,
+                    ])?>
+                </td>
+                <td style="min-width: 35vw;">
+                    <?=$form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"])?>
+                </td>
+                <td>
+                    <button type="button" class="remove-item btn btn-danger btn-xs"><i
+                        class="glyphicon glyphicon-minus"></i></button>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+</div>
 
-<!-- <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4>
-            <i class="glyphicon glyphicon-book"></i> Daftar Soal
-        </h4>
-    </div>
-    <div class="panel-body"> -->
-            <!-- widgetBody -->
-
-            
-            <div class="item panel table-responsive ">
-                <!-- widgetItem -->
-                <table class="table table-hover">
-                    <thead>
-                        <!-- <th> Tipe Soal </th> -->
-                        <th> Soal </th>
-                        <th> Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan) </th>
-                        <th> Jawaban </th>
-                        <th>
-                            <button type="button" class="add-item btn btn-success btn-xs"><i
-                                class="glyphicon glyphicon-plus"></i></button>
-                        </th>
-                    </thead>
-                    <tbody class="container-items soal-items">
-                        <?php foreach ($modelSoal as $i => $o): ?>
-                        <tr class="item-soal">
-                            <td style="min-width: 30vw;">
-                                    <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
-                                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
-                                        [
-                                            'prompt' => 'Select',
-                                        ])?>
-                                        <?= $form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea() ?>
-                            </td>
-                            <td  style="min-width: 35vw;">
-                            <?=
-                                $this->render('_soal_pilihan.php', [
-                                    'modelSoal' => $o,
-                                    'indexSoal' => $i,
-                                    'modelSoalPilihan' => $modelSoalPilihan[$i],
-                                    'form' => $form
-                                ]) ?>
-                            </td>
-                            <td  style="min-width: 35vw;">
-                                <?= $form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"]) ?>
-                            </td>
-                            <td>
-                                <button type="button" class="remove-item btn btn-danger btn-xs"><i
-                                    class="glyphicon glyphicon-minus"></i></button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <!-- </div>
-    </div> -->
-<!-- </div>.panel -->
-<?php DynamicFormWidget::end() ?>
+<?php 
+$this->registerJs('
+    $(".dynamicform_wrapper_soal").on("beforeDelete", function(e, item_orang) {
+        if (! confirm("Are you sure you want to delete this item?")) {
+            return true;
+        }
+    });
+');
+DynamicFormWidget::end()?>

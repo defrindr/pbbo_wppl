@@ -43,4 +43,12 @@ DynamicFormWidget::begin([
         <?php endforeach;?>
     </tbody>
 </table>
-<?php DynamicFormWidget::end()?>
+<?php 
+$this->registerJs('
+    $(".dynamicform_wrapper_soal_pilihan").on("beforeDelete", function(e, item_orang) {
+        if (! confirm("Are you sure you want to delete this item?")) {
+            return true;
+        }
+    });
+');
+DynamicFormWidget::end()?>
