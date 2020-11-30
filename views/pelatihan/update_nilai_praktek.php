@@ -47,6 +47,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                             'format' => 'raw',
                         ],
+                        [
+                            'attribute'=>'komentar',
+                            'label'=>'Komentar',
+                            'value' => function($model) use($form) {
+                                return $form->field($model,"[{$model->id}]komentar",[
+                                    'template' => '{input}'
+                                ])->textarea(['style' => 'width: 80%;margin-left: 10%', 'placeholder' => 'Tambahkan komentar anda']);
+                            },
+                            'format' => 'raw',
+                        ],
                         'nik',
                         'nama',
                         'email:email',

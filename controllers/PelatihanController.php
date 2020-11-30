@@ -586,6 +586,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         if(RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
         if($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
         $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => 1]);
+        if($peserta->count() == 0){
+            Yii::$app->session->setFlash('error',"Setidaknnya harus ada peserta yang hadir dalam pelatihan.");
+            return $this->redirect(['view','id' => $id]);
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $peserta,
             'pagination' => [
@@ -599,6 +603,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             foreach($_POST['PelatihanPeserta'] as $index => $value){
                 $modelPeserta = PelatihanPeserta::findOne(['id' => $index]);
                 $modelPeserta->nilai_praktek = $value['nilai_praktek'];
+                $modelPeserta->komentar = $value['komentar'];
                 $valid = $modelPeserta->validate();
                 if($valid == false) {
                     $transaction->rollBack();
@@ -608,9 +613,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     ]);
                 }
                 $modelPeserta->save();
-                $transaction->commit();
-                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
             }
+            $transaction->commit();
+            return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
         }
 
         return $this->render('update_nilai_praktek.php', [
