@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\components\RoleType;
 use app\models\PelatihanSoalJenis;
 use app\models\PelatihanSoalPeserta;
 use app\models\PelatihanPeserta;
@@ -16,6 +17,26 @@ use Yii;
 class PosttestController extends Controller {
     // public function 
     public $list_id_soal;
+    
+    public function actionKoreksiJawaban($id = null, $unique_id = null){
+        
+        if($unique_id == null || $id == null) throw new NotFoundHttpException();
+        $model = Pelatihan::find()->where(['unique_id' => $unique_id])->one();
+        if($model == [])   throw new NotFoundHttpException();
+        
+        if(RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
+        if($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
+
+        // $model_jenis_soal = $model->getPelatihanSoalJenis()->where(['jenis_id' => 2])->one();
+        // if($model_jenis_soal == [])  throw new NotFoundHttpException();
+        // $model_peserta = PelatihanPeserta::findOne(['id' => $id]);
+        // if($model_peserta == [])   throw new NotFoundHttpException();
+        // $model_soals = PelatihanSoal::find()->where(['jenis_id' => $model_jenis_soal->id, "peserta_id" => $model_peserta->id])->all();
+        // if($model_soals == [])   throw new NotFoundHttpException();
+        var_dump($model);
+        die;
+
+    }
 
     public function actionPostAnswer(){
         $user = Yii::$app->user->identity;
@@ -42,10 +63,10 @@ class PosttestController extends Controller {
             'error' => "Anda telah kehabisan waktu"
         ]);
         
-        $soal_jawaban_peserta = PelatihanSoalPesertaJawaban::findOne(['peserta_id' => $peserta->id, 'soal_id' => $pelatihan_soal->id]);
+        $soal_jawaban_peserta = PelatihanSoalPesertaJawaban::findOne(['peserta_id' => $soal_peserta->id, 'soal_id' => $pelatihan_soal->id]);
         if($soal_jawaban_peserta == null){
             $soal_jawaban_peserta = new PelatihanSoalPesertaJawaban();
-            $soal_jawaban_peserta->peserta_id = $peserta->id;
+            $soal_jawaban_peserta->peserta_id = $soal_peserta->id;
             $soal_jawaban_peserta->soal_id = $pelatihan_soal->id;
         }
         
@@ -71,7 +92,7 @@ class PosttestController extends Controller {
             'error' => "Anda telah kehabisan waktu"
         ]);
 
-        $jawaban = PelatihanSoalPesertaJawaban::findOne(['soal_id' => $pelatihan_soal->id, 'peserta_id' => $peserta->id]);
+        $jawaban = PelatihanSoalPesertaJawaban::findOne(['soal_id' => $pelatihan_soal->id, 'peserta_id' => $soal_peserta->id]);
         $model = Pelatihan::findOne(['id' => $pelatihan_soal_jenis->pelatihan_id]);
         $total_soal = PelatihanSoal::find()->where(['jenis_id' => $pelatihan_soal_jenis])->count();
         $this->list_id_soal = $pelatihan_soal_jenis->getPelatihanSoals()->select(['unique_id'])->asArray()->all();

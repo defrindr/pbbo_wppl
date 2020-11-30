@@ -14,8 +14,8 @@ use Yii;
  * @property integer $soal_id
  * @property string $jawaban
  *
- * @property \app\models\PelatihanPeserta $peserta
  * @property \app\models\PelatihanSoal $soal
+ * @property \app\models\PelatihanSoalPeserta $peserta
  * @property string $aliasModel
  */
 abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
@@ -40,8 +40,8 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
             [['peserta_id', 'soal_id', 'jawaban'], 'required'],
             [['peserta_id', 'soal_id'], 'integer'],
             [['jawaban'], 'string'],
-            [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']],
-            [['soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoal::className(), 'targetAttribute' => ['soal_id' => 'id']]
+            [['soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoal::className(), 'targetAttribute' => ['soal_id' => 'id']],
+            [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']]
         ];
     }
 
@@ -71,17 +71,17 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPeserta()
+    public function getSoal()
     {
-        return $this->hasOne(\app\models\PelatihanPeserta::className(), ['id' => 'peserta_id']);
+        return $this->hasOne(\app\models\PelatihanSoal::className(), ['id' => 'soal_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSoal()
+    public function getPeserta()
     {
-        return $this->hasOne(\app\models\PelatihanSoal::className(), ['id' => 'soal_id']);
+        return $this->hasOne(\app\models\PelatihanSoalPeserta::className(), ['id' => 'peserta_id']);
     }
 
 
