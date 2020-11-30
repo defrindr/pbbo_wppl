@@ -58,7 +58,10 @@ DynamicFormWidget::begin([
                     <?=$form->field($o, "[{$i}]pelatihan_id", $hiddenTemplate)->textInput($hiddenStyle) ?>
                     <?=$form->field($o, "[{$i}]judul_lampiran")->textInput(['maxlength' => true])?>
                     <?=$form->field($o, "[{$i}]image")->widget(FileInput::className(), [
-                        'options' => ['multiple' => true],
+                        'options' => [
+                            'multiple' => false,
+                            'accept' => 'application/msword,application/vnd.ms-excel'
+                        ],
                         'pluginOptions' => [
                             'maxSize' => 3000
                         ],
