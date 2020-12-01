@@ -7,7 +7,7 @@ namespace app\controllers\base;
 use app\components\RoleType;
 use app\components\Constant;
 use app\models\Action;
-use app\models\MasterKuisionerKepuasan;
+use app\models\MasterKuesionerKepuasan;
 use app\models\base\Role;
 use app\models\Pelatihan;
 use app\models\PelatihanLampiran;
@@ -142,18 +142,18 @@ class PelatihanController extends Controller
 
                     // create kuisioner kepuasan
                     $kuisionerKepuasan = new PelatihanSoalJenis();
-                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUISIONER_KEPUASAN;
+                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_KEPUASAN;
                     $kuisionerKepuasan->pelatihan_id = $model->id;
-                    $kuisionerKepuasan->jumlah_soal = MasterKuisionerKepuasan::find()->count();
-                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUISIONER; // default 2 jam
+                    $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
+                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
                     $kuisionerKepuasan->save();
                     
                     // create kuisioner monev
                     $kuisionerKepuasan = new PelatihanSoalJenis();
-                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUISIONER_MONEV;
+                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_MONEV;
                     $kuisionerKepuasan->pelatihan_id = $model->id;
-                    $kuisionerKepuasan->jumlah_soal = MasterKuisionerKepuasan::find()->count();
-                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUISIONER; // default 2 jam
+                    $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
+                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
                     $kuisionerKepuasan->save();
 
                     foreach ($modelLampiran as $i => $o) {

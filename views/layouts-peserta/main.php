@@ -26,7 +26,7 @@ $pluginAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/a
     </script>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition skin-light-blue sidebar-mini">
+<body class="hold-transition skin-light-blue layout-top-nav">
 <?php $this->beginBody() ?>
 <div class="wrapper">
 
@@ -37,15 +37,6 @@ $pluginAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/a
             'pluginAsset' => $pluginAsset,
         ]
     ) ?>
-
-    <?= $this->render(
-        'left.php',
-        [
-            'list_id_soal' => $this->context->list_id_soal,
-            'directoryAsset' => $directoryAsset,
-            'pluginAsset' => $pluginAsset,
-        ])
-    ?>
 
     <?= $this->render(
         'content.php',

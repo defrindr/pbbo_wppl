@@ -1,5 +1,6 @@
 <?php
 
+use app\components\Constant;
 use app\components\RoleType;
 use app\models\PelatihanLampiran;
 use app\models\PelatihanSoalJenis;
@@ -312,7 +313,7 @@ $this->params['breadcrumbs'][] = 'View';
 . \yii\grid\GridView::widget([
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider([
-        'query' => $model->getPelatihanSoalJenis(),
+        'query' => $model->getPelatihanSoalJenis()->where(['not in', 'jenis_id', [Constant::SOAL_JENIS_KUESIONER_KEPUASAN, Constant::SOAL_JENIS_KUESIONER_MONEV]]),
         'pagination' => [
             'pageSize' => 20,
             'pageParam' => 'page-pelatihansoaljenis',
@@ -379,7 +380,7 @@ $this->params['breadcrumbs'][] = 'View';
                         'active' => false,
                     ], [
                         'content' => $this->blocks['PelatihanSoalJenis'],
-                        'label' => '<small>Pelatihan Soal Jenis <span class="badge badge-default">' . count($model->getPelatihanSoalJenis()->asArray()->all()) . '</span></small>',
+                        'label' => '<small>Pelatihan Soal Jenis <span class="badge badge-default">' . count($model->getPelatihanSoalJenis()->where(['not in', 'jenis_id', [Constant::SOAL_JENIS_KUESIONER_KEPUASAN, Constant::SOAL_JENIS_KUESIONER_MONEV]])->asArray()->all()) . '</span></small>',
                         'active' => false,
                     ]],
                 ]

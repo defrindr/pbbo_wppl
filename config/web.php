@@ -64,18 +64,33 @@ $config = [
             // Disable r= routes
             'enablePrettyUrl' => true,
             'rules' => array(
-                '/pelatihan/posttest/koreksi-jawaban/<id:[\d]+>/<unique_id:[\w\_\-]+>' => '/posttest/koreksi-jawaban',
+                // '/pelatihan/posttest/koreksi-jawaban/<id:[\d]+>/<unique_id:[\w\_\-]+>' => '/posttest/koreksi-jawaban',
                 '/detail-pelatihan/<unique_id:[\w\_\-]+>' => 'pelatihan/detail',
-                '/posttest/post-answer' => '/posttest/post-answer',
-                '/pretest/post-answer' => '/pretest/post-answer',
+                // 
+                'kuesioner-kepuasan/post-answer' => '/kuesioner-kepuasan/post-answer',
+                'kuesioner-kepuasan/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/request-soal',
+                'kuesioner-kepuasan/finish' => 'kuesioner-kepuasan/finish',
+                // 'kuesioner-kepuasan/finish/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/finish',
+                'kuesioner-kepuasan/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/index',
+                // 
+                'kuesioner-monev/post-answer' => '/kuesioner-monev/post-answer',
+                'kuesioner-monev/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/request-soal',
+                'kuesioner-monev/finish' => 'kuesioner-monev/finish',
+                // 'kuesioner-monev/finish/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/finish',
+                'kuesioner-monev/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/index',
+                // 
+                'posttest/post-answer' => '/posttest/post-answer',
                 'posttest/request-soal/<unique_id:[\w\_\-]+>' => 'posttest/request-soal',
                 'posttest/finish' => 'posttest/finish',
+                'posttest/finish/<unique_id:[\w\_\-]+>' => 'posttest/finish',
+                'posttest/<unique_id:[\w\_\-]+>' => 'posttest/index',
+                // 
+                'pretest/post-answer' => '/pretest/post-answer',
                 'pretest/finish' => 'pretest/finish',
                 'pretest/request-soal/<unique_id:[\w\_\-]+>' => 'pretest/request-soal',
-                'posttest/finish/<unique_id:[\w\_\-]+>' => 'posttest/finish',
                 'pretest/finish/<unique_id:[\w\_\-]+>' => 'pretest/finish',
-                'posttest/<unique_id:[\w\_\-]+>' => 'posttest/index',
                 'pretest/<unique_id:[\w\_\-]+>' => 'pretest/index',
+                // 
                 '<controller:[\w\_\-]+>/<id:\d+>' => '<controller>/view',
                 '<controller:[\w\_\-]+>/<action:[\w\_\-]+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:[\w\_\-]+>/<action:[\w\_\-]+>' => '<controller>/<action>',

@@ -17,6 +17,8 @@ class Constant {
     const SOAL_JENIS_PRETEST= 1;
     const SOAL_JENIS_POSTTEST = 2;
     const SOAL_JENIS_PRAKTEK = 3;
+    const SOAL_JENIS_KUESIONER_KEPUASAN = 4;
+    const SOAL_JENIS_KUESIONER_MONEV = 5;
 
     const SOAL_TYPE_PILIHAN_GANDA = 1;
     const SOAL_TYPE_ESSAY = 2;
@@ -24,4 +26,7 @@ class Constant {
     const SOAL_TYPE_JAWABAN_SINGKAT = 4;
 
     const NILAI_MAKSIMAL = 100;
+
+    
+    const DEFAULT_PENGISIAN_KUESIONER = 120;
 }

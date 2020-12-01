@@ -18,14 +18,13 @@ $this->title = 'Daftar Pelatihan';
         <?php foreach($model as $o):
             $status = ((strtotime(date('Y-m-d H:i:s')) >= strtotime($o->tanggal_mulai)) && (strtotime(date('Y-m-d H:i:s')) <= strtotime($o->tanggal_selesai))) ? 1 : 0;
             ?>
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <!-- small box -->
             <div class="small-box <?= ($status) ? "bg-aqua" : "bg-red" ?>">
                 <div class="inner">
-                    <h3><?= $o->nama ?></h3>
+                    <h3><?= count($o->getPelatihanPesertas()) ?> Peserta</h3>
 
-                    <p><?= date("d F Y", strtotime($o->tanggal_mulai)) ?> s/d
-                        <?= date("d F Y", strtotime($o->tanggal_selesai)) ?></p>
+                    <p><?= $o->nama ?></p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
