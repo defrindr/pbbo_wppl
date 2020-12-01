@@ -5,6 +5,8 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+USE `db_pelatihan_online`;
+
 DROP TABLE IF EXISTS `action`;
 CREATE TABLE `action` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -83,7 +85,9 @@ INSERT INTO `action` (`id`, `controller_id`, `action_id`, `name`) VALUES
 (77,	'posttest',	'finish',	'Finish'),
 (78,	'pretest',	'finish',	'Finish'),
 (79,	'kepuasan',	'index',	'Index'),
-(80,	'kuisioner-kepuasan',	'index',	'Index');
+(80,	'kuisioner-kepuasan',	'index',	'Index'),
+(81,	'pelatihan',	'tingkat-lanjut',	'Tingkat Lanjut'),
+(82,	'pelatihan',	'sertifikat',	'Sertifikat');
 
 SET NAMES utf8mb4;
 
@@ -352,6 +356,7 @@ CREATE TABLE `pelatihan` (
   `sertifikat` varchar(100) DEFAULT NULL,
   `materi_pelatihan` varchar(100) DEFAULT NULL,
   `pelaksana_id` int(11) NOT NULL,
+  `pelatihan_sebelumnya` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_by` int(11) NOT NULL,
   `modified_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -361,13 +366,20 @@ CREATE TABLE `pelatihan` (
   KEY `pelatihan_tingkat_id` (`tingkat_id`),
   KEY `pelaksana_id` (`pelaksana_id`),
   KEY `status_id` (`status_id`),
+  KEY `pelatihan_sebelumnya` (`pelatihan_sebelumnya`),
   CONSTRAINT `pelatihan_ibfk_1` FOREIGN KEY (`tingkat_id`) REFERENCES `pelatihan_tingkat` (`id`),
   CONSTRAINT `pelatihan_ibfk_2` FOREIGN KEY (`pelaksana_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `pelatihan_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `pelatihan_status` (`id`)
+  CONSTRAINT `pelatihan_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `pelatihan_status` (`id`),
+  CONSTRAINT `pelatihan_ibfk_4` FOREIGN KEY (`pelatihan_sebelumnya`) REFERENCES `pelatihan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan` (`id`, `unique_id`, `nama`, `latar_belakang`, `tujuan`, `kota`, `nip_penandatangan`, `nama_penandatangan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `lokasi`, `kriteria`, `jumlah_target`, `sasaran_wilayah`, `hasil_pelaksanaan_pelatihan`, `dasar_pelaksanaan`, `absensi_kehadiran`, `rekapitulasi_nilai`, `sertifikat`, `materi_pelatihan`, `pelaksana_id`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
-(79,	'cTCfxymgOcycOCVHsxJ3AkG0rtcPTijH',	'Coba Survey',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	1,	3,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	'2020-12-01 10:27:22',	1,	'2020-12-01 08:39:49',	1,	1);
+INSERT INTO `pelatihan` (`id`, `unique_id`, `nama`, `latar_belakang`, `tujuan`, `kota`, `nip_penandatangan`, `nama_penandatangan`, `tanggal_mulai`, `tanggal_selesai`, `tingkat_id`, `status_id`, `forum_diskusi`, `lokasi`, `kriteria`, `jumlah_target`, `sasaran_wilayah`, `hasil_pelaksanaan_pelatihan`, `dasar_pelaksanaan`, `absensi_kehadiran`, `rekapitulasi_nilai`, `sertifikat`, `materi_pelatihan`, `pelaksana_id`, `pelatihan_sebelumnya`, `created_at`, `created_by`, `modified_at`, `modified_by`, `flag`) VALUES
+(79,	'cTCfxymgOcycOCVHsxJ3AkG0rtcPTijH',	'Coba Survey',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	1,	5,	'http://-',	'-',	'-',	1,	'-',	'-',	'-',	'uploads/berkas_pelatihan/absensi_kehadiran_j35PVUyp17pkx93vohs8_KsDFqaK7Si4.docx',	'uploads/berkas_pelatihan/rekapitulasi_nilai_imgx37ZSEmLpSldEHc8o1Ommg5yhEIMZ.docx',	'uploads/berkas_pelatihan/sertifikat_v1psULTuC_DeeNawZi_5Ypz3bjoB_8wJ.jpg',	NULL,	2,	NULL,	'2020-12-01 12:33:52',	1,	'2020-12-01 08:39:49',	1,	1),
+(80,	'IOWrKX2u0nkYLX38nQL-I08SjGM_cN7G',	'Coba Survey Lanjut 1',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	1,	1,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	'2020-12-01 15:05:41',	1,	'2020-12-01 15:02:53',	1,	0),
+(83,	'q4ReOfmFX1mFYcwaSWNGlnZ214EPwwci',	'Coba Survey Lanjut 1',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	2,	1,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	'2020-12-01 15:34:40',	1,	'2020-12-01 15:14:31',	1,	0),
+(84,	'uwHbrjnYdV2NoAZDK8GVv4HsBNXs2Qvv',	'Coba Survey Lanjut 1',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	2,	1,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	'2020-12-01 15:38:27',	1,	'2020-12-01 15:35:06',	1,	0),
+(85,	'Lly1Xdal3PQpFGpbVrWjPjHQgnEqJtIv',	'Coba Survey Lanjut 1',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	2,	1,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	79,	'2020-12-01 15:37:33',	1,	'2020-12-01 15:36:59',	1,	0),
+(86,	'yyUKt6NiFijooZuQgKVJMkqelOknBgyo',	'Coba Survey Lanjut 1',	'-',	'-',	'Sidoarjo',	'-',	'-',	'2020-12-01',	'2020-12-14',	2,	1,	'http://-',	'-',	'-',	1,	'-',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	79,	'0000-00-00 00:00:00',	1,	'2020-12-01 15:38:47',	1,	1);
 
 DROP TABLE IF EXISTS `pelatihan_kuesioner_kepuasan`;
 CREATE TABLE `pelatihan_kuesioner_kepuasan` (
@@ -442,7 +454,12 @@ CREATE TABLE `pelatihan_lampiran` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_lampiran` (`id`, `pelatihan_id`, `judul_lampiran`, `file`) VALUES
-(27,	79,	'Proposal Kegiatan',	'iiV05P19QBMky8pzFhpvCqUMeWd32dsy.doc');
+(27,	79,	'Proposal Kegiatan',	'iiV05P19QBMky8pzFhpvCqUMeWd32dsy.doc'),
+(28,	80,	'Proposal Kegiatan',	'b6SR_oKgxEsP7R305t0JoLRKk9FZDW0p.doc'),
+(29,	83,	'Proposal Kegiatan',	'syYjMBBzlzfAG1DDbG1lay-7zXHjz9pK.xls'),
+(30,	84,	'Proposal Kegiatan',	'SGJZa_X92PGtH24g3q1o9Oi09_69dtFC.xls'),
+(31,	85,	'Proposal Kegiatan',	'OPzIr8ptkBqo5PBnSUpByuOqIlyDJSbK.xls'),
+(32,	86,	'Proposal Kegiatan',	'U_KyH9Vx0tOxaLzzMFOoS20JJ2FkxeLD.xls');
 
 DROP TABLE IF EXISTS `pelatihan_peserta`;
 CREATE TABLE `pelatihan_peserta` (
@@ -492,7 +509,12 @@ CREATE TABLE `pelatihan_peserta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_peserta` (`id`, `user_id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
-(36,	7,	79,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	1,	0,	100,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
+(36,	7,	79,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	1,	0,	100,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(37,	7,	80,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(38,	7,	83,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(39,	7,	84,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(40,	7,	85,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0),
+(41,	7,	86,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
 
 DROP TABLE IF EXISTS `pelatihan_soal`;
 CREATE TABLE `pelatihan_soal` (
@@ -538,7 +560,17 @@ INSERT INTO `pelatihan_soal_jenis` (`id`, `jenis_id`, `pelatihan_id`, `waktu_pen
 (59,	4,	79,	120,	10),
 (60,	5,	79,	120,	10),
 (61,	1,	79,	10,	2),
-(62,	2,	79,	120,	2);
+(62,	2,	79,	120,	2),
+(63,	4,	80,	120,	10),
+(64,	5,	80,	120,	10),
+(69,	4,	83,	120,	10),
+(70,	5,	83,	120,	10),
+(71,	4,	84,	120,	10),
+(72,	5,	84,	120,	10),
+(73,	4,	85,	120,	10),
+(74,	5,	85,	120,	10),
+(75,	4,	86,	120,	10),
+(76,	5,	86,	120,	10);
 
 DROP TABLE IF EXISTS `pelatihan_soal_peserta`;
 CREATE TABLE `pelatihan_soal_peserta` (
@@ -703,54 +735,6 @@ INSERT INTO `role_action` (`id`, `role_id`, `action_id`) VALUES
 (1350,	2,	51),
 (1351,	2,	53),
 (1352,	2,	76),
-(1410,	1,	12),
-(1411,	1,	13),
-(1412,	1,	14),
-(1413,	1,	15),
-(1414,	1,	17),
-(1415,	1,	18),
-(1416,	1,	19),
-(1417,	1,	20),
-(1418,	1,	21),
-(1419,	1,	22),
-(1420,	1,	23),
-(1421,	1,	24),
-(1422,	1,	25),
-(1423,	1,	26),
-(1424,	1,	27),
-(1425,	1,	28),
-(1426,	1,	29),
-(1427,	1,	30),
-(1428,	1,	31),
-(1429,	1,	32),
-(1430,	1,	33),
-(1431,	1,	55),
-(1432,	1,	56),
-(1433,	1,	57),
-(1434,	1,	59),
-(1435,	1,	60),
-(1436,	1,	61),
-(1437,	1,	65),
-(1438,	1,	64),
-(1439,	1,	71),
-(1440,	1,	36),
-(1441,	1,	37),
-(1442,	1,	38),
-(1443,	1,	39),
-(1444,	1,	40),
-(1445,	1,	46),
-(1446,	1,	47),
-(1447,	1,	48),
-(1448,	1,	49),
-(1449,	1,	42),
-(1450,	1,	43),
-(1451,	1,	44),
-(1452,	1,	45),
-(1453,	1,	51),
-(1454,	1,	52),
-(1455,	1,	53),
-(1456,	1,	54),
-(1457,	1,	80),
 (1458,	3,	12),
 (1459,	3,	14),
 (1460,	3,	15),
@@ -765,7 +749,65 @@ INSERT INTO `role_action` (`id`, `role_id`, `action_id`) VALUES
 (1469,	3,	74),
 (1470,	3,	75),
 (1471,	3,	68),
-(1472,	3,	80);
+(1472,	3,	80),
+(1473,	1,	12),
+(1474,	1,	13),
+(1475,	1,	14),
+(1476,	1,	15),
+(1477,	1,	17),
+(1478,	1,	18),
+(1479,	1,	19),
+(1480,	1,	20),
+(1481,	1,	21),
+(1482,	1,	22),
+(1483,	1,	23),
+(1484,	1,	24),
+(1485,	1,	25),
+(1486,	1,	26),
+(1487,	1,	27),
+(1488,	1,	28),
+(1489,	1,	29),
+(1490,	1,	30),
+(1491,	1,	31),
+(1492,	1,	32),
+(1493,	1,	33),
+(1494,	1,	81),
+(1495,	1,	70),
+(1496,	1,	55),
+(1497,	1,	56),
+(1498,	1,	57),
+(1499,	1,	59),
+(1500,	1,	60),
+(1501,	1,	61),
+(1502,	1,	65),
+(1503,	1,	64),
+(1504,	1,	71),
+(1505,	1,	82),
+(1506,	1,	36),
+(1507,	1,	37),
+(1508,	1,	38),
+(1509,	1,	39),
+(1510,	1,	40),
+(1511,	1,	46),
+(1512,	1,	47),
+(1513,	1,	48),
+(1514,	1,	49),
+(1515,	1,	42),
+(1516,	1,	43),
+(1517,	1,	44),
+(1518,	1,	45),
+(1519,	1,	51),
+(1520,	1,	52),
+(1521,	1,	53),
+(1522,	1,	54),
+(1523,	1,	77),
+(1524,	1,	72),
+(1525,	1,	73),
+(1526,	1,	66),
+(1527,	1,	78),
+(1528,	1,	74),
+(1529,	1,	75),
+(1530,	1,	68);
 
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu` (
@@ -786,14 +828,14 @@ INSERT INTO `role_menu` (`id`, `role_id`, `menu_id`) VALUES
 (258,	2,	4),
 (259,	2,	5),
 (260,	2,	6),
-(271,	1,	1),
-(272,	1,	2),
-(273,	1,	3),
-(274,	1,	4),
-(275,	1,	5),
-(276,	1,	6),
 (277,	3,	1),
-(278,	3,	6);
+(278,	3,	6),
+(279,	1,	1),
+(280,	1,	2),
+(281,	1,	3),
+(282,	1,	4),
+(283,	1,	5),
+(284,	1,	6);
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -812,7 +854,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role_id`, `photo_url`, `last_login`, `last_logout`) VALUES
-(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-12-01 19:08:02',	'2020-12-01 17:30:03'),
+(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-12-01 19:20:42',	'2020-12-01 17:30:03'),
 (2,	'dinas_pendidikan',	'f0b171542f1bebedf72dbd45edc4755f',	'Dinas Pendidikan',	2,	'default.png',	'2020-12-01 14:52:34',	'2020-12-01 15:31:06'),
 (6,	'2020',	'e01f0aec6f2fa605c2d154a17ff74f02',	'Ronaldo Wati',	3,	NULL,	'2020-12-01 15:33:28',	'2020-12-01 15:35:01'),
 (7,	'1912',	'7d075590d614e32721b829d13641273c',	'Defri Indra Mahardika',	3,	NULL,	'2020-12-01 19:07:51',	'2020-12-01 19:07:57');
@@ -866,4 +908,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-12-01 12:10:15
+-- 2020-12-01 15:40:15
