@@ -6,11 +6,14 @@ use app\components\Constant;
 use app\components\RoleType;
 use app\models\base\PelatihanSoalPilihan as BasePelatihanSoalPilihan;
 use app\models\base\User;
+use app\models\MasterKuesionerKepuasan;
 use app\models\Pelatihan;
+use app\models\PelatihanLampiran;
 use app\models\PelatihanPeserta;
 use app\models\PelatihanSoal;
 use app\models\PelatihanSoalJenis;
 use app\models\PelatihanSoalPilihan;
+use app\models\PelatihanTingkat;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -24,6 +27,161 @@ use yii\web\UploadedFile;
  */
 class PelatihanController extends \app\controllers\base\PelatihanController
 {
+
+    public function actionTingkatLanjut($id){
+        $model = Pelatihan::findOne(['id' => $id]);
+        $new_model = new Pelatihan();
+        $check_exist = Pelatihan::findOne(['pelatihan_sebelumnya' => $model->id, 'flag' => 1]);
+        if ($check_exist != []) throw new \yii\web\NotFoundHttpException();
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => PelatihanPeserta::find()->where(['pelatihan_id' => $model->id])
+        ]);
+        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        $model->kota = "Sidoarjo";
+
+        $transaction = \Yii::$app->db->beginTransaction();
+
+        try {
+            if ($new_model->load($_POST)) {
+                if (Yii::$app->user->identity->role_id != RoleType::SA) {
+                    $model->pelaksana_id = Yii::$app->user->identity->id;
+                }
+
+                $tingkat_baru = $model->tingkat_id+1; // increment tingkat_id
+                $check_tingkat_exist = PelatihanTingkat::findOne(['id' => $tingkat_baru]);
+                if($check_tingkat_exist == []){
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', 'Tingat tidak ditemukan');
+                    return $this->redirect(['index']);
+                }
+
+                if (!preg_match("/https?/", $model->forum_diskusi)) {
+                    $model->forum_diskusi = "http://{$new_model->forum_diskusi}";
+                }
+
+                $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class);
+                Pelatihan::loadMultiple($modelLampiran, \Yii::$app->request->post());
+
+                if (\Yii::$app->request->isAjax) { //ajax validation
+                    \Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ArrayHelper::merge(
+                        ActiveForm::validateMultiple($modelLampiran),
+                        ActiveForm::validate($new_model)
+                    );
+                }
+
+                $new_model->unique_id = Yii::$app->security->generateRandomString(32);
+                $new_model->created_by = \Yii::$app->user->identity->id;
+                $new_model->modified_by = \Yii::$app->user->identity->id;
+                $new_model->tingkat_id = $tingkat_baru;
+                $new_model->pelatihan_sebelumnya = $model->id;
+
+                // validate all models
+                $valid = $new_model->validate();
+
+                if ($valid) {
+                    $new_model->save(); // save model untuk mendapatkan id
+
+                    // create kuisioner kepuasan
+                    $kuisionerKepuasan = new PelatihanSoalJenis();
+                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_KEPUASAN;
+                    $kuisionerKepuasan->pelatihan_id = $new_model->id;
+                    $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
+                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
+                    $kuisionerKepuasan->save();
+                    
+                    // create kuisioner monev
+                    $kuisionerKepuasan = new PelatihanSoalJenis();
+                    $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_MONEV;
+                    $kuisionerKepuasan->pelatihan_id = $new_model->id;
+                    $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
+                    $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
+                    $kuisionerKepuasan->save();
+
+                    foreach ($modelLampiran as $i => $o) {
+                        $o->scenario = "create";
+                        $o->pelatihan_id = $new_model->id;
+
+                        $o->image = UploadedFile::getInstanceByName("PelatihanLampiran[$i][image]");
+                        if($o->image == null) {
+                            $transaction->rollBack();
+                            Yii::$app->session->setFlash('error', 'data file tidak tersedia');
+                            return $this->redirect(['index']);
+                        }
+                        $tmp = explode('.', $o->image->name);
+                        $extension = end($tmp);
+
+                        $o->file = \Yii::$app->security->generateRandomString() . ".{$extension}";
+                        $path = $o->getUploadedFolder() . $o->file;
+                        $o->image->saveAs($path);
+
+                        $modelLampiran[$i] = $o;
+                    }
+
+                    $valid = PelatihanLampiran::validateMultiple($modelLampiran) && $valid;
+                    if (!$valid) {
+                        $transaction->rollback();
+                        return $this->render('create', [
+                            'model' => $new_model,
+                            'modelLampiran' => $modelLampiran,
+                        ]);
+                    }
+
+                    foreach ($modelLampiran as $i => $o) {
+                        $o->save(0);
+                    }
+                } else {
+                    $transaction->rollBack();
+                    $new_model->addError('_exception', "Validasi gagal");
+                    return $this->render('create', [
+                        'model' => $new_model,
+                        'modelLampiran' => (empty($modelLampiran)) ? [new PelatihanLampiran] : $modelLampiran,
+                    ]);
+                }
+
+                foreach($_POST['selection'] as $id_peserta_lama){
+                    $peserta_lama = PelatihanPeserta::findOne(['id' => $id_peserta_lama]);
+                    $peserta_baru = new PelatihanPeserta();
+                    
+                    $peserta_baru->user_id = $peserta_lama->user_id;
+                    $peserta_baru->pelatihan_id = $new_model->id;
+                    $peserta_baru->nik = $peserta_lama->nik;
+                    $peserta_baru->nama = $peserta_lama->nama;
+                    $peserta_baru->email = $peserta_lama->email;
+                    $peserta_baru->no_telp = $peserta_lama->no_telp;
+                    $peserta_baru->tanggal_lahir = $peserta_lama->tanggal_lahir;
+                    $peserta_baru->tempat_lahir = $peserta_lama->tempat_lahir;
+                    $peserta_baru->jenis_kelamin_id = $peserta_lama->jenis_kelamin_id;
+                    $peserta_baru->pendidikan_id = $peserta_lama->pendidikan_id;
+                    $peserta_baru->pekerjaan_id = $peserta_lama->pekerjaan_id;
+                    $peserta_baru->rt = $peserta_lama->rt;
+                    $peserta_baru->rw = $peserta_lama->rw;
+                    $peserta_baru->alamat = $peserta_lama->alamat;
+                    $peserta_baru->desa_id = $peserta_lama->desa_id;
+                    $peserta_lama->lanjut = 1;
+
+                    $peserta_lama->save();
+                    $peserta_baru->save();
+                }
+
+                $transaction->commit();
+                return $this->redirect(['view', 'id' => $new_model->id]);
+            } elseif (!\Yii::$app->request->isPost) {
+                $model->load($_GET);
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
+            $model->addError('_exception', $msg);
+        }
+
+        return $this->render('tingkat_lanjut',[
+            'model'=> $model,
+            'dataProvider'=> $dataProvider,
+            'modelLampiran'=> [new PelatihanLampiran()]
+        ]);
+    }
 
     public function actionDetail($unique_id)
     {
@@ -96,8 +254,8 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $valid = PelatihanPeserta::validateMultiple($modelPeserta) && $valid;
 
                     if (!$valid) {
+                        $transaction->rollBack();
                         $model->addError('_exception', "Validasi gagal.");
-                        $transaction->rollback();
                         return $this->render('update', [
                             'model' => $model,
                             'modelPeserta' => $modelPeserta,
@@ -504,9 +662,11 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     else Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ubah');
                     return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
                 } else {
+                    $transaction->rollBack();
                     Yii::$app->session->setFlash('error', 'Data gagal di validasi.');
                 }
             } catch (\Throwable $e) {
+                $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Pelatihan gagal disetujui');
             }
         }
@@ -524,11 +684,13 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
 
         if ($_POST) {
+            $transaction = Yii::$app->db->beginTransaction();
             try {
                 $model->status_id = 5; // status selesai
                 $model->save();
                 Yii::$app->session->setFlash('success', 'Monev Pelatihan berhasil disetujui');
             } catch (\Throwable $th) {
+                $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Monev Pelatihan gagal disetujui');
             }
         }
@@ -556,20 +718,26 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $hadir = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, 'id' => $selection])->all();
             $tidak_hadir = PelatihanPeserta::find()->where(['and', ['pelatihan_id' => $model->id], ['not in', 'id', $selection]])->all();
 
+            try{
 
-            foreach ($hadir as $participant) {
-                $participant->kehadiran = 1;
-                $participant->save();
+                foreach ($hadir as $participant) {
+                    $participant->kehadiran = 1;
+                    $participant->save();
+                }
+    
+                foreach ($tidak_hadir as $participant) {
+                    $participant->kehadiran = 0;
+                    $participant->save();
+                }
+    
+                $transaction->commit();
+                Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah');
+                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+            }catch(\Throwable $e){
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('success', 'Telah terjadi kesalahan');
+                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
             }
-
-            foreach ($tidak_hadir as $participant) {
-                $participant->kehadiran = 0;
-                $participant->save();
-            }
-
-            $transaction->commit();
-            Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah');
-            return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
         }
 
         $dataProvider =  new \yii\data\ActiveDataProvider([
@@ -590,7 +758,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
         $model = $this->findModel(['id' => $id]);
         if (RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
-        if ($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
+        if ($model->status_id != Constant::PELATIHAN_TINGKAT_LANJUT_2) throw new \yii\web\ForbiddenHttpException();
         $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => Constant::KEHADIRAN_HADIR]);
         if ($peserta->count() == 0) {
             Yii::$app->session->setFlash('error', "Setidaknnya harus ada peserta yang hadir dalam pelatihan.");

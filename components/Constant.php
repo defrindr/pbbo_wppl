@@ -4,6 +4,8 @@ namespace app\components;
 
 class Constant {
     const PELATIHAN_DASAR = 1;
+    const PELATIHAN_TINGKAT_LANJUT_1 = 2;
+    const PELATIHAN_TINGKAT_LANJUT_2 = 3;
 
     const KEHADIRAN_HADIR = 1;
     const KEHADIRAN_TIDAK_HADIR = 2;

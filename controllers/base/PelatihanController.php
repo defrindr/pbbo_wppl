@@ -184,6 +184,7 @@ class PelatihanController extends Controller
                         $o->save(0);
                     }
                 } else {
+                    $transaction->rollBack();
                     $model->addError('_exception', "Validasi gagal");
                     return $this->render('create', [
                         'model' => $model,
@@ -197,6 +198,7 @@ class PelatihanController extends Controller
                 $model->load($_GET);
             }
         } catch (\Exception $e) {
+            $transaction->rollBack();
             $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
             $model->addError('_exception', $msg);
         }
@@ -295,6 +297,7 @@ class PelatihanController extends Controller
                     $valid = PelatihanLampiran::validateMultiple($modelLampiran) && $valid;
 
                     if (!$valid) {
+                        $transaction->rollBack();
                         $model->addError('_exception', "Validasi gagal.");
                         $transaction->rollback();
                         return $this->render('update', [
@@ -308,6 +311,7 @@ class PelatihanController extends Controller
                         $o->save();
                     }
                 } else {
+                    $transaction->rollBack();
                     Yii::$app->session->setFlash("error", "Validasi tidak sesuai");
                     return $this->render('update', [
                         'model' => $model,
