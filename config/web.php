@@ -70,6 +70,7 @@ $config = [
                 '/pretest/post-answer' => '/pretest/post-answer',
                 'posttest/request-soal/<unique_id:[\w\_\-]+>' => 'posttest/request-soal',
                 'posttest/finish' => 'posttest/finish',
+                'pretest/finish' => 'pretest/finish',
                 'pretest/request-soal/<unique_id:[\w\_\-]+>' => 'pretest/request-soal',
                 'posttest/finish/<unique_id:[\w\_\-]+>' => 'posttest/finish',
                 'pretest/finish/<unique_id:[\w\_\-]+>' => 'pretest/finish',
