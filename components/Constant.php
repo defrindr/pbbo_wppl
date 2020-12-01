@@ -17,4 +17,11 @@ class Constant {
     const SOAL_JENIS_PRETEST= 1;
     const SOAL_JENIS_POSTTEST = 2;
     const SOAL_JENIS_PRAKTEK = 3;
+
+    const SOAL_TYPE_PILIHAN_GANDA = 1;
+    const SOAL_TYPE_ESSAY = 2;
+    const SOAL_TYPE_CHECKBOX = 3;
+    const SOAL_TYPE_JAWABAN_SINGKAT = 4;
+
+    const NILAI_MAKSIMAL = 100;
 }
