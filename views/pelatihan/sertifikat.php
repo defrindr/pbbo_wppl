@@ -5,6 +5,7 @@
  */
 
 use app\models\User;
+use yii\base\Model;
 
 ?>
 
@@ -90,11 +91,20 @@ $cretedby = User::findOne(['id' => $model->created_by])
         <p class='namapelatihan'><?= $model->nama ?></p>
         <p class='textbiasa'>Diseleggarakan Oleh</p>
         <p class='namapenyelenggara'><?= $cretedby->name ?></p>
-        <p class='textbiasa'>Sidoarjo, 23 Desember 2020</p>
+        <p class='textbiasa'>
+            <?= $model->kota ?>,
+            <?php
+            if ($model->tanggal_mulai == $model->tanggal_selesai) {
+                echo $model->tanggal_mulai;
+            } else {
+                echo $model->tanggal_mulai . " s/d " . $model->tanggal_selesai;
+            }
+            ?>
+        </p>
 
 
         <p class='textbiasa'><br /><br /><br /><b>Kepala <?= $cretedby->name ?></b><br /><br /><br /></p>
-        <p class='textbiasa namakepala'><b>&nbsp;Nama Kepala&nbsp;</b></p>
-        <p class='textbiasa' style="margin-top: 0;"><b>NIP. </b></p>
+        <p class='textbiasa namakepala'><b>&nbsp;<?= $model->nama_penandatangan ?>&nbsp;</b></p>
+        <p class='textbiasa' style="margin-top: 0;"><b>NIP. <?= $model->nip_penandatangan ?></b></p>
     </page>
 <?php } ?>
