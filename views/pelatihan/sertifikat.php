@@ -4,6 +4,7 @@
  * @var app\models\Pelatihan $model
  */
 
+use app\components\Tanggal;
 use app\models\User;
 use yii\base\Model;
 
@@ -95,9 +96,9 @@ $cretedby = User::findOne(['id' => $model->created_by])
             <?= $model->kota ?>,
             <?php
             if ($model->tanggal_mulai == $model->tanggal_selesai) {
-                echo $model->tanggal_mulai;
+                echo Tanggal::toReadableDate($model->tanggal_mulai);
             } else {
-                echo $model->tanggal_mulai . " s/d " . $model->tanggal_selesai;
+                echo Tanggal::toReadableDate($model->tanggal_mulai) . " s/d " . Tanggal::toReadableDate($model->tanggal_selesai);
             }
             ?>
         </p>
