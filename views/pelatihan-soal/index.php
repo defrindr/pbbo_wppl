@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'format' => 'raw',
 ],
 			'soal:ntext',
-			'nomor',
+			// 'nomor',
 			'jawaban:ntext',
                 ],
                 ]); ?>

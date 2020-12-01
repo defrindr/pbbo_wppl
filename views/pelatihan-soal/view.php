@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = 'View';
         : 
         '<span class="label label-warning">?</span>'),
 ],
-        'nomor',
+        // 'nomor',
         'soal:ntext',
         'pilihan:ntext',
         'jawaban:ntext',

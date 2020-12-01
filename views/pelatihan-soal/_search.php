@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
 		<?= $form->field($model, 'kategori_soal_id') ?>
 
-		<?= $form->field($model, 'nomor') ?>
+		<?php // $form->field($model, 'nomor') ?>
 
 		<?= $form->field($model, 'soal') ?>
 

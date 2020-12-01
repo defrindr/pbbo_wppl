@@ -39,7 +39,7 @@ abstract class PelatihanLampiran extends \yii\db\ActiveRecord
             [['judul_lampiran', 'file'], 'required'],
             [['pelatihan_id'], 'integer'],
             [['judul_lampiran', 'file'], 'string', 'max' => 100],
-            [['image'], 'file', 'extensions' => ['xlsx', 'xls', 'doc', 'docx']],
+            // [['image'], 'file', 'extensions' => ['xlsx', 'xls', 'doc', 'docx']],
             [['image'], 'file', 'skipOnEmpty' => true, 'on' => 'update'],
             [['image'], 'file', 'skipOnEmpty' => false, 'on' => 'create'],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']]

@@ -17,14 +17,11 @@ DynamicFormWidget::begin([
     'formId' => 'Pelatihan',
     'formFields' => [
         'id',
-        // 'pelatihan_id',
         "jenis_id",
         "kategori_soal_id",
-        "nomor",
         "soal",
         "pilihan",
         "jawaban",
-        // "jumlah_soal"
     ],
 ]);
 ?>
@@ -37,6 +34,7 @@ DynamicFormWidget::begin([
             <th> Soal </th>
             <th> Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan) </th>
             <th> Jawaban </th>
+            <!-- <th> Nilai Maksimum </th> -->
             <th>
                 <button type="button" class="add-item btn btn-success btn-xs"><i
                         class="glyphicon glyphicon-plus"></i></button>
@@ -45,15 +43,16 @@ DynamicFormWidget::begin([
         <tbody class="container-items soal-items">
             <?php foreach ($modelSoal as $i => $o): ?>
             <tr class="item-soal">
-                <td style="min-width: 30vw;">
-                    <?=$form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
-                        \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
-                        [
-                            'prompt' => 'Select',
-                        ])?>
+                <td>
+                    <?php 
+                    // $form->field($o, "[{$i}]kategori_soal_id", $hiddenTemplate)->dropdownList(
+                    //     \yii\helpers\ArrayHelper::map(app\models\MasterKategoriSoal::find()->all(), 'id', 'nama'),
+                    //     [
+                    //         'prompt' => 'Select',
+                    //     ])?>
                     <?=$form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea()?>
                 </td>
-                <td style="min-width: 35vw;">
+                <td>
                     <?=
                     $this->render('_soal_pilihan.php', [
                         'modelSoal' => $o,
@@ -62,9 +61,12 @@ DynamicFormWidget::begin([
                         'form' => $form,
                     ])?>
                 </td>
-                <td style="min-width: 35vw;">
+                <td>
                     <?=$form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"])?>
                 </td>
+                <!-- <td>
+                    <?php //$form->field($o, "[{$i}]nilai_maksimum", $hiddenTemplate)->textInput(['placeholder' => "Nilai Maksimum"])?>
+                </td> -->
                 <td>
                     <button type="button" class="remove-item btn btn-danger btn-xs"><i
                         class="glyphicon glyphicon-minus"></i></button>

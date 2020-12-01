@@ -13,6 +13,7 @@ use Yii;
  * @property integer $peserta_id
  * @property integer $soal_id
  * @property string $jawaban
+ * @property integer $nilai
  *
  * @property \app\models\PelatihanSoal $soal
  * @property \app\models\PelatihanSoalPeserta $peserta
@@ -21,6 +22,7 @@ use Yii;
 abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
 {
 
+    public $nilai_max = null;
 
 
     /**
@@ -38,7 +40,8 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
     {
         return [
             [['peserta_id', 'soal_id', 'jawaban'], 'required'],
-            [['peserta_id', 'soal_id'], 'integer'],
+            [['peserta_id', 'soal_id', 'nilai'], 'integer'],
+            ['nilai', 'integer', 'max' => $this->nilai_max],
             [['jawaban'], 'string'],
             [['soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoal::className(), 'targetAttribute' => ['soal_id' => 'id']],
             [['peserta_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanSoalPeserta::className(), 'targetAttribute' => ['peserta_id' => 'id']]
@@ -55,6 +58,7 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
             'peserta_id' => 'Peserta ID',
             'soal_id' => 'Soal ID',
             'jawaban' => 'Jawaban',
+            'nilai' => 'Nilai',
         ];
     }
 

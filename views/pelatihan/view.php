@@ -154,6 +154,15 @@ $this->params['breadcrumbs'][] = 'View';
                     'data-method' => 'post',
                 ]);
             }
+            
+            if($model->status_id == 5 && $model->tingkat_id < 4 && \Yii::$app->user->identity->role_id == $model->pelaksana_id) {
+                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan Pelatihan Ke Tingkat Selanjutnya', ['tingkat-selanjutnya', 'id' => $model->id], [    
+                    'class' => 'btn btn-success',
+                    'style' => "margin-left: 5px",
+                    // 'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+                    // 'data-method' => 'post',
+                ]);
+            }
             ?>
             <?php $this->endBlock();?>
 
@@ -211,6 +220,7 @@ $this->params['breadcrumbs'][] = 'View';
             <?php if($model->status_id == 3) : ?>
             <div style="padding :5px 0">
                 <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'List Kehadiran', ['update-kehadiran', 'id' => $model->id], ['class' => 'btn btn-success'])?>
+                <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Nilai Praktek', ['update-nilai-praktek', 'id' => $model->id], ['class' => 'btn btn-primary'])?>
             </div>
             <?php endif ?>
             <?php Pjax::begin(['id' => 'pjax-PelatihanPesertas', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanPesertas ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
@@ -232,7 +242,7 @@ $this->params['breadcrumbs'][] = 'View';
     'columns' => [
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view}',
+            'template' => '{view} {koreksi-posttest}',
             'contentOptions' => ['nowrap' => 'nowrap'],
             'urlCreator' => function ($action, $model, $key, $index) {
                 // using the column name as key, not mapping to 'id' like the standard generator
@@ -242,7 +252,14 @@ $this->params['breadcrumbs'][] = 'View';
                 return $params;
             },
             'buttons' => [
-
+                // 'koreksi-posttest' => function($modelPeserta) use ($model){
+                //     // if($model->status_id == 3){
+                //         // var_dump($model);
+                //         // die;
+                //         return "<a href='". Yii::$app->request->baseUrl ."/pelatihan/posttest/koreksi-jawaban/{$modelPeserta['id']}/{$model->unique_id}'><i class='fa fa-search'></i></a>";
+                //     // }
+                //     // return Html::a("<i class='fa fa-search'></i>", ["/pelatihan/posttest/koreksi-jawaban/{$model->id}/{$model->pelatihan->unique_id}"]);
+                // }
             ],
             'controller' => 'pelatihan-peserta',
         ],
@@ -278,6 +295,10 @@ $this->params['breadcrumbs'][] = 'View';
             },
             'format' => 'raw',
         ],
+        'nilai_posttest',
+        'nilai_pretest',
+        'nilai_praktek',
+        'komentar',
     ],
 ])
 . '</div>'?>

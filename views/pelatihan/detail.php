@@ -28,6 +28,15 @@ $this->title = 'Pelatihan : ' . $model->nama;
                             "class" => "small-box-footer",
                         ],
                     ];
+                } elseif ($model_soal_peserta->selesai) {
+                    $data = [
+                        "text" => "Anda Telah Menyelesaikan Soal Pelatihan ini.",
+                        "bg" => "bg-red",
+                        "link" => "#",
+                        "options" => [
+                            "class" => "small-box-footer",
+                        ],
+                    ];
                 } else {
                     $data = [
                         "text" => "Lanjutkan",

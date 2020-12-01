@@ -18,6 +18,7 @@ use Yii;
  * @property string $pilihan
  * @property string $jawaban
  * @property integer $order
+ * @property integer $nilai_maksimum
  *
  * @property \app\models\MasterKategoriSoal $kategoriSoal
  * @property \app\models\PelatihanSoalJenis $jenis
@@ -45,7 +46,7 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
     {
         return [
             [['unique_id', 'jenis_id', 'kategori_soal_id', 'soal'], 'required'],
-            [['jenis_id', 'kategori_soal_id', 'nomor', 'order'], 'integer'],
+            [['jenis_id', 'kategori_soal_id', 'nomor', 'order', 'nilai_maksimum'], 'integer'],
             [['soal', 'pilihan', 'jawaban'], 'string'],
             [['unique_id'], 'string', 'max' => 50],
             [['kategori_soal_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterKategoriSoal::className(), 'targetAttribute' => ['kategori_soal_id' => 'id']],
@@ -68,6 +69,7 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
             'pilihan' => 'Pilihan',
             'jawaban' => 'Jawaban',
             'order' => 'Order',
+            'nilai_maksimum' => 'Nilai Maksimum',
         ];
     }
 

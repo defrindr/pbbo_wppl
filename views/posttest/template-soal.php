@@ -64,6 +64,15 @@ const updateJawaban = () => {
     });
 }
 
+const selesai = () => {
+    updateJawaban();
+    $.ajax({
+        url: "'. \yii\helpers\Url::to(['posttest/finish']). '",
+        method: "POST",
+        data: $("#form-soal").serialize()
+    });
+}
+
 ', yii\web\View::POS_END, "loadSoal");
 ?>
 

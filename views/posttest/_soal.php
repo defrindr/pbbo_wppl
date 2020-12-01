@@ -13,6 +13,7 @@
 
 if ($soal->kategori_soal_id == 1): ?>
         <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
+        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
         <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
         <div class="form-group">
             <input type="Radio" name="jawaban" id="soal-jawaban-<?= $soal->unique_id ?>" value="<?=$pilihan->pilihan?>" <?= ($jawaban->jawaban == $pilihan->pilihan) ? "checked" : "" ?>>
@@ -27,6 +28,8 @@ if ($soal->kategori_soal_id == 1): ?>
         elseif ($soal->kategori_soal_id == 2): ?>
         <div class="form-group">
             <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
+
+        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
             <textarea name="jawaban" id="soal-<?= $soal->unique_id ?>" cols="30" rows="10" class="form-control"
                 placeholder="Jawaban Anda"><?= $jawaban->jawaban ?></textarea>
         </div>
@@ -35,6 +38,7 @@ if ($soal->kategori_soal_id == 1): ?>
         // short answer 
         elseif ($soal->kategori_soal_id == 3):?>
         <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
+        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
         <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
         <div class="form-group">
             <input type="text" name="jawaban" id="soal-<?= $soal->unique_id ?>" class="form-control"
@@ -47,6 +51,7 @@ if ($soal->kategori_soal_id == 1): ?>
         elseif ($soal->kategori_soal_id == 4):?>
 
         <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
+        <input type="hidden" name="pelatiahn_id" id="pelatiahn-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
         <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
         <div class="form-group">
             <input type="checkbox" name="jawaban[]" id="soal-<?= $soal->unique_id ?>" value="<?=$pilihan->pilihan?>" 
@@ -78,6 +83,7 @@ if ($soal->kategori_soal_id == 1): ?>
     <?php endif ?>
     <?php
     if($soal->order == $total_soal): ?>
-    <a class="btn btn-default btn-flat" href="#" onclick="event.preventDefault();updateJawaban();window.location = '<?= Url::to(["detail-pelatihan/$model->unique_id"]) ?>'">Selesai</a>
+    <!-- ;window.location = '<?= Url::to(["detail-pelatihan/$model->unique_id"]) ?>' -->
+    <a class="btn btn-default btn-flat" href="#" onclick="event.preventDefault();selesai()">Selesai</a>
     <?php endif ?>
 </div>

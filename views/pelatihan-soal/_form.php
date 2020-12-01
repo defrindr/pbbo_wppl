@@ -39,7 +39,7 @@ use yii\helpers\Html;
                     'disabled' => (isset($relAttributes) && isset($relAttributes['kategori_soal_id'])),
                 ]
             );?>
-			<?=$form->field($model, 'nomor')->textInput()?>
+			<?php //$form->field($model, 'nomor')->textInput()?>
 			<?=$form->field($model, 'soal')->textarea(['rows' => 6])?>
 			<?=$form->field($model, 'pilihan')->textarea(['rows' => 6])?>
 			<?=$form->field($model, 'jawaban')->textarea(['rows' => 6])?>        <hr/>

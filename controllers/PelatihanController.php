@@ -196,16 +196,16 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     foreach ($modelSoal as $i => $o) {
                         $o->order = $i+1;
                         $o->jenis_id = $modelSoalJenis->id;
+                        $o->kategori_soal_id = Constant::SOAL_TYPE_PILIHAN_GANDA;
                         $modelSoal[$i] = $o;
                         if($o->unique_id == null) $o->unique_id = \Yii::$app->security->generateRandomString(50);
                     }
-
 
                     // validasi dynamic form
                     $valid = PelatihanSoal::validateMultiple($modelSoal) && $valid;
 
                     if (!$valid) {
-                        $model->addError('_exception', "Validasi gagal.");
+                        $model->addError('_exception', "Validasi Soal gagal.");
                         $transaction->rollback();
                         return $this->render('update', [
                             'model' => $model,
@@ -235,7 +235,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     }
                     
                     if (!$valid) {
-                        $model->addError('_exception', "Validasi gagal.");
+                        $model->addError('_exception', "Validasi Pilihan gagal.");
                         $transaction->rollback();
                         return $this->render('update', [
                             'model' => $model,
@@ -337,6 +337,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     foreach ($modelSoal as $i => $o) {
                         $o->order = $i+1;
                         $o->jenis_id = $modelSoalJenis->id;
+                        $o->kategori_soal_id = Constant::SOAL_TYPE_PILIHAN_GANDA;
                         $o->unique_id = \Yii::$app->security->generateRandomString(50);
                         $modelSoal[$i] = $o;
                     }
