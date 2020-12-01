@@ -49,13 +49,13 @@ class PelatihanController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        if($user->role_id == RoleType::PESERTA){
+        if ($user->role_id == RoleType::PESERTA) {
             $list_user = [];
             $model_user = PelatihanPeserta::find()->where(['user_id' => $user->id])->select('pelatihan_id')->distinct()->all();
-            foreach($model_user as $o){
+            foreach ($model_user as $o) {
                 array_push($list_user, $o->pelatihan_id);
             }
-            $model = Pelatihan::find()->where(['and', ['in', 'id', $list_user], ['>=', 'status_id', 3 ]])->all();
+            $model = Pelatihan::find()->where(['and', ['in', 'id', $list_user], ['>=', 'status_id', 3]])->all();
             Tabs::clearLocalStorage();
 
             Url::remember();
@@ -105,15 +105,16 @@ class PelatihanController extends Controller
     {
         $model = new Pelatihan;
         $modelLampiran = [new PelatihanLampiran];
+        $model->kota = "Sidoarjo";
 
         $transaction = \Yii::$app->db->beginTransaction();
 
         try {
             if ($model->load($_POST)) {
-                if(Yii::$app->user->identity->role_id != RoleType::SA){
+                if (Yii::$app->user->identity->role_id != RoleType::SA) {
                     $model->pelaksana_id = Yii::$app->user->identity->id;
                 }
-                if(!preg_match("/https?/",$model->forum_diskusi)) {
+                if (!preg_match("/https?/", $model->forum_diskusi)) {
                     $model->forum_diskusi = "http://{$model->forum_diskusi}";
                 }
 
@@ -165,7 +166,7 @@ class PelatihanController extends Controller
                     foreach ($modelLampiran as $i => $o) {
                         $o->save(0);
                     }
-                }else{
+                } else {
                     $model->addError('_exception', "Validasi gagal");
                     return $this->render('create', [
                         'model' => $model,
@@ -198,7 +199,7 @@ class PelatihanController extends Controller
     {
         $model = $this->findModel($id);
         $uniqueId = $model->unique_id;
-        if($model->status_id != 1) {
+        if ($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
         }
@@ -216,16 +217,16 @@ class PelatihanController extends Controller
         if (count($modelLampiran) == 0) {
             $modelLampiran = [new PelatihanLampiran];
         }
-        
+
         $transaction = \Yii::$app->db->beginTransaction();
 
         if ($model->load($_POST)) {
-            if(!preg_match("/https?/",$model->forum_diskusi)) {
+            if (!preg_match("/https?/", $model->forum_diskusi)) {
                 $model->forum_diskusi = "http://{$model->forum_diskusi}";
             }
-            if($model->unique_id == null) $model->unique_id = Yii::$app->security->generateRandomString(32);
+            if ($model->unique_id == null) $model->unique_id = Yii::$app->security->generateRandomString(32);
             else $model->unique_id = $uniqueId;
-            
+
             // model lampiran
             $oldLampiranIDs = ArrayHelper::map($modelLampiran, 'id', 'id');
             $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class, $modelLampiran);
@@ -271,7 +272,6 @@ class PelatihanController extends Controller
                         } else {
                             $o->file = $oldLampiranFile;
                         }
-
                     }
 
                     // validasi dynamic form
@@ -290,8 +290,7 @@ class PelatihanController extends Controller
                     foreach ($modelLampiran as $i => $o) {
                         $o->save();
                     }
-
-                }else{
+                } else {
                     Yii::$app->session->setFlash("error", "Validasi tidak sesuai");
                     return $this->render('update', [
                         'model' => $model,
