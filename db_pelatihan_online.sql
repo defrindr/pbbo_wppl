@@ -387,32 +387,48 @@ CREATE TABLE `pelatihan_kuesioner_kepuasan` (
 
 INSERT INTO `pelatihan_kuesioner_kepuasan` (`id`, `jenis_id`, `peserta_id`, `soal`, `jawaban`) VALUES
 (1,	59,	36,	1,	'2'),
-(2,	59,	36,	2,	'2'),
+(2,	59,	36,	2,	'3'),
 (3,	59,	36,	3,	'2'),
-(4,	59,	36,	4,	'2'),
-(5,	59,	36,	5,	'3'),
-(6,	59,	36,	6,	'1'),
-(7,	59,	36,	7,	'1'),
-(8,	59,	36,	8,	'1'),
+(4,	59,	36,	4,	'4'),
+(5,	59,	36,	5,	'1'),
+(6,	59,	36,	6,	'2'),
+(7,	59,	36,	7,	'3'),
+(8,	59,	36,	8,	'4'),
 (9,	59,	36,	9,	'1'),
-(10,	59,	36,	10,	'1');
+(10,	59,	36,	10,	'10\r\n');
 
 DROP TABLE IF EXISTS `pelatihan_kuesioner_monev`;
 CREATE TABLE `pelatihan_kuesioner_monev` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jenis_id` int(11) NOT NULL,
   `peserta_id` int(11) NOT NULL,
-  `soal_id` int(11) NOT NULL,
+  `soal` int(11) NOT NULL,
   `jawaban` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `peserta_id` (`peserta_id`),
-  KEY `soal_id` (`soal_id`),
+  KEY `soal_id` (`soal`),
   KEY `jenis_id` (`jenis_id`),
   CONSTRAINT `pelatihan_kuesioner_monev_ibfk_1` FOREIGN KEY (`peserta_id`) REFERENCES `pelatihan_peserta` (`id`),
-  CONSTRAINT `pelatihan_kuesioner_monev_ibfk_3` FOREIGN KEY (`soal_id`) REFERENCES `master_kuesioner_monev` (`id`),
+  CONSTRAINT `pelatihan_kuesioner_monev_ibfk_3` FOREIGN KEY (`soal`) REFERENCES `master_kuesioner_monev` (`id`),
   CONSTRAINT `pelatihan_kuesioner_monev_ibfk_4` FOREIGN KEY (`jenis_id`) REFERENCES `pelatihan_soal_jenis` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `pelatihan_kuesioner_monev` (`id`, `jenis_id`, `peserta_id`, `soal`, `jawaban`) VALUES
+(1,	60,	36,	1,	''),
+(2,	60,	36,	2,	''),
+(3,	60,	36,	3,	''),
+(4,	60,	36,	4,	''),
+(5,	60,	36,	5,	''),
+(6,	60,	36,	6,	''),
+(7,	60,	36,	7,	''),
+(8,	60,	36,	8,	'Cukup Sesuai'),
+(9,	60,	36,	9,	NULL),
+(10,	60,	36,	10,	''),
+(11,	60,	36,	11,	NULL),
+(12,	60,	36,	12,	NULL),
+(13,	60,	36,	13,	NULL),
+(14,	60,	36,	14,	NULL),
+(15,	60,	36,	15,	'');
 
 DROP TABLE IF EXISTS `pelatihan_lampiran`;
 CREATE TABLE `pelatihan_lampiran` (
@@ -476,7 +492,7 @@ CREATE TABLE `pelatihan_peserta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `pelatihan_peserta` (`id`, `user_id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
-(36,	7,	79,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	0,	0,	100,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
+(36,	7,	79,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-08',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	1,	1,	0,	100,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
 
 DROP TABLE IF EXISTS `pelatihan_soal`;
 CREATE TABLE `pelatihan_soal` (
@@ -796,10 +812,10 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `user` (`id`, `username`, `password`, `name`, `role_id`, `photo_url`, `last_login`, `last_logout`) VALUES
-(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-12-01 17:26:57',	'2020-12-01 14:15:07'),
+(1,	'admin',	'21232f297a57a5a743894a0e4a801fc3',	'Dinas Pusat',	1,	'ID6jM8Az7Yh_R6LR44Ezh02VECKTQ_Ya.png',	'2020-12-01 19:08:02',	'2020-12-01 17:30:03'),
 (2,	'dinas_pendidikan',	'f0b171542f1bebedf72dbd45edc4755f',	'Dinas Pendidikan',	2,	'default.png',	'2020-12-01 14:52:34',	'2020-12-01 15:31:06'),
 (6,	'2020',	'e01f0aec6f2fa605c2d154a17ff74f02',	'Ronaldo Wati',	3,	NULL,	'2020-12-01 15:33:28',	'2020-12-01 15:35:01'),
-(7,	'1912',	'7d075590d614e32721b829d13641273c',	'Defri Indra Mahardika',	3,	NULL,	'2020-12-01 15:41:43',	'2020-12-01 17:26:54');
+(7,	'1912',	'7d075590d614e32721b829d13641273c',	'Defri Indra Mahardika',	3,	NULL,	'2020-12-01 19:07:51',	'2020-12-01 19:07:57');
 
 DROP TABLE IF EXISTS `wilayah_desa`;
 CREATE TABLE `wilayah_desa` (
@@ -850,4 +866,4 @@ CREATE TABLE `wilayah_provinsi` (
 INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (1,	'jawa timur');
 
--- 2020-12-01 10:28:06
+-- 2020-12-01 12:10:15
