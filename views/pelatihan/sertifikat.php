@@ -86,7 +86,7 @@ $cretedby = User::findOne(['id' => $model->created_by])
     <page size="A4">
         <img src="https://seeklogo.com/images/S/sidoarjo-logo-5B22446ACF-seeklogo.com.png" />
         <h1>SERTIFIKAT</h1>
-        <p class='textbiasa'>Diberika Kepada</p>
+        <p class='textbiasa'>Diberikan Kepada</p>
         <p class='namapeserta'>&nbsp;&nbsp;&nbsp;<?= $p->nama ?>&nbsp;&nbsp;&nbsp;</p>
         <p class='textbiasa'>Sebagai Peserta</p>
         <p class='namapelatihan'><?= $model->nama ?></p>
