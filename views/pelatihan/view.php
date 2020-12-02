@@ -3,12 +3,12 @@
 use app\components\Constant;
 use app\components\RoleType;
 use app\models\PelatihanLampiran;
-use app\models\PelatihanSoalJenis;
 use dmstr\bootstrap\Tabs;
 use dmstr\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
+use app\components\Tanggal;
 
 /**
  * @var yii\web\View $this
@@ -23,18 +23,18 @@ $this->params['breadcrumbs'][] = 'View';
 <div class="giiant-crud pelatihan-view">
 
 
-    <?php if($model->status_id < 2) : ?>
+    <?php if ($model->status_id < 2): ?>
     <!-- menu buttons -->
     <p class='pull-left'>
         <?=Html::a('<span class="glyphicon glyphicon-pencil"></span> ' . 'Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-info'])?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Peserta', ['add-peserta', 'id' => $model->id], ['class' => 'btn btn-success'])?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Soal', ['add-soal', 'id' => $model->id], ['class' => 'btn btn-success'])?>
     </p>
-    
+
     <p class="pull-right">
         <?=Html::a('<span class="glyphicon glyphicon-list"></span> ' . 'Daftar Pelatihan', ['index'], ['class' => 'btn btn-default'])?>
     </p>
-    <?php endif ?>
+    <?php endif?>
 
     <div class="clearfix"></div>
 
@@ -52,119 +52,138 @@ $this->params['breadcrumbs'][] = 'View';
             <?php $this->beginBlock('app\models\Pelatihan');?>
 
             <?=DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    // 'id',
-                    'nama',
-                    'latar_belakang:ntext',
-                    'tujuan:ntext',
-                    'tanggal_mulai',
-                    'tanggal_selesai',
-                    [
-                        'format' => 'html',
-                        'attribute' => 'tingkat_id',
-                        'value' => $model->tingkat->nama
-                    ],
-                    [
-                        'format' => 'html',
-                        'attribute' => 'status_id',
-                        'value' => $model->status->nama,
-                    ],
-                    [
-                        'format' => 'html',
-                        'attribute' => 'forum_diskusi',
-                        'value' => "<a target='_blank' href='$model->forum_diskusi'>$model->forum_diskusi</a>",
-                    ],
-                    [
-                        'format' => 'html',
-                        'attribute' => 'pelaksana_id',
-                        'value' => ($model->pelaksana ?
-                            Html::a('<i class="glyphicon glyphicon-circle-arrow-right"></i> ' . $model->pelaksana->name, ['user/view', 'id' => $model->pelaksana->id])
-                            :
-                            '<span class="label label-warning">?</span>'),
-                    ],
-                    [
-                        'attribute' => 'dasar_pelaksanaan',
-                        'visible' => ($model->status_id >= 4)
-                    ],
-                    [
-                        'attribute' => 'hasil_pelaksanaan_pelatihan',
-                        'visible' => ($model->status_id >= 4)
-                    ],
-                    [
-                        'attribute' => 'proposal',
-                        'visible' => ($model->status_id >= 4),
-                        'value' => function($model){
-                            return "<a href='".Yii::$app->request->baseUrl."/".$model->proposal."'>Download Proposal</a>";
-                        },
-                        'format' => 'html'
-                    ],
-                    // [
-                    //     'attribute' => 'rekapitulasi_nilai',
-                    //     'visible' => ($model->status_id >= 4),
-                    //     'value' => function($model){
-                    //         return "<a href='".Yii::$app->request->baseUrl."/".$model->rekapitulasi_nilai."'>Download Rekapitulasi Nilai</a>";
-                    //     },
-                    //     'format' => 'html'
-                    // ],
-                    // [
-                    //     'attribute' => 'absensi_kehadiran',
-                    //     'visible' => ($model->status_id >= 4),
-                    //     'value' => function($model){
-                    //         return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
-                    //     },
-                    //     'format' => 'raw'
-                    // ],
-                    // 'created_at',
-                    // 'created_by',
-                    // 'modified_at',
-                    // 'modified_by',
-                    // 'flag',
-                ],
-            ]);?>
+    'model' => $model,
+    'attributes' => [
+        // 'id',
+        'nama',
+        'latar_belakang:ntext',
+        'tujuan:ntext',
+        [
+            'attribute' => 'tanggal_mulai',
+            'format' => 'raw',
+            'value' => function($model){
+                return Tanggal::toReadableDate($model->tanggal_mulai);
+            }
+        ],
+        [
+            'attribute' => 'tanggal_selesai',
+            'format' => 'raw',
+            'value' => function($model){
+                return Tanggal::toReadableDate($model->tanggal_selesai);
+            }
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'tingkat_id',
+            'value' => $model->tingkat->nama,
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'status_id',
+            'value' => $model->status->nama,
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'forum_diskusi',
+            'value' => "<a target='_blank' href='$model->forum_diskusi'>$model->forum_diskusi</a>",
+        ],
+        [
+            'format' => 'html',
+            'attribute' => 'pelaksana_id',
+            'value' => ($model->pelaksana ?
+                Html::a('<i class="glyphicon glyphicon-circle-arrow-right"></i> ' . $model->pelaksana->name, ['user/view', 'id' => $model->pelaksana->id])
+                :
+                '<span class="label label-warning">?</span>'),
+        ],
+        [
+            'attribute' => 'dasar_pelaksanaan',
+            'visible' => ($model->status_id >= 4),
+        ],
+        [
+            'attribute' => 'hasil_pelaksanaan_pelatihan',
+            'visible' => ($model->status_id >= 4),
+        ],
+        [
+            'attribute' => 'proposal',
+            'visible' => ($model->status_id >= 4),
+            'value' => function ($model) {
+                return "<a href='" . Yii::$app->request->baseUrl . "/" . $model->proposal . "'>Download Proposal</a>";
+            },
+            'format' => 'html',
+        ],
+        // [
+        //     'attribute' => 'rekapitulasi_nilai',
+        //     'visible' => ($model->status_id >= 4),
+        //     'value' => function($model){
+        //         return "<a href='".Yii::$app->request->baseUrl."/".$model->rekapitulasi_nilai."'>Download Rekapitulasi Nilai</a>";
+        //     },
+        //     'format' => 'html'
+        // ],
+        // [
+        //     'attribute' => 'absensi_kehadiran',
+        //     'visible' => ($model->status_id >= 4),
+        //     'value' => function($model){
+        //         return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
+        //     },
+        //     'format' => 'raw'
+        // ],
+        // 'created_at',
+        // 'created_by',
+        // 'modified_at',
+        // 'modified_by',
+        // 'flag',
+    ],
+]);?>
 
             <hr />
-            <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
-                [
-                    'class' => 'btn btn-danger',
-                    'data-confirm' => '' . 'Are you sure to delete this item?' . '',
-                    'data-method' => 'post',
-                ]);?>
-            <?php if($model->status_id==1){ 
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan', ['ajukan', 'id' => $model->id],
-                    [
-                        'class' => 'btn btn-primary',
-                        'data-confirm' => '' . 'Yakin ingin mengajukan pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
-                        'data-method' => 'post',
-                    ]);
-            }else if($model->status_id==2 && \app\components\RoleType::SA == \Yii::$app->user->identity->role_id) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui', ['setujui', 'id' => $model->id],
-                    [
-                        'class' => 'btn btn-primary',
-                        'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
-                        'data-method' => 'post',
-                    ]);
-            }else if(($model->status_id==3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
-            }
-            if($model->status_id == 4 && \Yii::$app->user->identity->role_id == RoleType::SA) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui Monev', ['setujui-monev', 'id' => $model->id], [    
-                    'class' => 'btn btn-success',
-                    'style' => "margin-left: 5px",
-                    'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
-                    'data-method' => 'post',
-                ]);
-            }
-            
-            if($model->status_id == 5 && $model->tingkat_id < 4 && \Yii::$app->user->identity->role_id == $model->pelaksana_id) {
-                echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan Pelatihan Ke Tingkat Selanjutnya', ['tingkat-selanjutnya', 'id' => $model->id], [    
-                    'class' => 'btn btn-success',
-                    'style' => "margin-left: 5px",
-                    // 'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
-                    // 'data-method' => 'post',
-                ]);
-            }
-            ?>
+            <?=Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
+    [
+        'class' => 'btn btn-danger',
+        'data-confirm' => '' . 'Are you sure to delete this item?' . '',
+        'data-method' => 'post',
+    ]);?>
+            <?php if ($model->status_id == 1) {
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan', ['ajukan', 'id' => $model->id],
+        [
+            'class' => 'btn btn-primary',
+            'data-confirm' => '' . 'Yakin ingin mengajukan pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+            'data-method' => 'post',
+        ]);
+} else if ($model->status_id == 2 && \app\components\RoleType::SA == \Yii::$app->user->identity->role_id) {
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui', ['setujui', 'id' => $model->id],
+        [
+            'class' => 'btn btn-primary',
+            'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+            'data-method' => 'post',
+        ]);
+} else if (($model->status_id == 3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
+}
+if ($model->status_id == 4 && \Yii::$app->user->identity->role_id == RoleType::SA) {
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui Monev', ['setujui-monev', 'id' => $model->id], [
+        'class' => 'btn btn-success',
+        'style' => "margin-left: 5px",
+        'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+        'data-method' => 'post',
+    ]);
+}
+
+// if($model->status_id == 5){
+//     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Cetak Sertifikat', ['sertifikat', 'id' => $model->id], [
+//         'class' => 'btn btn-success',
+//         'style' => "margin-left: 5px",
+//     ]);
+// }
+
+if ($model->status_id == 5 && $model->tingkat_id < 4 && \Yii::$app->user->identity->role_id == $model->pelaksana_id) {
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan Pelatihan Ke Tingkat Selanjutnya', ['tingkat-selanjutnya', 'id' => $model->id], [
+        'class' => 'btn btn-success',
+        'style' => "margin-left: 5px",
+        // 'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
+        // 'data-method' => 'post',
+    ]);
+}
+?>
             <?php $this->endBlock();?>
 
 
@@ -199,11 +218,11 @@ $this->params['breadcrumbs'][] = 'View';
                 return $params;
             },
             'buttons' => [
-                'download' => function($model){
+                'download' => function ($model) {
                     $item = PelatihanLampiran::findOne(['id' => $model['id']]);
-                    $url = \yii\helpers\Url::to(['/'. $item->getUploadedUrlFolder(). '/'. $item->file]);
+                    $url = \yii\helpers\Url::to(['/' . $item->getUploadedUrlFolder() . '/' . $item->file]);
                     return "<a href='{$url}'><i class='fa fa-download'></a>";
-                }
+                },
             ],
             'controller' => 'pelatihan-lampiran',
         ],
@@ -218,12 +237,12 @@ $this->params['breadcrumbs'][] = 'View';
 
 
             <?php $this->beginBlock('PelatihanPesertas');?>
-            <?php if($model->status_id == 3) : ?>
+            <?php if ($model->status_id == 3) : ?>
             <div style="padding :5px 0">
                 <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'List Kehadiran', ['update-kehadiran', 'id' => $model->id], ['class' => 'btn btn-success'])?>
                 <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Nilai Praktek', ['update-nilai-praktek', 'id' => $model->id], ['class' => 'btn btn-primary'])?>
             </div>
-            <?php endif ?>
+            <?php endif?>
             <?php Pjax::begin(['id' => 'pjax-PelatihanPesertas', 'enableReplaceState' => false, 'linkSelector' => '#pjax-PelatihanPesertas ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
             <?='<div class="table-responsive">'
 . \yii\grid\GridView::widget([
@@ -268,15 +287,21 @@ $this->params['breadcrumbs'][] = 'View';
         ['class' => 'yii\grid\SerialColumn'],
         [
             'attribute' => 'kehadiran',
-            'value' => function($model) {
+            'value' => function ($model) {
                 return ($model->kehadiran) ? "Hadir" : "Tidak Hadir";
-            }
+            },
         ],
         'nik',
         'nama',
         'email:email',
         'no_telp',
-        'tanggal_lahir',
+        [
+            'attribute' => 'tanggal_lahir',
+            'format' => 'raw',
+            'value' => function($model){
+                return Tanggal::toReadableDate($model->tanggal_lahir);
+            }
+        ],
         'tempat_lahir',
         // generated by schmunk42\giiant\generators\crud\providers\core\RelationProvider::columnFormat
         [
@@ -337,10 +362,10 @@ $this->params['breadcrumbs'][] = 'View';
                 return $params;
             },
             'buttons' => [
-                'update' => function($model){
+                'update' => function ($model) {
                     // $item = PelatihanSoalJenis::findOne($model['id']);
                     return "<a href='update-soal?id={$model['id']}'><i class='fa fa-pencil'></i></a>";
-                }
+                },
             ],
             'controller' => 'pelatihan-soal-jenis',
         ],
@@ -363,29 +388,29 @@ $this->params['breadcrumbs'][] = 'View';
 
 
             <?=Tabs::widget(
-                [
-                    'id' => 'relation-tabs',
-                    'encodeLabels' => false,
-                    'items' => [[
-                        'label' => '<b class=""># ' . $model->nama . '</b>',
-                        'content' => $this->blocks['app\models\Pelatihan'],
-                        'active' => true,
-                    ], [
-                        'content' => $this->blocks['PelatihanLampirans'],
-                        'label' => '<small>Pelatihan Lampirans <span class="badge badge-default">' . count($model->getPelatihanLampirans()->asArray()->all()) . '</span></small>',
-                        'active' => false,
-                    ], [
-                        'content' => $this->blocks['PelatihanPesertas'],
-                        'label' => '<small>Pelatihan Pesertas <span class="badge badge-default">' . count($model->getPelatihanPesertas()->asArray()->all()) . '</span></small>',
-                        'active' => false,
-                    ], [
-                        'content' => $this->blocks['PelatihanSoalJenis'],
-                        'label' => '<small>Pelatihan Soal Jenis <span class="badge badge-default">' . count($model->getPelatihanSoalJenis()->where(['not in', 'jenis_id', [Constant::SOAL_JENIS_KUESIONER_KEPUASAN, Constant::SOAL_JENIS_KUESIONER_MONEV]])->asArray()->all()) . '</span></small>',
-                        'active' => false,
-                    ]],
-                ]
-            );
-            ?>
+    [
+        'id' => 'relation-tabs',
+        'encodeLabels' => false,
+        'items' => [[
+            'label' => '<b class=""># ' . $model->nama . '</b>',
+            'content' => $this->blocks['app\models\Pelatihan'],
+            'active' => true,
+        ], [
+            'content' => $this->blocks['PelatihanLampirans'],
+            'label' => '<small>Pelatihan Lampirans <span class="badge badge-default">' . count($model->getPelatihanLampirans()->asArray()->all()) . '</span></small>',
+            'active' => false,
+        ], [
+            'content' => $this->blocks['PelatihanPesertas'],
+            'label' => '<small>Pelatihan Pesertas <span class="badge badge-default">' . count($model->getPelatihanPesertas()->asArray()->all()) . '</span></small>',
+            'active' => false,
+        ], [
+            'content' => $this->blocks['PelatihanSoalJenis'],
+            'label' => '<small>Pelatihan Soal Jenis <span class="badge badge-default">' . count($model->getPelatihanSoalJenis()->where(['not in', 'jenis_id', [Constant::SOAL_JENIS_KUESIONER_KEPUASAN, Constant::SOAL_JENIS_KUESIONER_MONEV]])->asArray()->all()) . '</span></small>',
+            'active' => false,
+        ]],
+    ]
+);
+?>
         </div>
     </div>
 </div>
