@@ -578,6 +578,14 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
         $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_PELENGKAPAN_DATA])->one();
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if($model->getPelatihanSoalJenis()->count() != 4) {
+            Yii::$app->session->setFlash('error', 'Soal pretest / posttest harus dibuat terlebih dahulu');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+        if($model->getPelatihanPesertas()->count() == 0) {
+            Yii::$app->session->setFlash('error', 'Setidaknya harus terdapat 1 peserta');
+            return $this->redirect(['view', 'id' => $id]);
+        }
         if ($model) {
             try {
                 $model->status_id = 2;
