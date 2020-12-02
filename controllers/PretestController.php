@@ -50,7 +50,7 @@ class PretestController extends Controller {
     public function actionFinish(){
         $unique_id = $_POST['pelatihan_id'];
         $this->selesai($unique_id);
-        return $this->redirect(['/pelatihan']);
+        return $this->redirect(['/pelatihan/view', 'unique_id' => $unique_id]);
     }
     
     public function actionPostAnswer(){
