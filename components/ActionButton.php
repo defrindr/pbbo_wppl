@@ -32,7 +32,7 @@ class ActionButton
             },
         ];
         $template = '{view} {update} {delete}';
-        $width = "140px";
+        $width = "120px";
 
         if($btn_pengajuan_selanjutnya) {
             $template = "{ajukan} <br> $template";
@@ -50,7 +50,7 @@ class ActionButton
                     }
                 }
             };
-            $width = "280px";
+            $width = "200px";
         }
 
         return [
