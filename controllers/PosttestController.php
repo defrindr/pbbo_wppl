@@ -121,7 +121,7 @@ class PosttestController extends Controller {
 
         $jawaban = PelatihanSoalPesertaJawaban::findOne(['soal_id' => $pelatihan_soal->id, 'peserta_id' => $soal_peserta->id]);
         $model = Pelatihan::findOne(['id' => $pelatihan_soal_jenis->pelatihan_id]);
-        $total_soal = PelatihanSoal::find()->where(['jenis_id' => $pelatihan_soal_jenis])->count();
+        $total_soal = PelatihanSoal::find()->where(['jenis_id' => $pelatihan_soal_jenis->id])->count();
         $this->list_id_soal = $pelatihan_soal_jenis->getPelatihanSoals()->select(['unique_id'])->asArray()->all();
         return $this->renderPartial('_soal.php',[
             'soal' => $pelatihan_soal,
