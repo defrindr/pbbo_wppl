@@ -29,7 +29,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 {
 
     public function actionTingkatLanjut($id){
-        $model = Pelatihan::findOne(['id' => $id]);
+        $model = Pelatihan::findOne(['id' => $id, 'status_id' => Constant::STATUS_SELESAI]);
+        if ($model == []) throw new \yii\web\NotFoundHttpException();
+
         $new_model = new Pelatihan();
         $check_exist = Pelatihan::findOne(['pelatihan_sebelumnya' => $model->id, 'flag' => 1]);
         if ($check_exist != []) throw new \yii\web\NotFoundHttpException();
@@ -76,6 +78,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 $new_model->modified_by = \Yii::$app->user->identity->id;
                 $new_model->tingkat_id = $tingkat_baru;
                 $new_model->pelatihan_sebelumnya = $model->id;
+                $new_model->pelaksana_id = $model->pelaksana_id;
 
                 // validate all models
                 $valid = $new_model->validate();
@@ -122,9 +125,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $valid = PelatihanLampiran::validateMultiple($modelLampiran) && $valid;
                     if (!$valid) {
                         $transaction->rollback();
-                        return $this->render('create', [
-                            'model' => $new_model,
-                            'modelLampiran' => $modelLampiran,
+                        return $this->render('tingkat_lanjut', [
+                            'model'=> $model,
+                            'dataProvider'=> $dataProvider,
+                            'modelLampiran'=> [new PelatihanLampiran()]
                         ]);
                     }
 
@@ -134,9 +138,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 } else {
                     $transaction->rollBack();
                     $new_model->addError('_exception', "Validasi gagal");
-                    return $this->render('create', [
-                        'model' => $new_model,
-                        'modelLampiran' => (empty($modelLampiran)) ? [new PelatihanLampiran] : $modelLampiran,
+                    return $this->render('tingkat_lanjut', [
+                        'model'=> $model,
+                        'dataProvider'=> $dataProvider,
+                        'modelLampiran'=> [new PelatihanLampiran()]
                     ]);
                 }
 
@@ -642,26 +647,26 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             return $this->redirect(['/pelatihan/view', 'id' => $id]);
         }
         $oldStatus = $model->status_id;
-        $oldSertifikat = $model->sertifikat;
-        $oldRekapitulasiNilai = $model->rekapitulasi_nilai;
-        $oldAbsensiKehadiran = $model->absensi_kehadiran;
+        $oldProposal = $model->proposal;
+        // $oldRekapitulasiNilai = $model->rekapitulasi_nilai;
+        // $oldAbsensiKehadiran = $model->absensi_kehadiran;
 
         if (RoleType::disallow($model)) throw new NotFoundHttpException();
         if ($model->load($_POST)) {
             try {
                 $transaction = Yii::$app->db->beginTransaction();
-                $sertifikat = UploadedFile::getInstance($model, "sertifikat");
-                $rekapitulasi_nilai = UploadedFile::getInstance($model, "rekapitulasi_nilai");
-                $absensi_kehadiran = UploadedFile::getInstance($model, "absensi_kehadiran");
-                if ($model->status_id == 3) $valid = ($sertifikat != null && $model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null && $rekapitulasi_nilai != null && $absensi_kehadiran != null);
+                $proposal = UploadedFile::getInstance($model, "proposal");
+                // $rekapitulasi_nilai = UploadedFile::getInstance($model, "rekapitulasi_nilai");
+                // $absensi_kehadiran = UploadedFile::getInstance($model, "absensi_kehadiran");
+                if ($model->status_id == 3) $valid = ($proposal != null && $model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
                 else $valid = ($model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
                 if ($valid) {
-                    if ($sertifikat) $model->sertifikat = $this->uploadFile($sertifikat, "sertifikat", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
-                    else $model->sertifikat = $oldSertifikat;
-                    if ($rekapitulasi_nilai) $model->rekapitulasi_nilai = $this->uploadFile($rekapitulasi_nilai, "rekapitulasi_nilai", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
-                    else $model->rekapitulasi_nilai = $oldRekapitulasiNilai;
-                    if ($absensi_kehadiran) $model->absensi_kehadiran = $this->uploadFile($absensi_kehadiran, "absensi_kehadiran", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
-                    else $model->absensi_kehadiran = $oldAbsensiKehadiran;
+                    if ($proposal) $model->proposal = $this->uploadFile($proposal, "proposal", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    else $model->proposal = $oldProposal;
+                    // if ($rekapitulasi_nilai) $model->rekapitulasi_nilai = $this->uploadFile($rekapitulasi_nilai, "rekapitulasi_nilai", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    // else $model->rekapitulasi_nilai = $oldRekapitulasiNilai;
+                    // if ($absensi_kehadiran) $model->absensi_kehadiran = $this->uploadFile($absensi_kehadiran, "absensi_kehadiran", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    // else $model->absensi_kehadiran = $oldAbsensiKehadiran;
 
                     if ($model->status_id == 3) $model->status_id = 4;
                     $model->save();
@@ -695,8 +700,14 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $model->status_id = 5; // status selesai
-                $model->save();
-                Yii::$app->session->setFlash('success', 'Monev Pelatihan berhasil disetujui');
+                $model->validate();
+                if($model->save()){
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'Monev Pelatihan berhasil disetujui');
+                }else{
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', 'Monev Pelatihan gagal disetujui');
+                }
             } catch (\Throwable $th) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Monev Pelatihan gagal disetujui');
