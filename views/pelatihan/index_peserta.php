@@ -1,6 +1,8 @@
 <?php
 
 /* @var $this yii\web\View */
+
+use app\components\Tanggal;
 use app\models\Setting;
 use app\models\Barang;
 use app\models\StokBarang;
@@ -24,7 +26,11 @@ $this->title = 'Daftar Pelatihan';
                 <div class="inner">
                     <h3><?= count($o->getPelatihanPesertas()) ?> Peserta</h3>
 
-                    <p><?= $o->nama ?></p>
+                    <p>
+                        <?= $o->nama ?>
+                        <br>
+                        <?= Tanggal::toReadableDate($o->tanggal_mulai) ." / ". Tanggal::toReadableDate($o->tanggal_selesai) ?>
+                    </p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
