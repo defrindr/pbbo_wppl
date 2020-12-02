@@ -36,6 +36,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $materi_pelatihan
  * @property integer $pelaksana_id
  * @property integer $pelatihan_sebelumnya
+ * @property string $proposal
  * @property string $modified_at
  * @property integer $modified_by
  * @property integer $flag
@@ -93,7 +94,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
             [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'pelatihan_sebelumnya', 'modified_by', 'flag'], 'integer'],
             [['unique_id'], 'string', 'max' => 32],
-            [['nama'], 'string', 'max' => 200],
+            [['nama', 'proposal'], 'string', 'max' => 200],
             [['nip_penandatangan', 'forum_diskusi', 'kriteria', 'sasaran_wilayah', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat', 'materi_pelatihan'], 'string', 'max' => 100],
             [['kota'], 'string', 'max' => 50],
             [['nama_penandatangan'], 'string', 'max' => 120],
@@ -136,6 +137,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'materi_pelatihan' => 'Materi Pelatihan',
             'pelaksana_id' => 'Pelaksana ID',
             'pelatihan_sebelumnya' => 'Pelatihan Sebelumnya',
+            'proposal' => 'Proposal',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'modified_at' => 'Modified At',

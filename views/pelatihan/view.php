@@ -92,29 +92,29 @@ $this->params['breadcrumbs'][] = 'View';
                         'visible' => ($model->status_id >= 4)
                     ],
                     [
-                        'attribute' => 'sertifikat',
+                        'attribute' => 'proposal',
                         'visible' => ($model->status_id >= 4),
                         'value' => function($model){
-                            return "<a href='".Yii::$app->request->baseUrl."/".$model->sertifikat."'>Download Template Sertifikat</a>";
+                            return "<a href='".Yii::$app->request->baseUrl."/".$model->proposal."'>Download Proposal</a>";
                         },
                         'format' => 'html'
                     ],
-                    [
-                        'attribute' => 'rekapitulasi_nilai',
-                        'visible' => ($model->status_id >= 4),
-                        'value' => function($model){
-                            return "<a href='".Yii::$app->request->baseUrl."/".$model->rekapitulasi_nilai."'>Download Rekapitulasi Nilai</a>";
-                        },
-                        'format' => 'html'
-                    ],
-                    [
-                        'attribute' => 'absensi_kehadiran',
-                        'visible' => ($model->status_id >= 4),
-                        'value' => function($model){
-                            return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
-                        },
-                        'format' => 'raw'
-                    ],
+                    // [
+                    //     'attribute' => 'rekapitulasi_nilai',
+                    //     'visible' => ($model->status_id >= 4),
+                    //     'value' => function($model){
+                    //         return "<a href='".Yii::$app->request->baseUrl."/".$model->rekapitulasi_nilai."'>Download Rekapitulasi Nilai</a>";
+                    //     },
+                    //     'format' => 'html'
+                    // ],
+                    // [
+                    //     'attribute' => 'absensi_kehadiran',
+                    //     'visible' => ($model->status_id >= 4),
+                    //     'value' => function($model){
+                    //         return "<a href='".Yii::$app->request->baseUrl."/".$model->absensi_kehadiran."'>Download Absensi Kehadiran</a>";
+                    //     },
+                    //     'format' => 'raw'
+                    // ],
                     // 'created_at',
                     // 'created_by',
                     // 'modified_at',
