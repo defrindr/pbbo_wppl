@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 
 use app\components\Constant;
+use app\models\Pelatihan;
 use app\models\PelatihanSoalPeserta;
 use app\models\User;
 use yii\helpers\Url;
@@ -14,14 +15,19 @@ $this->title = 'Pelatihan : ' . $model->nama;
 <div class="site-index">
     <div class="row">
         <?php if ($model):
-            // $sudah_selesai = $model->getPelatihanSoalJenis()->where(['selesai' => 1, 'jenis_id' => [Constant::SOAL_JENIS_POSTTEST, Constant::SOAL_JENIS_PRETEST]])->count();
-            // $data = $model->getPelatihanSoalJenis()->where(['jenis_id' => [Constant::SOAL_JENIS_POSTTEST, Constant::SOAL_JENIS_PRETEST]])->all();
-            // if($sudah_selesai == 2){
+            $model_peserta = User::findOne(Yii::$app->user->identity->id)->getPelatihanPesertas()->where(['pelatihan_id' => $model->id])->one();
+            $sudah_selesai = $model->getPelatihanSoalJenis()->where(['jenis_id' => [Constant::SOAL_JENIS_POSTTEST, Constant::SOAL_JENIS_PRETEST]])->select('id')->asArray()->all();
+            $list_selesai = [];
+            foreach($sudah_selesai as $id) array_push($list_selesai, $id['id']);
+            $check_selesai = PelatihanSoalPeserta::find()->where(['peserta_id' => $model_peserta->id, 'jenis_soal' => $list_selesai, 'selesai' => 1])->count();
+            $data = $model->getPelatihanSoalJenis()->where(['jenis_id' => [Constant::SOAL_JENIS_POSTTEST, Constant::SOAL_JENIS_PRETEST]])->all();
+            // var_dump($list_selesai);
+            // die;
+            if($check_selesai == 2){
                 $data = $model->getPelatihanSoalJenis()->all();
-            // }
+            }
             foreach ($data as $o):
                 $data = [];
-                $model_peserta = User::findOne(Yii::$app->user->identity->id)->getPelatihanPesertas()->where(['pelatihan_id' => $model->id])->one();
                 $model_soal_peserta = PelatihanSoalPeserta::findOne(['peserta_id' => $model_peserta->id, 'jenis_soal' => $o->id]);
 
                 switch ($o->jenis_id) {
