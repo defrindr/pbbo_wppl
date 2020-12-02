@@ -68,6 +68,8 @@ DynamicFormWidget::begin([
                     <?php //$form->field($o, "[{$i}]nilai_maksimum", $hiddenTemplate)->textInput(['placeholder' => "Nilai Maksimum"])?>
                 </td> -->
                 <td>
+                    <button type="button" class="add-item btn btn-success btn-xs"><i
+                        class="glyphicon glyphicon-plus"></i></button>
                     <button type="button" class="remove-item btn btn-danger btn-xs"><i
                         class="glyphicon glyphicon-minus"></i></button>
                 </td>
