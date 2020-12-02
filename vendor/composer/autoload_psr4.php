@@ -22,6 +22,7 @@ return array(
     'kartik\\spinner\\' => array($vendorDir . '/kartik-v/yii2-widget-spinner/src'),
     'kartik\\select2\\' => array($vendorDir . '/kartik-v/yii2-widget-select2/src'),
     'kartik\\plugins\\fileinput\\' => array($vendorDir . '/kartik-v/bootstrap-fileinput'),
+    'kartik\\form\\' => array($vendorDir . '/kartik-v/yii2-widget-activeform/src'),
     'kartik\\file\\' => array($vendorDir . '/kartik-v/yii2-widget-fileinput/src'),
     'kartik\\datetime\\' => array($vendorDir . '/kartik-v/yii2-widget-datetimepicker/src'),
     'kartik\\date\\' => array($vendorDir . '/kartik-v/yii2-widget-datepicker/src'),

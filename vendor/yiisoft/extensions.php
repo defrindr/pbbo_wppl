@@ -222,4 +222,13 @@ return array (
       '@drsdre/wizardwidget' => $vendorDir . '/drsdre/yii2-wizardwidget',
     ),
   ),
+  'kartik-v/yii2-widget-activeform' => 
+  array (
+    'name' => 'kartik-v/yii2-widget-activeform',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/form' => $vendorDir . '/kartik-v/yii2-widget-activeform/src',
+    ),
+  ),
 );
