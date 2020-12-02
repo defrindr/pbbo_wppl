@@ -20,11 +20,15 @@ use yii\base\Model;
         height: 21cm;
         width: 29.7cm;
         display: block;
+        margin: 0 auto;
+        margin-bottom: 1.5cm;
+        margin-top: 1.5cm;
         background-image: url("https://backgroundcheckall.com/wp-content/uploads/2017/12/background-desain-sertifikat-2.jpg");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
         text-align: center;
+        box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     }
 
     @media print {

@@ -1,40 +1,44 @@
 <?php
 
 /* @var $this yii\web\View */
+
 use app\models\Setting;
 use app\models\Barang;
 use app\models\StokBarang;
+
 $this->title = 'Dashboard';
 
 //$tableData = array_diff($tableData,$stk);
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
 <div class="site-index">
 
     <div class="row">
-      <?php if($outl == TRUE && $stk != NULL){ ?>
-        <style>
-        .content {
-            min-height: 0px;
-            padding-top: 5px;
-            margin-right: auto;
-            margin-left: auto;
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-        </style>
-        <div class="content">
-        <div class="alert alert-warning alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i> Info!</h4>
-                <?php foreach($stk as $i => $s){
-                    $dat = Barang::find()->where(['id' => $s['id_barang']])->one();
-                    echo 'Barang : '.$dat->nama.', Stok dibawah '.$min.'<hr>';
-              }; ?>
-              </div>
+        <?php if ($outl == TRUE && $stk != NULL) { ?>
+            <style>
+                .content {
+                    min-height: 0px;
+                    padding-top: 5px;
+                    margin-right: auto;
+                    margin-left: auto;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+            </style>
+            <div class="content">
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i> Info!</h4>
+                    <?php foreach ($stk as $i => $s) {
+                        $dat = Barang::find()->where(['id' => $s['id_barang']])->one();
+                        echo 'Barang : ' . $dat->nama . ', Stok dibawah ' . $min . '<hr>';
+                    }; ?>
+                </div>
             </div>
 
-    <?php } ?>
+        <?php } ?>
         <div class="col-lg-3 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-aqua">
@@ -97,4 +101,15 @@ $this->title = 'Dashboard';
         <!-- ./col -->
     </div>
 
+    <div class='row'>
+        <div class='col-md-6'>
+            <?= $this->render('_chart_pelatihan_tingkat.php') ?>
+        </div>
+        <div class='col-md-6'>
+            <?= $this->render('_chart_pelatihan_user_pembuat.php') ?>
+        </div>
+        <div class='col-md-12'>
+            <?= $this->render('_chart_pelatihan_bulan.php') ?>
+        </div>
+    </div>
 </div>
