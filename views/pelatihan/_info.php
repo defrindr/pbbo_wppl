@@ -48,7 +48,9 @@ use app\components\RoleType;
             <?php
             if (Yii::$app->user->identity->role_id == RoleType::SA) :
                 echo $form->field($model, 'pelaksana_id')->dropDownList(
-                    \yii\helpers\ArrayHelper::map(app\models\User::find()->all(), 'id', 'name'),
+                    \yii\helpers\ArrayHelper::map(app\models\User::find()->where([
+                        '=!', 'role_id', '3' // role peserta
+                    ])->all(), 'id', 'name'),
                     [
                         'prompt' => 'Select',
                         'disabled' => (isset($relAttributes) && isset($relAttributes['pelaksana_id'])),
