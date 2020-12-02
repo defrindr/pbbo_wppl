@@ -55,8 +55,8 @@ abstract class PelatihanSoalPesertaJawaban extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'peserta_id' => 'Peserta ID',
-            'soal_id' => 'Soal ID',
+            'peserta_id' => 'Peserta',
+            'soal_id' => 'Soal',
             'jawaban' => 'Jawaban',
             'nilai' => 'Nilai',
         ];

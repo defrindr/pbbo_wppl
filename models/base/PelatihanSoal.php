@@ -62,8 +62,8 @@ abstract class PelatihanSoal extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'unique_id' => 'Unique ID',
-            'jenis_id' => 'Jenis ID',
-            'kategori_soal_id' => 'Kategori Soal ID',
+            'jenis_id' => 'Jenis',
+            'kategori_soal_id' => 'Kategori Soal',
             'nomor' => 'Nomor',
             'soal' => 'Soal',
             'pilihan' => 'Pilihan',

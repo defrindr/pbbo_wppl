@@ -53,8 +53,8 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'jenis_id' => 'Jenis ID',
-            'pelatihan_id' => 'Pelatihan ID',
+            'jenis_id' => 'Jenis',
+            'pelatihan_id' => 'Pelatihan',
             'waktu_pengerjaan' => 'Waktu Pengerjaan',
             'jumlah_soal' => 'Jumlah Soal',
         ];

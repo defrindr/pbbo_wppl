@@ -50,7 +50,7 @@ abstract class PelatihanSoalPilihan extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pelatihan_soal_id' => 'Pelatihan Soal ID',
+            'pelatihan_soal_id' => 'Pelatihan Soal',
             'pilihan' => 'Pilihan',
             'flag' => 'Flag',
         ];

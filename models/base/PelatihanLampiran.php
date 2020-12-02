@@ -53,7 +53,7 @@ abstract class PelatihanLampiran extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pelatihan_id' => 'Pelatihan ID',
+            'pelatihan_id' => 'Pelatihan',
             'judul_lampiran' => 'Judul Lampiran',
             'image' => 'Dokumen',
             'file' => 'File',
