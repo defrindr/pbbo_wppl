@@ -74,6 +74,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
             [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
+            [['nik', 'pelatihan_id'], 'unique', 'targetAttribute' => ['nik', 'pelatihan_id']], // menambahkan filter agar peserta dalam pelatihan tidak duplicate
             [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']],
             [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['user_id' => 'id']],

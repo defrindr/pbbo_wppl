@@ -207,8 +207,8 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
         $transaction = Yii::$app->db->beginTransaction();
         $model = $this->findModel($id);
-        if ($model->status_id != 1) {
-            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
+        if ($model->status_id >= 4) {
+            Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah dilaksanakan');
             return $this->goBack();
         }
 
@@ -243,7 +243,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 $valid = $model->validate();
                 if ($valid) {
                     $model->save(); // save model untuk mendapatkan id
-
+                    
                     // check apakah ada data yang dihapus
                     if (!empty($deletedPesertaIDs)) {
                         PelatihanPeserta::deleteAll(['id' => $deletedPesertaIDs]);
@@ -285,6 +285,14 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $o->user_id = $checkUser->id; //get user id
                         $o->save();
                     }
+                }else{
+                    $transaction->rollback();
+                    $msg = $model->getErrors();
+                    $model->addError('_exception', $msg);
+                    return $this->render('_form-add-peserta', [
+                        'model' => $model,
+                        'modelPeserta' => $modelPeserta,
+                    ]);
                 }
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
