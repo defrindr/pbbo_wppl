@@ -41,6 +41,7 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
         return [
             [['jenis_id', 'pelatihan_id'], 'required'],
             [['jenis_id', 'pelatihan_id', 'waktu_pengerjaan', 'jumlah_soal'], 'integer'],
+            [['waktu_pengerjaan'], 'integer', 'min' => 5], // minimal waktu pengerjaan adalah 5 menit
             [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisSoal::className(), 'targetAttribute' => ['jenis_id' => 'id']],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']]
         ];

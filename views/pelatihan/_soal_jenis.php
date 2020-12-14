@@ -19,4 +19,4 @@ $exist = [Constant::SOAL_JENIS_PRAKTEK]; // BY DEFAULT PRAKTEK IS HIDDEN
     [
         'prompt' => 'Select',
     ])?>
-<?=$form->field($modelSoalJenis, "waktu_pengerjaan")->textInput(['type' => 'number'])?>
+<?=$form->field($modelSoalJenis, "waktu_pengerjaan")->textInput(['type' => 'number', 'min' => 5])?>
