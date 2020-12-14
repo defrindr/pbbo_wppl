@@ -22,12 +22,15 @@ $this->params['breadcrumbs'][] = 'View';
 ?>
 <div class="giiant-crud pelatihan-view">
 
-
-    <?php if ($model->status_id < 2): ?>
     <!-- menu buttons -->
     <p class='pull-left'>
+        <?php if ($model->status_id < 2): ?>
         <?=Html::a('<span class="glyphicon glyphicon-pencil"></span> ' . 'Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-info'])?>
+        <?php endif?>
+        <?php if ($model->status_id < 4): ?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Peserta', ['add-peserta', 'id' => $model->id], ['class' => 'btn btn-success'])?>
+        <?php endif ?>
+        <?php if ($model->status_id < 2): ?>
         <?=Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'Tambah Soal', ['add-soal', 'id' => $model->id], ['class' => 'btn btn-success'])?>
     </p>
 
