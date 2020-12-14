@@ -145,23 +145,27 @@ $this->params['breadcrumbs'][] = 'View';
         'data-confirm' => '' . 'Are you sure to delete this item?' . '',
         'data-method' => 'post',
     ]);?>
-            <?php if ($model->status_id == 1) {
+            <?php 
+if ($model->status_id == 1) {
     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan', ['ajukan', 'id' => $model->id],
         [
             'class' => 'btn btn-primary',
             'data-confirm' => '' . 'Yakin ingin mengajukan pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
             'data-method' => 'post',
         ]);
-} else if ($model->status_id == 2 && \app\components\RoleType::SA == \Yii::$app->user->identity->role_id) {
+}
+if ($model->status_id == 2 && \app\components\RoleType::SA == \Yii::$app->user->identity->role_id) {
     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui', ['setujui', 'id' => $model->id],
         [
             'class' => 'btn btn-primary',
             'data-confirm' => '' . 'Yakin ingin menyetujui pelatihan ini ? anda tidak akan dapat mengubahnya setelah diajukan' . '',
             'data-method' => 'post',
         ]);
-} else if (($model->status_id == 3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
+}
+if (($model->status_id == 3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
 }
+
 if ($model->status_id == 4 && \Yii::$app->user->identity->role_id == RoleType::SA) {
     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Setujui Monev', ['setujui-monev', 'id' => $model->id], [
         'class' => 'btn btn-success',
@@ -171,12 +175,12 @@ if ($model->status_id == 4 && \Yii::$app->user->identity->role_id == RoleType::S
     ]);
 }
 
-// if($model->status_id == 5){
-//     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Cetak Sertifikat', ['sertifikat', 'id' => $model->id], [
-//         'class' => 'btn btn-success',
-//         'style' => "margin-left: 5px",
-//     ]);
-// }
+if($model->status_id == 5){
+    echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Cetak Sertifikat', ['sertifikat', 'id' => $model->id], [
+        'class' => 'btn btn-success',
+        'style' => "margin-left: 5px",
+    ]);
+}
 
 if ($model->status_id == 5 && $model->tingkat_id < 4 && \Yii::$app->user->identity->role_id == $model->pelaksana_id) {
     echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . 'Ajukan Pelatihan Ke Tingkat Selanjutnya', ['tingkat-selanjutnya', 'id' => $model->id], [
