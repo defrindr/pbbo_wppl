@@ -17,6 +17,7 @@ use app\models\PelatihanTingkat;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -190,7 +191,18 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
     public function actionDetail($unique_id)
     {
+        // validasi apakah user mengikuti pelatihan ini
+        $user = Yii::$app->user->identity;
+        if($user == []) throw new ForbiddenHttpException();
         $model = Pelatihan::findOne(['unique_id' => $unique_id]);
+        if($model == []) throw new NotFoundHttpException();
+        if($model->status_id != Constant::STATUS_DISETUJUI){
+            Yii::$app->session->setFlash('error', 'Tidak dapat melaksanakan test karena pelatihan sudah berada pada tahap monev.');
+            return $this->goBack();
+        }
+        $pelatihan_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user->id])->one();
+        if($pelatihan_peserta == []) throw new NotFoundHttpException();
+
         $waktu_sekarang = strtotime(date('Y-m-d H:i:s'));
         $lebih_tgl_mulai = $waktu_sekarang >= strtotime($model->tanggal_mulai);
         $kurang_tgl_selesai = $waktu_sekarang <= strtotime($model->tanggal_selesai);
