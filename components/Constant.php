@@ -31,4 +31,6 @@ class Constant {
 
     
     const DEFAULT_PENGISIAN_KUESIONER = 120;
+
+    const LIMIT_SOAL = 3;
 }

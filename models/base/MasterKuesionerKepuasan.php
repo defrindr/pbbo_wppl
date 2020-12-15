@@ -59,9 +59,9 @@ abstract class MasterKuesionerKepuasan extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihanKuisionerKepuasans()
+    public function getPelatihanKuesionerKepuasans()
     {
-        return $this->hasMany(\app\models\PelatihanKuisionerKepuasan::className(), ['soal' => 'id']);
+        return $this->hasMany(\app\models\PelatihanKuesionerKepuasan::class, ['soal' => 'id']);
     }
 
 
