@@ -59,9 +59,9 @@ abstract class MasterKuesionerMonev extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihanKuisionerMonevs()
+    public function getPelatihanKuesionerMonevs()
     {
-        return $this->hasMany(\app\models\PelatihanKuisionerMonev::className(), ['soal_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanKuesionerMonev::className(), ['soal' => 'id']);
     }
 
 
