@@ -87,7 +87,7 @@ $config = [
                 // 
                 'pretest/post-answer' => '/pretest/post-answer',
                 'pretest/finish' => 'pretest/finish',
-                'pretest/request-soal/<unique_id:[\w\_\-]+>' => 'pretest/request-soal',
+                'pretest/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'pretest/request-soal',
                 'pretest/finish/<unique_id:[\w\_\-]+>' => 'pretest/finish',
                 'pretest/<unique_id:[\w\_\-]+>' => 'pretest/index',
                 // 
