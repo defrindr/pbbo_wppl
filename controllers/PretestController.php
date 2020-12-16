@@ -69,7 +69,6 @@ class PretestController extends Controller
     public function actionPostAnswer()
     {
         $user = Yii::$app->user->identity;
-        $unique_id = $_POST['soal_id'];
         $pelatihan_unique_id = $_POST['pelatihan_id'];
         $jawabans = $_POST['jawaban'];
 
