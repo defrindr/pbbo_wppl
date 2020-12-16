@@ -481,10 +481,6 @@ CREATE TABLE `pelatihan_peserta` (
   `rt` int(11) NOT NULL,
   `rw` int(11) NOT NULL,
   `alamat` text NOT NULL,
-  `desa_id` char(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `kecamatan_id` int(11) DEFAULT NULL,
-  `kabupaten_id` int(11) DEFAULT NULL,
-  `provinsi_id` int(11) DEFAULT NULL,
   `kehadiran` int(11) NOT NULL DEFAULT 0 COMMENT 'konfirmasi peserta jika 1 maka ikut, jika 0 maka mengundurkan diri atau tidak mengkonfirmasi kesiapan mengikutipelatihan',
   `nilai_pretest` int(11) NOT NULL DEFAULT 0 COMMENT 'nilai max 100',
   `nilai_posttest` int(11) NOT NULL DEFAULT 0 COMMENT 'nilai max 100',
@@ -505,23 +501,15 @@ CREATE TABLE `pelatihan_peserta` (
   KEY `pekerjaan_id` (`pekerjaan_id`),
   KEY `jenis_kelamin_id` (`jenis_kelamin_id`),
   KEY `user_id` (`user_id`),
-  KEY `kecamatan_id` (`kecamatan_id`),
-  KEY `kabupaten_id` (`kabupaten_id`),
-  KEY `provinsi_id` (`provinsi_id`),
-  KEY `desa_id` (`desa_id`),
   CONSTRAINT `pelatihan_peserta_ibfk_11` FOREIGN KEY (`jenis_kelamin_id`) REFERENCES `master_jenis_kelamin` (`id`),
   CONSTRAINT `pelatihan_peserta_ibfk_12` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `pelatihan_peserta_ibfk_13` FOREIGN KEY (`kecamatan_id`) REFERENCES `wilayah_kecamatan` (`id`),
-  CONSTRAINT `pelatihan_peserta_ibfk_14` FOREIGN KEY (`kabupaten_id`) REFERENCES `wilayah_kabupaten` (`id`),
-  CONSTRAINT `pelatihan_peserta_ibfk_15` FOREIGN KEY (`provinsi_id`) REFERENCES `wilayah_provinsi` (`id`),
-  CONSTRAINT `pelatihan_peserta_ibfk_16` FOREIGN KEY (`desa_id`) REFERENCES `wilayah_desa` (`id`),
   CONSTRAINT `pelatihan_peserta_ibfk_7` FOREIGN KEY (`pelatihan_id`) REFERENCES `pelatihan` (`id`),
   CONSTRAINT `pelatihan_peserta_ibfk_8` FOREIGN KEY (`pendidikan_id`) REFERENCES `master_pendidikan` (`id`),
   CONSTRAINT `pelatihan_peserta_ibfk_9` FOREIGN KEY (`pekerjaan_id`) REFERENCES `master_pekerjaan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pelatihan_peserta` (`id`, `user_id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `desa_id`, `kecamatan_id`, `kabupaten_id`, `provinsi_id`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
-(85,	7,	89,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-12',	'Ponorogo',	1,	9,	1,	12,	12,	'Ponorogo',	'3502070007',	3502070,	3502,	35,	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
+INSERT INTO `pelatihan_peserta` (`id`, `user_id`, `pelatihan_id`, `nik`, `nama`, `email`, `no_telp`, `tanggal_lahir`, `tempat_lahir`, `jenis_kelamin_id`, `pendidikan_id`, `pekerjaan_id`, `rt`, `rw`, `alamat`, `kehadiran`, `nilai_pretest`, `nilai_posttest`, `nilai_praktek`, `komentar`, `kesibukan_pasca_pelatihan`, `nama_usaha`, `jenis_usaha`, `lokasi`, `jenis_izin_usaha`, `nib`, `masa_berlaku`, `lanjut`) VALUES
+(86,	7,	89,	'1912',	'Defri Indra Mahardika',	'defrindr@gmail.com',	'085604845437',	'2020-12-24',	'Ponorogo',	1,	4,	1,	12,	12,	'Ponorogo',	0,	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	0);
 
 DROP TABLE IF EXISTS `pelatihan_soal`;
 CREATE TABLE `pelatihan_soal` (
@@ -90480,4 +90468,4 @@ INSERT INTO `wilayah_provinsi` (`id`, `nama`) VALUES
 (91,	'PAPUA BARAT'),
 (94,	'PAPUA');
 
--- 2020-12-16 13:22:53
+-- 2020-12-16 16:26:15

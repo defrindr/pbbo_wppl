@@ -24,10 +24,6 @@ use Yii;
  * @property integer $rt
  * @property integer $rw
  * @property string $alamat
- * @property string $desa_id
- * @property integer $kecamatan_id
- * @property integer $kabupaten_id
- * @property integer $provinsi_id
  * @property integer $kehadiran
  * @property integer $nilai_pretest
  * @property integer $nilai_posttest
@@ -46,10 +42,6 @@ use Yii;
  * @property \app\models\PelatihanKuesionerMonev[] $pelatihanKuesionerMonevs
  * @property \app\models\MasterJenisKelamin $jenisKelamin
  * @property \app\models\User $user
- * @property \app\models\WilayahKecamatan $kecamatan
- * @property \app\models\WilayahKabupaten $kabupaten
- * @property \app\models\WilayahProvinsi $provinsi
- * @property \app\models\WilayahDesa $desa
  * @property \app\models\Pelatihan $pelatihan
  * @property \app\models\MasterPendidikan $pendidikan
  * @property \app\models\MasterPekerjaan $pekerjaan
@@ -75,20 +67,15 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'kecamatan_id', 'kabupaten_id', 'provinsi_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
+            [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
             [['nilai_pretest', 'nilai_posttest', 'nilai_praktek'], 'integer', 'max' => 100, 'min' => 0],
-            [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat', 'desa_id', 'kecamatan_id', 'kabupaten_id', 'provinsi_id'], 'required'],
+            [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat'], 'required'],
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
             [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
-            [['desa_id'], 'string', 'max' => 10],
             [['nik', 'pelatihan_id'], 'unique', 'targetAttribute' => ['nik', 'pelatihan_id']], // menambahkan filter agar peserta dalam pelatihan tidak duplicate
             [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['kecamatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahKecamatan::className(), 'targetAttribute' => ['kecamatan_id' => 'id']],
-            [['kabupaten_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahKabupaten::className(), 'targetAttribute' => ['kabupaten_id' => 'id']],
-            [['provinsi_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahProvinsi::className(), 'targetAttribute' => ['provinsi_id' => 'id']],
-            [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
             [['pendidikan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPendidikan::className(), 'targetAttribute' => ['pendidikan_id' => 'id']],
             [['pekerjaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterPekerjaan::className(), 'targetAttribute' => ['pekerjaan_id' => 'id']]
@@ -116,10 +103,6 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'rt' => 'Rt',
             'rw' => 'Rw',
             'alamat' => 'Alamat',
-            'desa_id' => 'Desa ID',
-            'kecamatan_id' => 'Kecamatan ID',
-            'kabupaten_id' => 'Kabupaten ID',
-            'provinsi_id' => 'Provinsi ID',
             'kehadiran' => 'Kehadiran',
             'nilai_pretest' => 'Nilai Pretest',
             'nilai_posttest' => 'Nilai Posttest',
@@ -188,38 +171,6 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getKecamatan()
-    {
-        return $this->hasOne(\app\models\WilayahKecamatan::className(), ['id' => 'kecamatan_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getKabupaten()
-    {
-        return $this->hasOne(\app\models\WilayahKabupaten::className(), ['id' => 'kabupaten_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvinsi()
-    {
-        return $this->hasOne(\app\models\WilayahProvinsi::className(), ['id' => 'provinsi_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDesa()
-    {
-        return $this->hasOne(\app\models\WilayahDesa::className(), ['id' => 'desa_id']);
     }
 
     /**
