@@ -1,89 +1,91 @@
+<?php
+
+use app\components\Constant;
+use yii\helpers\Url;
+ ?>
 <div class="box-header">
-    <h4>
-        <?=$soal->order . "). " . $soal->soal?>
-    </h4>
 </div>
 <div class="box-body">
     <form id="form-soal">
-
+        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>"
+            value="<?= $model->unique_id ?>">
         <?php 
-        // multiple choices
+        foreach ($soals as $id => $soal): 
+        $jawaban = $soal->getPelatihanSoalPesertaJawabans()->where(['peserta_id' => $soal_peserta->id, 'soal_id' => $soal->id])->one(); 
+        ?> 
+            <h4>
+                <?= $soal->order . "). " . $soal->soal ?>
+            </h4>
 
-        use yii\helpers\Url;
 
-if ($soal->kategori_soal_id == 1): ?>
-        <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
-        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
-        <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
-        <div class="form-group">
-            <input type="Radio" name="jawaban" id="soal-jawaban-<?= $soal->unique_id ?>" value="<?=$pilihan->pilihan?>" <?= ($jawaban->jawaban == $pilihan->pilihan) ? "checked" : "" ?>>
-            <label class="form-check-label" for="soal-<?= $soal->unique_id ?>">
-                <?=$pilihan->pilihan?>
-            </label>
-        </div>
-        <?php endforeach?>
+        <?php if ($soal->kategori_soal_id == Constant::SOAL_TYPE_PILIHAN_GANDA):  ?>
+        <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?= $soal->unique_id ?>">
+        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?= $model->unique_id ?>">
+            <?php foreach ($soal->pelatihanSoalPilihans as $pilihan):  ?>
+            <div class="form-group">
+                <input type="Radio" name="jawaban[<?= $soal->unique_id ?>]" id="soal-jawaban-<?= $soal->unique_id ?>" value="<?= $pilihan->pilihan ?>" <?=($jawaban->jawaban == $pilihan->pilihan) ? "checked" : "" ?>>
+                <label class="form-check-label" for="soal-<?= $soal->unique_id ?>">
+                    <?= $pilihan->pilihan ?>
+                </label>
+            </div>
+            <?php endforeach ?>
 
-        <?php
-        // essay
-        elseif ($soal->kategori_soal_id == 2): ?>
-        <div class="form-group">
-            <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
 
-        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
-            <textarea name="jawaban" id="soal-<?= $soal->unique_id ?>" cols="30" rows="10" class="form-control"
-                placeholder="Jawaban Anda"><?= $jawaban->jawaban ?></textarea>
-        </div>
+        <?php elseif ($soal->kategori_soal_id == Constant::SOAL_TYPE_ESSAY): ?>
+            <div class="form-group">
+                <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?= $soal->unique_id ?>">
 
-        <?php
-        // short answer 
-        elseif ($soal->kategori_soal_id == 3):?>
-        <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
-        <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
-        <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
-        <div class="form-group">
-            <input type="text" name="jawaban" id="soal-<?= $soal->unique_id ?>" class="form-control"
-                placeholder="Jawaban Anda" value="<?= $jawaban->jawaban ?>">
-        </div>
-        <?php endforeach?>
+            <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?= $model->unique_id ?>">
+                <textarea name="jawaban[<?= $soal->unique_id ?>]" id="soal-<?= $soal->unique_id ?>" cols="30" rows="10" class="form-control"
+                    placeholder="Jawaban Anda"><?= $jawaban->jawaban ?></textarea>
+            </div>
 
-        <?php
-        // checkbox
-        elseif ($soal->kategori_soal_id == 4):?>
 
-        <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?=$soal->unique_id?>">
-        <input type="hidden" name="pelatiahn_id" id="pelatiahn-id-<?= $model->unique_id ?>" value="<?=$model->unique_id?>">
-        <?php foreach ($soal->pelatihanSoalPilihans as $pilihan): ?>
-        <div class="form-group">
-            <input type="checkbox" name="jawaban[]" id="soal-<?= $soal->unique_id ?>" value="<?=$pilihan->pilihan?>" 
-            
-            <?php foreach(explode("|", $jawaban->jawaban) as $checked): 
-                if($checked == $pilihan->pilihan){
-                    echo "checked";
-                    break;
-                } 
-            endforeach?>
-                >
-            <label class="form-check-label" for="soal-<?= $soal->unique_id ?>">
-                <?=$pilihan->pilihan?>
-            </label>
-        </div>
-        <?php endforeach?>
 
-        <?php endif?>
+        <?php elseif ($soal->kategori_soal_id == Constant::SOAL_TYPE_JAWABAN_SINGKAT): ?>
+            <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?= $soal->unique_id ?>">
+            <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>" value="<?= $model->unique_id ?>">
+            <?php foreach ($soal->pelatihanSoalPilihans as $pilihan):  ?>
+            <div class="form-group">
+                <input type="text" name="jawaban[<?= $soal->unique_id ?>]" id="soal-<?= $soal->unique_id ?>" class="form-control"
+                    placeholder="Jawaban Anda" value="<?= $jawaban->jawaban ?>">
+            </div>
+            <?php endforeach ?>
+
+
+
+        <?php elseif ($soal->kategori_soal_id == Constant::SOAL_TYPE_CHECKBOX):  ?>
+            <input type="hidden" name="soal_id" id="soal-id-<?= $soal->unique_id ?>" value="<?= $soal->unique_id ?>">
+            <input type="hidden" name="pelatiahn_id" id="pelatiahn-id-<?= $model->unique_id ?>" value="<?= $model->unique_id ?>">
+            <?php foreach ($soal->pelatihanSoalPilihans as $pilihan):  ?>
+                <div class="form-group">
+                    <input type="checkbox" name="jawaban[<?= $soal->unique_id ?>][]" id="soal-<?= $soal->unique_id ?>" value="<?= $pilihan->pilihan ?>"
+                    <?php foreach (explode("|", $jawaban->jawaban) as $checked):
+                        if ($checked == $pilihan->pilihan) {
+                            echo "checked";
+                            break;
+                        }
+                    endforeach ?> >
+                    <label class="form-check-label" for="soal-<?= $soal->unique_id ?>">
+                        <?= $pilihan->pilihan ?>
+                    </label>
+                </div>
+            <?php endforeach ?>
+
+        <?php endif ?>
+        <?php endforeach ?>
     </form>
-    <?php 
-    if($soal->order > 1): ?>
-    <a class="btn btn-default btn-flat" href="#" onclick="handleChangeSoal(this)"
-        data-soal="<?= $soal->order-2 ?>">Kembali</a>
-    <?php endif ?>
     <?php
-    if($soal->order < $total_soal): ?>
+if ($current_page > 1):  ?>
     <a class="btn btn-default btn-flat" href="#" onclick="handleChangeSoal(this)"
-        data-soal="<?= $soal->order ?>">Selanjutnya</a>
+        data-soal="<?= $current_page - 1 ?>">Kembali</a>
     <?php endif ?>
-    <?php
-    if($soal->order == $total_soal): ?>
-    <!-- ;window.location = '<?= Url::to(["detail-pelatihan/$model->unique_id"]) ?>' -->
+    <?php if ($current_page < $total_page):  ?>
+    <a class="btn btn-default btn-flat" href="#" onclick="handleChangeSoal(this)"
+        data-soal="<?= $current_page + 1 ?>">Selanjutnya</a>
+    <?php endif ?>
+    <?php if ($current_page == $total_page):  ?>
+    <!-- ;window.location = '<?=Url::to(["detail-pelatihan/$model->unique_id"]) ?>' -->
     <a class="btn btn-default btn-flat" href="#" onclick="event.preventDefault();selesai()">Selesai</a>
     <?php endif ?>
 </div>
