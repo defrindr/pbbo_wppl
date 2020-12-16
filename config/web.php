@@ -1,6 +1,6 @@
 <?php
 
-$params = require(__DIR__ . '/params.php');
+$params = require __DIR__ . '/params.php';
 
 $config = [
     'id' => 'basic',
@@ -26,27 +26,27 @@ $config = [
         'i18n' => [
             'translations' => [
                 '*' => [
-                    'class'          => 'yii\i18n\PhpMessageSource',
-                    'basePath'       => '@app/messages', // if advanced application, set @frontend/messages
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages', // if advanced application, set @frontend/messages
                     'sourceLanguage' => 'en',
-                    'fileMap'        => [
+                    'fileMap' => [
                         //'main' => 'main.php',
                     ],
                 ],
             ],
         ],
         'mailer' => [
-             'class' => 'yii\swiftmailer\Mailer',
-             'useFileTransport' => false,
-             'transport' => [
-                    'class' => 'Swift_SmtpTransport',
-                    'host' => 'smtp.gmail.com',
-                    'username' => 'ds.popcafe@gmail.com',
-                    'password' => 'dspopcafe',
-                    'port' => '587',
-                    'encryption' => 'tls'
-             ],
-         ],
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'ds.popcafe@gmail.com',
+                'password' => 'dspopcafe',
+                'port' => '587',
+                'encryption' => 'tls',
+            ],
+        ],
 
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -66,31 +66,27 @@ $config = [
             'rules' => array(
                 // '/pelatihan/posttest/koreksi-jawaban/<id:[\d]+>/<unique_id:[\w\_\-]+>' => '/posttest/koreksi-jawaban',
                 '/detail-pelatihan/<unique_id:[\w\_\-]+>' => 'pelatihan/detail',
-                // 
+                //
                 'kuesioner-kepuasan/post-answer' => '/kuesioner-kepuasan/post-answer',
                 'kuesioner-kepuasan/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/request-soal',
                 'kuesioner-kepuasan/finish' => 'kuesioner-kepuasan/finish',
-                // 'kuesioner-kepuasan/finish/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/finish',
                 'kuesioner-kepuasan/<unique_id:[\w\_\-]+>' => 'kuesioner-kepuasan/index',
-                // 
+                //
                 'kuesioner-monev/post-answer' => '/kuesioner-monev/post-answer',
                 'kuesioner-monev/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/request-soal',
                 'kuesioner-monev/finish' => 'kuesioner-monev/finish',
-                // 'kuesioner-monev/finish/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/finish',
                 'kuesioner-monev/<unique_id:[\w\_\-]+>' => 'kuesioner-monev/index',
-                // 
+                //
                 'posttest/post-answer' => '/posttest/post-answer',
-                'posttest/request-soal/<unique_id:[\w\_\-]+>' => 'posttest/request-soal',
+                'posttest/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'posttest/request-soal',
                 'posttest/finish' => 'posttest/finish',
-                'posttest/finish/<unique_id:[\w\_\-]+>' => 'posttest/finish',
                 'posttest/<unique_id:[\w\_\-]+>' => 'posttest/index',
-                // 
+                //
                 'pretest/post-answer' => '/pretest/post-answer',
-                'pretest/finish' => 'pretest/finish',
                 'pretest/request-soal/<id:[\w\_\-]+>/<unique_id:[\w\_\-]+>' => 'pretest/request-soal',
-                'pretest/finish/<unique_id:[\w\_\-]+>' => 'pretest/finish',
+                'pretest/finish' => 'pretest/finish',
                 'pretest/<unique_id:[\w\_\-]+>' => 'pretest/index',
-                // 
+                //
                 '<controller:[\w\_\-]+>/<id:\d+>' => '<controller>/view',
                 '<controller:[\w\_\-]+>/<action:[\w\_\-]+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:[\w\_\-]+>/<action:[\w\_\-]+>' => '<controller>/<action>',
@@ -98,14 +94,14 @@ $config = [
         ],
         /*
         'view' => [
-            'theme' => [
-                'pathMap' => [
-                    '@app/views' => '@vendor/dmstr/yii2-adminlte-asset/example-views/yiisoft/yii2-app'
-                ],
-            ],
+        'theme' => [
+        'pathMap' => [
+        '@app/views' => '@vendor/dmstr/yii2-adminlte-asset/example-views/yiisoft/yii2-app'
         ],
-        */
-        'db' => require(__DIR__ . '/db.php'),
+        ],
+        ],
+         */
+        'db' => require __DIR__ . '/db.php',
     ],
     'params' => $params,
 ];
