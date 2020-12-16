@@ -50,7 +50,7 @@ DynamicFormWidget::begin([
                     //     [
                     //         'prompt' => 'Select',
                     //     ])?>
-                    <?=$form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea()?>
+                    <?=$form->field($o, "[{$i}]soal", $hiddenTemplate)->TextArea(['style' => 'min-width: 30vw'])?>
                 </td>
                 <td>
                     <?=
