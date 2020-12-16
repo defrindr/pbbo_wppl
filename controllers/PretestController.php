@@ -127,7 +127,8 @@ class PretestController extends Controller
                 return $this->renderPartial('not-found');
             }
 
-            if ($flag == 2) {
+            if ($flag == 2) { // waktu habis
+                $transaction->commit();
                 $this->selesai($pelatihan_unique_id);
                 return $this->render('not-found', [
                     'error' => "Anda telah kehabisan waktu",
