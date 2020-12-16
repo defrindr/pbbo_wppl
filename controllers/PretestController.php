@@ -102,6 +102,8 @@ class PretestController extends Controller
                 $soal_peserta = PelatihanSoalPeserta::findOne(['jenis_soal' => $pelatihan_soal->jenis_id, 'peserta_id' => $peserta->id]);
                 if ($soal_peserta == null) {
                     $flag = 0;
+                }else if($soal_peserta->selesai == 1){
+                    $flag = 3;
                 }
 
                 // check apakah waktu masih tersisa atau tidak
@@ -131,6 +133,13 @@ class PretestController extends Controller
                 $this->selesai($pelatihan_unique_id);
                 return $this->render('not-found', [
                     'error' => "Anda telah kehabisan waktu",
+                ]);
+            }
+
+            if ($flag == 3) { // telah selesai
+                $transaction->rollBack();
+                return $this->renderPartial('not-found', [
+                    'error' => "Anda telah menyelesaikan test ini",
                 ]);
             }
 
