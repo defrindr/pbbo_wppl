@@ -4,24 +4,30 @@ namespace app\controllers;
 
 use app\components\Constant;
 use app\components\RoleType;
-use app\models\base\PelatihanSoalPilihan as BasePelatihanSoalPilihan;
-use app\models\base\User;
+use app\models\MasterJenisKelamin;
 use app\models\MasterKuesionerKepuasan;
+use app\models\MasterPekerjaan;
+use app\models\MasterPendidikan;
 use app\models\Pelatihan;
 use app\models\PelatihanLampiran;
 use app\models\PelatihanPeserta;
+use app\models\PelatihanPesertaExcel;
 use app\models\PelatihanSoal;
 use app\models\PelatihanSoalJenis;
 use app\models\PelatihanSoalPilihan;
 use app\models\PelatihanTingkat;
+use app\models\User;
+use PHPExcel_Cell_DataValidation;
+use PHPExcel_IOFactory;
+use PHPExcel_Worksheet;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\widgets\ActiveForm;
 use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
 
 /**
  * This is the class for controller "PelatihanController".
@@ -29,18 +35,26 @@ use yii\web\UploadedFile;
 class PelatihanController extends \app\controllers\base\PelatihanController
 {
 
-    public function actionTingkatLanjut($id){
+    public function actionTingkatLanjut($id)
+    {
         $model = Pelatihan::findOne(['id' => $id, 'status_id' => Constant::STATUS_SELESAI]);
-        if ($model == []) throw new \yii\web\NotFoundHttpException();
+        if ($model == []) {
+            throw new \yii\web\NotFoundHttpException();
+        }
 
         $new_model = new Pelatihan();
         $check_exist = Pelatihan::findOne(['pelatihan_sebelumnya' => $model->id, 'flag' => 1]);
-        if ($check_exist != []) throw new \yii\web\NotFoundHttpException();
-        
+        if ($check_exist != []) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => PelatihanPeserta::find()->where(['pelatihan_id' => $model->id])
+            'query' => PelatihanPeserta::find()->where(['pelatihan_id' => $model->id]),
         ]);
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
+
         $model->kota = "Sidoarjo";
 
         $transaction = \Yii::$app->db->beginTransaction();
@@ -51,9 +65,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $model->pelaksana_id = Yii::$app->user->identity->id;
                 }
 
-                $tingkat_baru = $model->tingkat_id+1; // increment tingkat_id
+                $tingkat_baru = $model->tingkat_id + 1; // increment tingkat_id
                 $check_tingkat_exist = PelatihanTingkat::findOne(['id' => $tingkat_baru]);
-                if($check_tingkat_exist == []){
+                if ($check_tingkat_exist == []) {
                     $transaction->rollBack();
                     Yii::$app->session->setFlash('error', 'Tingat tidak ditemukan');
                     return $this->redirect(['index']);
@@ -94,7 +108,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
                     $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
                     $kuisionerKepuasan->save();
-                    
+
                     // create kuisioner monev
                     $kuisionerKepuasan = new PelatihanSoalJenis();
                     $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_MONEV;
@@ -108,7 +122,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $o->pelatihan_id = $new_model->id;
 
                         $o->image = UploadedFile::getInstanceByName("PelatihanLampiran[$i][image]");
-                        if($o->image == null) {
+                        if ($o->image == null) {
                             $transaction->rollBack();
                             Yii::$app->session->setFlash('error', 'data file tidak tersedia');
                             return $this->redirect(['index']);
@@ -127,9 +141,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     if (!$valid) {
                         $transaction->rollback();
                         return $this->render('tingkat_lanjut', [
-                            'model'=> $model,
-                            'dataProvider'=> $dataProvider,
-                            'modelLampiran'=> [new PelatihanLampiran()]
+                            'model' => $model,
+                            'dataProvider' => $dataProvider,
+                            'modelLampiran' => [new PelatihanLampiran()],
                         ]);
                     }
 
@@ -140,16 +154,16 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $transaction->rollBack();
                     $new_model->addError('_exception', "Validasi gagal");
                     return $this->render('tingkat_lanjut', [
-                        'model'=> $model,
-                        'dataProvider'=> $dataProvider,
-                        'modelLampiran'=> [new PelatihanLampiran()]
+                        'model' => $model,
+                        'dataProvider' => $dataProvider,
+                        'modelLampiran' => [new PelatihanLampiran()],
                     ]);
                 }
 
-                foreach($_POST['selection'] as $id_peserta_lama){
+                foreach ($_POST['selection'] as $id_peserta_lama) {
                     $peserta_lama = PelatihanPeserta::findOne(['id' => $id_peserta_lama]);
                     $peserta_baru = new PelatihanPeserta();
-                    
+
                     $peserta_baru->user_id = $peserta_lama->user_id;
                     $peserta_baru->pelatihan_id = $new_model->id;
                     $peserta_baru->nik = $peserta_lama->nik;
@@ -182,10 +196,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $model->addError('_exception', $msg);
         }
 
-        return $this->render('tingkat_lanjut',[
-            'model'=> $model,
-            'dataProvider'=> $dataProvider,
-            'modelLampiran'=> [new PelatihanLampiran()]
+        return $this->render('tingkat_lanjut', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+            'modelLampiran' => [new PelatihanLampiran()],
         ]);
     }
 
@@ -193,15 +207,23 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
         // validasi apakah user mengikuti pelatihan ini
         $user = Yii::$app->user->identity;
-        if($user == []) throw new ForbiddenHttpException();
+        if ($user == []) {
+            throw new ForbiddenHttpException();
+        }
+
         $model = Pelatihan::findOne(['unique_id' => $unique_id]);
-        if($model == []) throw new NotFoundHttpException();
-        if($model->status_id != Constant::STATUS_DISETUJUI){
+        if ($model == []) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($model->status_id != Constant::STATUS_DISETUJUI) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melaksanakan test karena pelatihan sudah berada pada tahap monev.');
             return $this->goBack();
         }
         $pelatihan_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user->id])->one();
-        if($pelatihan_peserta == []) throw new NotFoundHttpException();
+        if ($pelatihan_peserta == []) {
+            throw new NotFoundHttpException();
+        }
 
         $waktu_sekarang = strtotime(date('Y-m-d H:i:s'));
         $lebih_tgl_mulai = $waktu_sekarang >= strtotime($model->tanggal_mulai);
@@ -211,14 +233,15 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             return $this->goBack();
         }
         return $this->render('detail', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     public function actionAddPeserta($id)
     {
-        $transaction = Yii::$app->db->beginTransaction();
         $model = $this->findModel($id);
+        $modelExcel = new PelatihanPesertaExcel;
+
         if ($model->status_id >= 4) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah dilaksanakan');
             return $this->goBack();
@@ -229,7 +252,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $modelPeserta = [new PelatihanPeserta()];
         }
 
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
 
         if ($_POST) {
             // model lampiran
@@ -252,10 +277,13 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $model->modified_by = \Yii::$app->user->identity->id;
 
             try {
+                $transaction = Yii::$app->db->beginTransaction();
                 $valid = $model->validate();
+
+                // input manual
                 if ($valid) {
                     $model->save(); // save model untuk mendapatkan id
-                    
+
                     // check apakah ada data yang dihapus
                     if (!empty($deletedPesertaIDs)) {
                         PelatihanPeserta::deleteAll(['id' => $deletedPesertaIDs]);
@@ -276,6 +304,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         return $this->render('update', [
                             'model' => $model,
                             'modelPeserta' => $modelPeserta,
+                            'modelExcel' => $modelExcel,
                         ]);
                     }
 
@@ -284,28 +313,81 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $o->tanggal_lahir = date('Y-m-d', strtotime($o->tanggal_lahir));
                         $checkUser = \app\models\User::findOne(['username' => $o->nik]);
                         if ($checkUser == []) {
-                            $newUser = new User();
-                            $newUser->username = $o->nik;
-                            $newUser->name = $o->nama;
-                            $newUser->password = md5($o->tanggal_lahir);
-                            $newUser->role_id = 3;
+                            $new_user = new User();
+                            $new_user->username = $o->nik;
+                            $new_user->name = $o->nama;
+                            $new_user->password = md5($o->tanggal_lahir);
+                            $new_user->role_id = 3;
 
-                            $newUser->save();
-                            $checkUser = $newUser;
+                            $new_user->save();
+                            $checkUser = $new_user;
                         }
 
                         $o->user_id = $checkUser->id; //get user id
                         $o->save();
                     }
-                }else{
+                } else {
                     $transaction->rollback();
                     $msg = $model->getErrors();
                     $model->addError('_exception', $msg);
                     return $this->render('_form-add-peserta', [
                         'model' => $model,
                         'modelPeserta' => $modelPeserta,
+                        'modelExcel' => $modelExcel,
                     ]);
                 }
+
+                // input excel
+                $file = UploadedFile::getInstance($modelExcel, 'file');
+                if ($file) {
+                    $excelReader = PHPExcel_IOFactory::createReaderForFile($file->tempName);
+                    $excelObj = $excelReader->load($file->tempName);
+                    $worksheet = $excelObj->getSheet(1);
+                    $lastRow = $worksheet->getHighestRow();
+                    for ($row = 2; $row <= $lastRow; $row++) {
+                        $new_peserta = new PelatihanPeserta;
+                        $new_peserta->pelatihan_id = $model->id;
+                        $new_peserta->nik = (string) $worksheet->getCell('A' . $row)->getValue();
+                        $new_peserta->nama = $worksheet->getCell('B' . $row)->getValue();
+                        $new_peserta->no_telp = $worksheet->getCell('C' . $row)->getValue();
+                        $new_peserta->email = $worksheet->getCell('D' . $row)->getValue();
+                        $new_peserta->tempat_lahir = $worksheet->getCell('E' . $row)->getValue();
+                        $new_peserta->tanggal_lahir = date('Y-m-d', strtotime($worksheet->getCell('F' . $row)->getValue()));
+                        $new_peserta->jenis_kelamin_id = MasterJenisKelamin::findOne(['nama' => $worksheet->getCell('G' . $row)->getValue()])->id;
+                        $new_peserta->pekerjaan_id = MasterPekerjaan::findOne(['nama' => $worksheet->getCell('H' . $row)->getValue()])->id;
+                        $new_peserta->pendidikan_id = MasterPendidikan::findOne(['nama' => $worksheet->getCell('I' . $row)->getValue()])->id;
+                        $new_peserta->alamat = $worksheet->getCell('J' . $row)->getValue();
+                        $new_peserta->rt = $worksheet->getCell('K' . $row)->getValue();
+                        $new_peserta->rw = $worksheet->getCell('L' . $row)->getValue();
+
+                        $check_user = \app\models\User::findOne(['username' => $new_peserta->nik]);
+                        if ($check_user == []) {
+                            $new_user = new User();
+                            $new_user->username = $new_peserta->nik;
+                            $new_user->name = $new_peserta->nama;
+                            $new_user->password = md5($new_peserta->tanggal_lahir);
+                            $new_user->role_id = 3;
+
+                            $new_user->save();
+                            $check_user = $new_user;
+                        }
+                        $new_peserta->user_id = $check_user->id; //get user id
+
+                        if ($new_peserta->validate()) {
+                            $new_peserta->save();
+                        } else {
+                            $transaction->rollBack();
+                            $msg = array_values($new_peserta->getErrors())[0][0];
+                            Yii::$app->session->setFlash('error', "Terdapat kesalahan pada data excel, pada baris ke $row ($msg)");
+                            return $this->render('_form-add-peserta', [
+                                'model' => $model,
+                                'modelPeserta' => $modelPeserta,
+                                'modelExcel' => $modelExcel,
+                            ]);
+                        }
+                    }
+                }
+
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
             } catch (\Exception $e) {
@@ -318,6 +400,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         return $this->render('_form-add-peserta', [
             'model' => $model,
             'modelPeserta' => $modelPeserta,
+            'modelExcel' => $modelExcel,
         ]);
     }
 
@@ -381,7 +464,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $o->jenis_id = $modelSoalJenis->id;
                         $o->kategori_soal_id = Constant::SOAL_TYPE_PILIHAN_GANDA;
                         $modelSoal[$i] = $o;
-                        if ($o->unique_id == null) $o->unique_id = \Yii::$app->security->generateRandomString(50);
+                        if ($o->unique_id == null) {
+                            $o->unique_id = \Yii::$app->security->generateRandomString(50);
+                        }
+
                     }
 
                     // validasi dynamic form
@@ -397,7 +483,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                             'modelSoal' => $modelSoal,
                         ]);
                     }
-
 
                     // save dynamic model
                     foreach ($modelSoal as $i => $o) {
@@ -469,8 +554,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
         foreach ($modelSoal as $index => $value) {
             $item = PelatihanSoal::findOne(['id' => $value->id]);
-            if (count($item->pelatihanSoalPilihans) > 1) $modelSoalPilihan[$index] = $item->pelatihanSoalPilihans;
-            else $modelSoalPilihan[$index] = [new PelatihanSoalPilihan()];
+            if (count($item->pelatihanSoalPilihans) > 1) {
+                $modelSoalPilihan[$index] = $item->pelatihanSoalPilihans;
+            } else {
+                $modelSoalPilihan[$index] = [new PelatihanSoalPilihan()];
+            }
+
         }
 
         if (count($modelSoal) < 1) {
@@ -525,8 +614,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         $modelSoal[$i] = $o;
                     }
 
-
-
                     // validasi dynamic form
                     $valid = PelatihanSoal::validateMultiple($modelSoal) && $valid;
 
@@ -540,7 +627,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                             'modelSoal' => $modelSoal,
                         ]);
                     }
-
 
                     // save dynamic model soal
                     foreach ($modelSoal as $i => $o) {
@@ -602,12 +688,15 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionAjukan($id)
     {
         $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_PELENGKAPAN_DATA])->one();
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
-        if($model->getPelatihanSoalJenis()->count() != 4) {
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($model->getPelatihanSoalJenis()->count() != 4) {
             Yii::$app->session->setFlash('error', 'Soal pretest / posttest harus dibuat terlebih dahulu');
             return $this->redirect(['view', 'id' => $id]);
         }
-        if($model->getPelatihanPesertas()->count() == 0) {
+        if ($model->getPelatihanPesertas()->count() == 0) {
             Yii::$app->session->setFlash('error', 'Setidaknya harus terdapat 1 peserta');
             return $this->redirect(['view', 'id' => $id]);
         }
@@ -629,7 +718,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionSetujui($id)
     {
         $model = Pelatihan::find()->where(['id' => $id, 'status_id' => Constant::STATUS_MENUNGGU_PERSETUJUAN])->one();
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
+
         if ($model) {
             try {
                 $model->status_id = 3;
@@ -656,7 +748,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         $extension = end($tmp);
         $filename .= \Yii::$app->security->generateRandomString() . ".{$extension}";
         $path = $dir . $filename;
-        if ($file->saveAs($path)) return $url . $filename;
+        if ($file->saveAs($path)) {
+            return $url . $filename;
+        }
+
     }
 
     public function actionAjukanMonev($id)
@@ -671,28 +766,46 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         // $oldRekapitulasiNilai = $model->rekapitulasi_nilai;
         // $oldAbsensiKehadiran = $model->absensi_kehadiran;
 
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
+
         if ($model->load($_POST)) {
             try {
                 $transaction = Yii::$app->db->beginTransaction();
                 $proposal = UploadedFile::getInstance($model, "proposal");
                 // $rekapitulasi_nilai = UploadedFile::getInstance($model, "rekapitulasi_nilai");
                 // $absensi_kehadiran = UploadedFile::getInstance($model, "absensi_kehadiran");
-                if ($model->status_id == 3) $valid = ($proposal != null && $model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
-                else $valid = ($model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
+                if ($model->status_id == 3) {
+                    $valid = ($proposal != null && $model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
+                } else {
+                    $valid = ($model->hasil_pelaksanaan_pelatihan != null && $model->dasar_pelaksanaan != null);
+                }
+
                 if ($valid) {
-                    if ($proposal) $model->proposal = $this->uploadFile($proposal, "proposal", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
-                    else $model->proposal = $oldProposal;
+                    if ($proposal) {
+                        $model->proposal = $this->uploadFile($proposal, "proposal", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
+                    } else {
+                        $model->proposal = $oldProposal;
+                    }
+
                     // if ($rekapitulasi_nilai) $model->rekapitulasi_nilai = $this->uploadFile($rekapitulasi_nilai, "rekapitulasi_nilai", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
                     // else $model->rekapitulasi_nilai = $oldRekapitulasiNilai;
                     // if ($absensi_kehadiran) $model->absensi_kehadiran = $this->uploadFile($absensi_kehadiran, "absensi_kehadiran", $model->getUploadedFolder(), $model->getUploadedUrlFolder());
                     // else $model->absensi_kehadiran = $oldAbsensiKehadiran;
 
-                    if ($model->status_id == 3) $model->status_id = 4;
+                    if ($model->status_id == 3) {
+                        $model->status_id = 4;
+                    }
+
                     $model->save();
                     $transaction->commit();
-                    if ($oldStatus == 3) Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ajukan');
-                    else Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ubah');
+                    if ($oldStatus == 3) {
+                        Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ajukan');
+                    } else {
+                        Yii::$app->session->setFlash('success', 'Monev Pelatihan Berhasil Di Ubah');
+                    }
+
                     return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
                 } else {
                     $transaction->rollBack();
@@ -704,7 +817,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             }
         }
         return $this->render('form-upload-monev', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
@@ -714,17 +827,19 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         if ($model == false) {
             throw new NotFoundHttpException();
         }
-        if (RoleType::disallow($model)) throw new NotFoundHttpException();
+        if (RoleType::disallow($model)) {
+            throw new NotFoundHttpException();
+        }
 
         if ($_POST) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $model->status_id = 5; // status selesai
                 $model->validate();
-                if($model->save()){
+                if ($model->save()) {
                     $transaction->commit();
                     Yii::$app->session->setFlash('success', 'Monev Pelatihan berhasil disetujui');
-                }else{
+                } else {
                     $transaction->rollBack();
                     Yii::$app->session->setFlash('error', 'Monev Pelatihan gagal disetujui');
                 }
@@ -749,37 +864,43 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionUpdateKehadiran($id)
     {
         $model = $this->findModel($id);
-        if (RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
-        if ($model->status_id != 3) throw new \yii\web\ForbiddenHttpException();
+        if (RoleType::disallow($model)) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        if ($model->status_id != 3) {
+            throw new \yii\web\ForbiddenHttpException();
+        }
+
         if ($_POST) {
             $transaction = Yii::$app->db->beginTransaction();
-            $selection = (array)Yii::$app->request->post('selection');
+            $selection = (array) Yii::$app->request->post('selection');
             $hadir = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, 'id' => $selection])->all();
             $tidak_hadir = PelatihanPeserta::find()->where(['and', ['pelatihan_id' => $model->id], ['not in', 'id', $selection]])->all();
 
-            try{
+            try {
 
                 foreach ($hadir as $participant) {
                     $participant->kehadiran = 1;
                     $participant->save();
                 }
-    
+
                 foreach ($tidak_hadir as $participant) {
                     $participant->kehadiran = 0;
                     $participant->save();
                 }
-    
+
                 $transaction->commit();
                 Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah');
                 return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
-            }catch(\Throwable $e){
+            } catch (\Throwable $e) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('success', 'Telah terjadi kesalahan');
                 return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
             }
         }
 
-        $dataProvider =  new \yii\data\ActiveDataProvider([
+        $dataProvider = new \yii\data\ActiveDataProvider([
             'query' => $model->getPelatihanPesertas(),
             'pagination' => [
                 'pageSize' => 999999,
@@ -789,15 +910,21 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
         return $this->render('list-kehadiran', [
             'dataProvider' => $dataProvider,
-            'model' => $model
+            'model' => $model,
         ]);
     }
 
     public function actionUpdateNilaiPraktek($id)
     {
         $model = $this->findModel(['id' => $id]);
-        if (RoleType::disallow($model)) throw new \yii\web\NotFoundHttpException();
-        if ($model->status_id != Constant::PELATIHAN_TINGKAT_LANJUT_2) throw new \yii\web\ForbiddenHttpException();
+        if (RoleType::disallow($model)) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+
+        if ($model->status_id != Constant::PELATIHAN_TINGKAT_LANJUT_2) {
+            throw new \yii\web\ForbiddenHttpException();
+        }
+
         $peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $id, 'kehadiran' => Constant::KEHADIRAN_HADIR]);
         if ($peserta->count() == 0) {
             Yii::$app->session->setFlash('error', "Setidaknnya harus ada peserta yang hadir dalam pelatihan.");
@@ -836,6 +963,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             "dataProvider" => $dataProvider,
         ]);
     }
+
     public function actionSertifikat($id)
     {
         $this->layout = false;
@@ -843,5 +971,135 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         return $this->render('sertifikat', [
             "model" => $model,
         ]);
+    }
+
+    public function actionDownloadTemplatePeserta()
+    {
+        $objPHPExcel = new \PHPExcel();
+        $sheet0 = 0;
+        $sheet1 = 1;
+
+        $objPHPExcel->setActiveSheetIndex($sheet0)->setSheetState(PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->setTitle("pekerjaan")
+            ->setCellValue('A1', 'Nama');
+        $masterPekerjaanDB = MasterPekerjaan::find()->select('nama')->asArray()->all();
+        // extract value
+        foreach ($masterPekerjaanDB as $index => $pekerjaan) {
+            $masterPekerjaanDB[$index] = array_values($pekerjaan)[0];
+        }
+        for ($i = 2; $i < count($masterPekerjaanDB); $i++) {
+            $objPHPExcel->getActiveSheet()->setCellValue("A$i", $masterPekerjaanDB[$i - 2]);
+        }
+
+        /**
+         * Must create new sheet
+         * to handle error offset value
+         */
+        $objPHPExcel->createSheet();
+        $objPHPExcel->setActiveSheetIndex($sheet1);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(5);
+
+        $objPHPExcel->getActiveSheet()->setTitle("Template Peserta")
+            ->setCellValue('A1', 'NIK')
+            ->setCellValue('B1', 'Nama Peserta')
+            ->setCellValue('C1', 'No Telp')
+            ->setCellValue('D1', 'Email')
+            ->setCellValue('E1', 'Tempat Lahir')
+            ->setCellValue('F1', 'Tanggal Lahir')
+            ->setCellValue('G1', 'Jenis Kelamin')
+            ->setCellValue('H1', 'Pekerjaan')
+            ->setCellValue('I1', 'Pendidikan')
+            ->setCellValue('J1', 'Alamat')
+            ->setCellValue('K1', 'RT')
+            ->setCellValue('L1', 'RW');
+
+        $cellPos = str_split("ABCDEFGHIJKL");
+        foreach ($cellPos as $alphabet) {
+            $objPHPExcel->getActiveSheet()->getStyle("{$alphabet}1")->getFont()->setBold(true)->setName('Verdana')->setSize(10)->getColor()->setRGB('6F6F6F');
+        }
+
+        // data jenis kelamin
+        $masterJenisKelamin = MasterJenisKelamin::find()->select('nama')->asArray()->all();
+        foreach ($masterJenisKelamin as $index => $jenis_kelamin) {
+            $masterJenisKelamin[$index] = array_values($jenis_kelamin)[0];
+        }
+        // extract value
+        $configs = implode(",", $masterJenisKelamin);
+        for ($i = 2; $i <= 200; $i++) {
+            $objValidation = $objPHPExcel->getActiveSheet()->getCell("G$i")->getDataValidation();
+            $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                ->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1("\"$configs\"");
+        }
+
+        // data pekerjaan
+        $configs = "pekerjaan!\$A$2:\$A$88";
+        for ($i = 2; $i <= 200; $i++) {
+            $objValidation = $objPHPExcel->getActiveSheet()->getCell("H$i")->getDataValidation();
+            $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                ->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1($configs);
+        }
+
+        // data pendidikan
+        $masterPendidikan = MasterPendidikan::find()->select('nama')->asArray()->all();
+        foreach ($masterPendidikan as $index => $pekerjaan) {
+            $masterPendidikan[$index] = array_values($pekerjaan)[0];
+        }
+        // extract value
+        $configs = implode(",", $masterPendidikan);
+        for ($i = 2; $i <= 200; $i++) {
+            $objValidation = $objPHPExcel->getActiveSheet()->getCell("I$i")->getDataValidation();
+            $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+                ->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+                ->setAllowBlank(false)
+                ->setShowInputMessage(true)
+                ->setShowErrorMessage(true)
+                ->setShowDropDown(true)
+                ->setErrorTitle('Input error')
+                ->setError('Value is not in list.')
+                ->setPromptTitle('Pick from list')
+                ->setPrompt('Please pick a value from the drop-down list.')
+                ->setFormula1("\"$configs\"");
+        }
+
+        $filename = "Template Peserta.xls";
+        ob_end_clean();
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        ob_end_clean();
     }
 }
