@@ -42,8 +42,8 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
             [['jenis_id', 'pelatihan_id'], 'required'],
             [['jenis_id', 'pelatihan_id', 'waktu_pengerjaan', 'jumlah_soal'], 'integer'],
             [['waktu_pengerjaan'], 'integer', 'min' => 5], // minimal waktu pengerjaan adalah 5 menit
-            [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisSoal::className(), 'targetAttribute' => ['jenis_id' => 'id']],
-            [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']]
+            [['jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisSoal::class, 'targetAttribute' => ['jenis_id' => 'id']],
+            [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::class, 'targetAttribute' => ['pelatihan_id' => 'id']]
         ];
     }
 
@@ -78,7 +78,7 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
      */
     public function getPelatihanSoals()
     {
-        return $this->hasMany(\app\models\PelatihanSoal::className(), ['jenis_id' => 'id']);
+        return $this->hasMany(\app\models\PelatihanSoal::class, ['jenis_id' => 'id']);
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
      */
     public function getJenis()
     {
-        return $this->hasOne(\app\models\MasterJenisSoal::className(), ['id' => 'jenis_id']);
+        return $this->hasOne(\app\models\MasterJenisSoal::class, ['id' => 'jenis_id']);
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class PelatihanSoalJenis extends \yii\db\ActiveRecord
      */
     public function getPelatihan()
     {
-        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_id']);
+        return $this->hasOne(\app\models\Pelatihan::class, ['id' => 'pelatihan_id']);
     }
 
 
