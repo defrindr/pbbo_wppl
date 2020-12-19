@@ -25,6 +25,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/main.js',
+        // '//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js',
         'js/masterslider.js',
         'js/jquery.easing.js',
         'js/rowsorter.js',

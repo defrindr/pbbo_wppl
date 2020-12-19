@@ -11,11 +11,11 @@
 
 namespace Symfony\Component\DomCrawler\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\FormFieldRegistry;
+use Symfony\Component\DomCrawler\Field;
 
-class FormTest extends TestCase
+class FormTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
@@ -189,8 +189,7 @@ class FormTest extends TestCase
         $form = $this->createForm('<form>'.$form.'</form>');
         $this->assertEquals(
             $values,
-            array_map(
-                function ($field) {
+            array_map(function ($field) {
                     $class = get_class($field);
 
                     return array(substr($class, strrpos($class, '\\') + 1), $field->getValue());
@@ -321,12 +320,6 @@ class FormTest extends TestCase
         $this->assertEquals('PATCH', $form->getMethod(), '->getMethod() returns the method defined in the constructor if provided');
     }
 
-    public function testGetMethodWithOverride()
-    {
-        $form = $this->createForm('<form method="get"><input type="submit" formmethod="post" /></form>');
-        $this->assertEquals('POST', $form->getMethod(), '->getMethod() returns the method attribute value of the form');
-    }
-
     public function testGetSetValue()
     {
         $form = $this->createForm('<form><input type="text" name="foo" value="foo" /><input type="submit" /></form>');
@@ -349,6 +342,18 @@ class FormTest extends TestCase
             $this->fail('->offsetSet() throws an \InvalidArgumentException exception if the field does not exist');
         } catch (\InvalidArgumentException $e) {
             $this->assertTrue(true, '->offsetSet() throws an \InvalidArgumentException exception if the field does not exist');
+        }
+    }
+
+    public function testSetValueOnMultiValuedFieldsWithMalformedName()
+    {
+        $form = $this->createForm('<form><input type="text" name="foo[bar]" value="bar" /><input type="text" name="foo[baz]" value="baz" /><input type="submit" /></form>');
+
+        try {
+            $form['foo[bar'] = 'bar';
+            $this->fail('->offsetSet() throws an \InvalidArgumentException exception if the name is malformed.');
+        } catch (\InvalidArgumentException $e) {
+            $this->assertTrue(true, '->offsetSet() throws an \InvalidArgumentException exception if the name is malformed.');
         }
     }
 
@@ -534,12 +539,6 @@ class FormTest extends TestCase
         $this->assertEquals('http://localhost/foo/bar', $form->getUri(), '->getUri() returns path if no action defined');
     }
 
-    public function testGetUriWithActionOverride()
-    {
-        $form = $this->createForm('<form action="/foo"><button type="submit" formaction="/bar" /></form>', null, 'http://localhost/foo/');
-        $this->assertEquals('http://localhost/bar', $form->getUri(), '->getUri() returns absolute URIs');
-    }
-
     public function provideGetUriValues()
     {
         return array(
@@ -682,19 +681,31 @@ class FormTest extends TestCase
         $this->assertTrue($form->has('example.y'), '->has() returns true if the image input was correctly turned into an x and a y fields');
     }
 
-    public function testFormFieldRegistryAcceptAnyNames()
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFormFieldRegistryAddThrowAnExceptionWhenTheNameIsMalformed()
     {
-        $field = $this->getFormFieldMock('[t:dbt%3adate;]data_daterange_enddate_value');
-
         $registry = new FormFieldRegistry();
-        $registry->add($field);
-        $this->assertEquals($field, $registry->get('[t:dbt%3adate;]data_daterange_enddate_value'));
-        $registry->set('[t:dbt%3adate;]data_daterange_enddate_value', null);
+        $registry->add($this->getFormFieldMock('[foo]'));
+    }
 
-        $form = $this->createForm('<form><input type="text" name="[t:dbt%3adate;]data_daterange_enddate_value" value="bar" /><input type="submit" /></form>');
-        $form['[t:dbt%3adate;]data_daterange_enddate_value'] = 'bar';
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFormFieldRegistryRemoveThrowAnExceptionWhenTheNameIsMalformed()
+    {
+        $registry = new FormFieldRegistry();
+        $registry->remove('[foo]');
+    }
 
-        $registry->remove('[t:dbt%3adate;]data_daterange_enddate_value');
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFormFieldRegistryGetThrowAnExceptionWhenTheNameIsMalformed()
+    {
+        $registry = new FormFieldRegistry();
+        $registry->get('[foo]');
     }
 
     /**
@@ -704,6 +715,15 @@ class FormTest extends TestCase
     {
         $registry = new FormFieldRegistry();
         $registry->get('foo');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFormFieldRegistrySetThrowAnExceptionWhenTheNameIsMalformed()
+    {
+        $registry = new FormFieldRegistry();
+        $registry->set('[foo]', null);
     }
 
     /**

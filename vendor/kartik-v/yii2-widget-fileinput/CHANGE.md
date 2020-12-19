@@ -1,6 +1,25 @@
 Change Log: `yii2-widget-fileinput`
 ===================================
 
+## Version 1.1.0
+
+**Date:** 24-Oct-2020
+
+- (enh #171): Eliminate DOM Purify plugin and assets dependencies.
+- (enh #169): Add German Translations.
+- (enh #165): Add Latvian Translations.
+- (enh #162): Add Uzbek Translations.
+- (enh #159): Add Romanian Translations.
+- (enh #157): Add Armenian Translations.
+- Bump composer dependencies.
+
+## Version 1.0.9
+
+**Date:** 19-Apr-2019
+
+- (enh #147): Auto-set multiple file upload naming convention.
+- Bump composer dependencies.
+
 ## Version 1.0.8
 
 **Date:** 19-Sep-2018

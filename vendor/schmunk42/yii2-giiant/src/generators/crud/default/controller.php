@@ -47,7 +47,6 @@ use yii\web\HttpException;
 use yii\helpers\Url;
 use yii\filters\AccessControl;
 use dmstr\bootstrap\Tabs;
-use app\models\Action;
 
 /**
 * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -67,12 +66,7 @@ if ($traits) {
 * CSRF validation is enabled only when both this property and [[Request::enableCsrfValidation]] are true.
 */
 public $enableCsrfValidation = false;
-public function behaviors()
-{
-//NodeLogger::sendLog(Action::getAccess($this->id));
-//apply role_action table for privilege (doesn't apply to super admin)
-return Action::getAccess($this->id);
-}
+
 <?php if ($generator->accessFilter): ?>
     /**
     * @inheritdoc

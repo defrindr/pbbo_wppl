@@ -24,14 +24,14 @@
         "kartik-v/yii2-widget-select2": "@dev",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "2amigos/yii2-selectize-widget": "~1.0",
-        "wbraganca/yii2-dynamicform": "~2.0.2",
         "phpoffice/phpexcel": "*",
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "drsdre/yii2-wizardwidget": "^1.2",
         "kartik-v/yii2-widget-activeform": "@dev",
         "kartik-v/yii2-widget-depdrop": "dev-master",
-        "moonlandsoft/yii2-phpexcel": "*"
+        "moonlandsoft/yii2-phpexcel": "*",
+        "symfony/dom-crawler": "2.8"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
