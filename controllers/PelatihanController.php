@@ -519,6 +519,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                             $modelPilihan->pelatihan_soal_id = $o->id;
                             $modelPilihan->save();
                         }
+                        $id_jawaban_benar = $_POST['PelatihanSoal'][$i]['checked'];
+                        $o->jawaban = $_POST['PelatihanSoalPilihan'][$i][$id_jawaban_benar]['pilihan'];
+                        $o->save();
                     }
 
                     $modelSoalJenis->jumlah_soal = count($modelSoalJenis->pelatihanSoals);
@@ -663,6 +666,9 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                             $modelPilihan->pelatihan_soal_id = $o->id;
                             $modelPilihan->save();
                         }
+                        $id_jawaban_benar = $_POST['PelatihanSoal'][$i]['checked'];
+                        $o->jawaban = $_POST['PelatihanSoalPilihan'][$i][$id_jawaban_benar]['pilihan'];
+                        $o->save();
                     }
 
                     $modelSoalJenis->jumlah_soal = count($modelSoal);
