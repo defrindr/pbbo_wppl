@@ -1,6 +1,5 @@
 <?php
 use wbraganca\dynamicform\DynamicFormWidget;
-use yii\bootstrap\ActiveForm;
 
 $hiddenTemplate = ["template" => "{input}"];
 $hiddenStyle = ["style" => "display: none"];
@@ -28,7 +27,19 @@ DynamicFormWidget::begin([
         <?php foreach ($modelSoalPilihan as $i => $o): ?>
         <tr class="item item-soal-pilihan">
             <td>
-                <?=$form->field($o, "[{$indexSoal}][{$i}]pilihan", ["template" => "<div class='col-md-2'></div><div class='col-md-6'>{input}</div>"])->textInput()?>
+                <?php
+                $checked = ($modelSoal->jawaban == $o->pilihan) ? 'checked' : '';
+                // Formatted addons (inputs)
+                echo $form->field($o, "[{$indexSoal}][{$i}]pilihan", [
+                    "template" => "<div class='col-md-12'>{input}</div>",
+                    'addon' => [
+                        'prepend' => [
+                            'content' => "<input type=\"radio\" name=\"PelatihanSoal[{$indexSoal}][checked]\" value=\"$i\" $checked>"
+                        ]
+                    ]
+                ]);
+                ?>
+                <?php //$form->field($o, "[{$indexSoal}][{$i}]pilihan", ["template" => "<div class='col-md-2'></div><div class='col-md-6'>{input}</div>"])->textInput()?>
             </td>
             <td>
                 <div class="pull-right">
@@ -45,7 +56,14 @@ DynamicFormWidget::begin([
 </table>
 <?php 
 $this->registerJs('
-    $(".dynamicform_wrapper_soal_pilihan").on("beforeDelete", function(e, item_orang) {
+
+    $(".dynamicform_wrapper_soal_pilihan").on("afterInsert", function(e, item_pilihan) {
+        let sub_elements = $(".soal-pilihan-items");
+        sub_elements = $(sub_elements).find(".item-soal-pilihan");
+        var sub_id = sub_elements.length-1;
+        $(item_pilihan).find("input[type=\"radio\"]").attr("value", sub_id);
+    });
+    $(".dynamicform_wrapper_soal_pilihan").on("beforeDelete", function(e, item_pilihan) {
         if (! confirm("Are you sure you want to delete this item?")) {
             return true;
         }

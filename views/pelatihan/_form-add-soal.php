@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use kartik\form\ActiveForm;
 /**
  * @var yii\web\View $this
  * @var app\models\Pelatihan $model
@@ -16,18 +16,6 @@ $this->params['breadcrumbs'][] = 'Edit';
 <p>
     <?=Html::a('<i class="fa fa-eye-open"></i> Kembali', ['view', 'id' => $model->id], ['class' => 'btn btn-default'])?>
 </p>
-
-<?php
-
-use yii\bootstrap\ActiveForm;
-
-/**
- * @var yii\web\View $this
- * @var app\models\Pelatihan $model
- * @var yii\widgets\ActiveForm $form
- */
-
-?>
 <style>
     .form-group {
         margin: 0!important;
@@ -37,7 +25,8 @@ use yii\bootstrap\ActiveForm;
     <div class="box-body">
         <?php $form = ActiveForm::begin([
             'id' => 'Pelatihan',
-            'layout' => 'horizontal',
+            // 'layout' => 'horizontal',
+            'type' => ActiveForm::TYPE_HORIZONTAL,
             'enableClientValidation' => true,
             'errorSummaryCssClass' => 'error-summary alert alert-error',
         ]);
@@ -84,7 +73,7 @@ use yii\bootstrap\ActiveForm;
                 ],
             ],
             'complete_content' => $this->render('_action.php'), // Optional final screen
-            'start_step' => 1, // Optional, start with a specific step
+            'start_step' => 2, // Optional, start with a specific step
         ];
         ?>
 

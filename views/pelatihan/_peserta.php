@@ -19,7 +19,7 @@ DynamicFormWidget::begin([
     'widgetBody' => '.peserta-items', // required: css class selector
     'widgetItem' => '.item-peserta', // required: css class
     'limit' => 999, // the maximum times, an element can be cloned (default 999)
-    'min' => 1, // 0 or 1 (default 1)
+    'min' => 0, // 0 or 1 (default 1)
     'insertButton' => '.add-item', // css class
     'deleteButton' => '.remove-item', // css class
     'model' => $modelPeserta[0],
@@ -47,7 +47,9 @@ DynamicFormWidget::begin([
         <div class="container-items peserta-items">
             <!-- widgetBody -->
 
-            <?php foreach ($modelPeserta as $i => $o): ?>
+            <?php
+            foreach ($modelPeserta as $i => $o):
+            ?>
             <div class="item item-peserta panel panel-default">
                 <!-- widgetItem -->
                 <div class="panel-heading">
@@ -159,4 +161,7 @@ $this->registerJs('
 ');
 
 ?>
-<?php DynamicFormWidget::end()?>
+<?php 
+
+DynamicFormWidget::end()
+?>

@@ -33,7 +33,7 @@ DynamicFormWidget::begin([
             <!-- <th> Tipe Soal </th> -->
             <th> Soal </th>
             <th> Pilihan (Kosongi jika tipe soal tidak membutuhkan pilihan) </th>
-            <th> Jawaban </th>
+            <!-- <th> Jawaban </th> -->
             <!-- <th> Nilai Maksimum </th> -->
             <th>
                 <button type="button" class="add-item btn btn-success btn-xs"><i
@@ -62,7 +62,7 @@ DynamicFormWidget::begin([
                     ])?>
                 </td>
                 <td>
-                    <?=$form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"])?>
+                    <?php //$form->field($o, "[{$i}]jawaban", $hiddenTemplate)->textInput(['placeholder' => "Kosongi jika tipe soal bukan multiple choices"])?>
                 </td>
                 <!-- <td>
                     <?php //$form->field($o, "[{$i}]nilai_maksimum", $hiddenTemplate)->textInput(['placeholder' => "Nilai Maksimum"])?>
@@ -81,6 +81,26 @@ DynamicFormWidget::begin([
 
 <?php 
 $this->registerJs('
+
+    $(".dynamicform_wrapper_soal").on("afterInsert", function(e, item_pilihan) {
+        let elements = $(".soal-pilihan-items");
+        var id = elements.length-1;
+        var prepare_attr = "PelatihanSoal["+id+"][checked]";
+        $(item_pilihan).find("input[type=\"radio\"]").attr("name", prepare_attr);
+
+        
+        $(".dynamicform_wrapper_soal_pilihan").on("afterInsert", function(e, item_pilihan) {
+            let sub_elements = $(".soal-pilihan-items")[id];
+            sub_elements = $(sub_elements).find(".item-soal-pilihan");
+            var sub_id = sub_elements.length-1;
+            if(id != null){
+                var prepare_attr = "PelatihanSoal["+id+"][checked]";
+                $(item_pilihan).find("input[type=\"radio\"]").attr("name", prepare_attr);
+            }
+            $(item_pilihan).find("input[type=\"radio\"]").attr("value", sub_id);
+        });
+    });
+
     $(".dynamicform_wrapper_soal").on("beforeDelete", function(e, item_orang) {
         if (! confirm("Are you sure you want to delete this item?")) {
             return true;
