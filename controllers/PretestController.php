@@ -215,7 +215,6 @@ class PretestController extends Controller
     public function actionIndex($unique_id = null)
     {
         $this->layout = '../layouts-peserta/not-found';
-
         $user = \Yii::$app->user->identity;
         if (!isset($user)) {
             return $this->redirect(['/site/login']);
@@ -237,7 +236,7 @@ class PretestController extends Controller
             ]);
         }
 
-        $model_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user])->one();
+        $model_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user->id])->one();
         if ($model_peserta == []) {
             return $this->render('not-found', [
                 'error' => "Anda tidak terdaftar pada pelatihan ini",
@@ -285,7 +284,6 @@ class PretestController extends Controller
         for ($i = 1; $i <= $total_page; $i++) {
             array_push($this->list_id_soal, $i);
         }
-
         $this->layout = '../layouts-peserta/main';
         return $this->render('template-soal', [
             'model' => $model,

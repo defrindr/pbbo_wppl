@@ -238,7 +238,7 @@ class PosttestController extends Controller
             ]);
         }
 
-        $model_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user])->one();
+        $model_peserta = PelatihanPeserta::find()->where(['pelatihan_id' => $model->id, "user_id" => $user->id])->one();
         if ($model_peserta == []) {
             return $this->render('not-found', [
                 'error' => "Anda tidak terdaftar pada pelatihan ini",
