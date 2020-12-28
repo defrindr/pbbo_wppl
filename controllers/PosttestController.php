@@ -20,6 +20,7 @@ class PosttestController extends Controller
     private function selesai($unique_id)
     {
         $user = Yii::$app->user->identity;
+        $transaction = Yii::$app->db->beginTransaction();
 
         $pelatihan = Pelatihan::findOne(['unique_id' => $unique_id]);
         if ($pelatihan == null) {
@@ -58,6 +59,7 @@ class PosttestController extends Controller
 
         $peserta->save();
         $soal_peserta->save();
+        $transaction->commit();
     }
 
     public function actionFinish()
