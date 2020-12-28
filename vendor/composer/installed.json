@@ -1673,23 +1673,23 @@
     },
     {
         "name": "kartik-v/yii2-widget-datepicker",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "v1.4.7",
+        "version_normalized": "1.4.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-widget-datepicker.git",
-            "reference": "fada92bc506d382ea3367daac6a1f7a9adf434b2"
+            "reference": "aadeb08fe0199a62bb26940cdccafc2c169edc69"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-widget-datepicker/zipball/fada92bc506d382ea3367daac6a1f7a9adf434b2",
-            "reference": "fada92bc506d382ea3367daac6a1f7a9adf434b2",
+            "url": "https://api.github.com/repos/kartik-v/yii2-widget-datepicker/zipball/aadeb08fe0199a62bb26940cdccafc2c169edc69",
+            "reference": "aadeb08fe0199a62bb26940cdccafc2c169edc69",
             "shasum": ""
         },
         "require": {
             "kartik-v/yii2-krajee-base": ">=2.0.0"
         },
-        "time": "2020-03-20T14:21:31+00:00",
+        "time": "2018-10-09T11:34:49+00:00",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
