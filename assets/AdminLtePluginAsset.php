@@ -12,7 +12,7 @@ class AdminLtePluginAsset extends AssetBundle
         'iCheck/all.css',
         //'bootstrap-slider/slider.css',
         //'bootstrap-wysihtml5/bootstrap-wysihtml5.css',
-        'datepicker/datepicker3.css',
+        // 'datepicker/datepicker3.css',
         'select2/select2.css',
     ];
     public $js = [
