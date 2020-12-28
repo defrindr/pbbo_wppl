@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = 'Edit';
                 ],
             ],
             'complete_content' => $this->render('_action.php'), // Optional final screen
-            'start_step' => 2, // Optional, start with a specific step
+            'start_step' => 1, // Optional, start with a specific step
         ];
         ?>
 
