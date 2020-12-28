@@ -24,7 +24,7 @@ $this->title = 'Daftar Pelatihan';
             <!-- small box -->
             <div class="small-box <?= ($status) ? "bg-aqua" : "bg-red" ?>">
                 <div class="inner">
-                    <h3><?= count($o->getPelatihanPesertas()) ?> Peserta</h3>
+                    <h3><?= $o->getPelatihanPesertas()->count() ?> Peserta</h3>
 
                     <p>
                         <?= $o->nama ?>
