@@ -178,7 +178,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                     $peserta_baru->rt = $peserta_lama->rt;
                     $peserta_baru->rw = $peserta_lama->rw;
                     $peserta_baru->alamat = $peserta_lama->alamat;
-                    $peserta_baru->desa_id = $peserta_lama->desa_id;
                     $peserta_lama->lanjut = 1;
 
                     $peserta_lama->save();
