@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Pelatihan;
+use app\models\PelatihanJenis;
 use app\models\search\PelatihanSearch;
 use Yii;
 use yii\web\Controller;
@@ -82,5 +83,28 @@ class ChartController extends Controller
                 "value" => array_column($models, 'value')
             ]
         ];
+    }
+
+    public function actionJenis()
+    {
+
+        $fh = fopen('JENIS.txt', 'r');
+        while ($line = fgets($fh)) {
+            // <... Do your work with the line ...>
+            echo ($line);
+            echo "<br/>";
+
+            $l = explode(",", $line);
+            $jenis = new PelatihanJenis();
+            $jenis->index = $l[0];
+            $jenis->nama = $l[1];
+            $jenis->sasaran = $l[2];
+            $jenis->peserta = $l[3];
+            $jenis->durasi = $l[4];
+            $jenis->instansi_id = $l[0];
+            $jenis->save();
+        }
+        fclose($fh);
+        return "ok";
     }
 }

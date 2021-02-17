@@ -44,17 +44,17 @@ class SiteController extends Controller
 
     public function actionProfile()
     {
-        $model = User::find()->where(["id"=>Yii::$app->user->id])->one();
+        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
         $oldMd5Password = $model->password;
         $oldPhotoUrl = $model->photo_url;
 
         $model->password = "";
 
-        if ($model->load($_POST)){
+        if ($model->load($_POST)) {
             //password
-            if($model->password != ""){
+            if ($model->password != "") {
                 $model->password = md5($model->password);
-            }else{
+            } else {
                 $model->password = $oldMd5Password;
             }
 
@@ -72,13 +72,13 @@ class SiteController extends Controller
                 # the path to save file
                 $path = Yii::getAlias("@app/web/uploads/") . $model->photo_url;
                 $image->saveAs($path);
-            }else{
+            } else {
                 $model->photo_url = $oldPhotoUrl;
             }
 
-            if($model->save()){
+            if ($model->save()) {
                 Yii::$app->session->addFlash("success", "Profile successfully updated.");
-            }else{
+            } else {
                 Yii::$app->session->addFlash("danger", "Profile cannot updated.");
             }
             return $this->redirect(["profile"]);

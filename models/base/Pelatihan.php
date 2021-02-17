@@ -5,8 +5,6 @@
 namespace app\models\base;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the base-model class for table "pelatihan".
@@ -26,8 +24,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $forum_diskusi
  * @property string $lokasi
  * @property string $kriteria
+ * @property string $jenis
  * @property integer $jumlah_target
+ * @property integer $sasaran
  * @property string $sasaran_wilayah
+ * @property string $sumber_dana
  * @property string $hasil_pelaksanaan_pelatihan
  * @property string $dasar_pelaksanaan
  * @property string $absensi_kehadiran
@@ -37,11 +38,11 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $pelaksana_id
  * @property integer $pelatihan_sebelumnya
  * @property string $proposal
+ * @property string $created_at
+ * @property integer $created_by
  * @property string $modified_at
  * @property integer $modified_by
  * @property integer $flag
- * @property string $created_at
- * @property integer $created_by
  *
  * @property \app\models\PelatihanTingkat $tingkat
  * @property \app\models\User $pelaksana
@@ -69,36 +70,16 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => BlameableBehavior::className(),
-                'updatedByAttribute' => false,
-            ],
-            [
-                'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => false,
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['nama', 'latar_belakang', 'tujuan', 'kota', 'nip_penandatangan', 'nama_penandatangan', 'tanggal_mulai', 'tingkat_id', 'lokasi', 'kriteria', 'jumlah_target', 'sasaran_wilayah', 'pelaksana_id', 'modified_by'], 'required'],
+            [['nama', 'latar_belakang', 'tujuan', 'kota', 'nip_penandatangan', 'nama_penandatangan', 'tanggal_mulai', 'tingkat_id', 'lokasi', 'kriteria', 'jenis', 'jumlah_target', 'sasaran', 'sasaran_wilayah', 'sumber_dana', 'pelaksana_id', 'created_by', 'modified_by'], 'required'],
             [['latar_belakang', 'tujuan', 'kota', 'nama_penandatangan', 'lokasi', 'hasil_pelaksanaan_pelatihan', 'dasar_pelaksanaan'], 'string'],
-            [['tanggal_mulai', 'tanggal_selesai', 'modified_at'], 'safe'],
-            [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'pelatihan_sebelumnya', 'modified_by', 'flag'], 'integer'],
+            [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'modified_at'], 'safe'],
+            [['tingkat_id', 'status_id', 'jumlah_target', 'sasaran', 'pelaksana_id', 'pelatihan_sebelumnya', 'created_by', 'modified_by', 'flag'], 'integer'],
             [['unique_id'], 'string', 'max' => 32],
-            [['nama', 'proposal'], 'string', 'max' => 200],
-            [['nip_penandatangan', 'forum_diskusi', 'kriteria', 'sasaran_wilayah', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat', 'materi_pelatihan'], 'string', 'max' => 100],
-            [['kota'], 'string', 'max' => 50],
-            [['nama_penandatangan'], 'string', 'max' => 120],
-            [['nip_penandatangan'], 'string', 'max' => 20],
+            [['nama', 'kriteria', 'jenis', 'proposal'], 'string', 'max' => 200],
+            [['nip_penandatangan', 'forum_diskusi', 'sasaran_wilayah', 'sumber_dana', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat', 'materi_pelatihan'], 'string', 'max' => 100],
             [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
             [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']],
@@ -118,24 +99,27 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'latar_belakang' => 'Latar Belakang',
             'tujuan' => 'Tujuan',
             'kota' => 'Kota',
-            'nip_penandatangan' => 'NIP Penandatangan',
+            'nip_penandatangan' => 'Nip Penandatangan',
             'nama_penandatangan' => 'Nama Penandatangan',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
-            'tingkat_id' => 'Tingkat',
-            'status_id' => 'Status',
+            'tingkat_id' => 'Tingkat ID',
+            'status_id' => 'Status ID',
             'forum_diskusi' => 'Forum Diskusi',
             'lokasi' => 'Lokasi',
             'kriteria' => 'Kriteria',
+            'jenis' => 'Jenis',
             'jumlah_target' => 'Jumlah Target',
+            'sasaran' => 'Sasaran',
             'sasaran_wilayah' => 'Sasaran Wilayah',
+            'sumber_dana' => 'Sumber Dana',
             'hasil_pelaksanaan_pelatihan' => 'Hasil Pelaksanaan Pelatihan',
             'dasar_pelaksanaan' => 'Dasar Pelaksanaan',
             'absensi_kehadiran' => 'Absensi Kehadiran',
             'rekapitulasi_nilai' => 'Rekapitulasi Nilai',
             'sertifikat' => 'Sertifikat',
             'materi_pelatihan' => 'Materi Pelatihan',
-            'pelaksana_id' => 'Pelaksana',
+            'pelaksana_id' => 'Pelaksana ID',
             'pelatihan_sebelumnya' => 'Pelatihan Sebelumnya',
             'proposal' => 'Proposal',
             'created_at' => 'Created At',
