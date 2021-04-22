@@ -28,10 +28,12 @@
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "drsdre/yii2-wizardwidget": "^1.2",
-        "kartik-v/yii2-widget-activeform": "@dev",
+        "kartik-v/yii2-widget-activeform": "dev-master",
         "kartik-v/yii2-widget-depdrop": "dev-master",
         "moonlandsoft/yii2-phpexcel": "*",
-        "symfony/dom-crawler": "2.8"
+        "symfony/dom-crawler": "2.8",
+        "kartik-v/yii2-widgets": "dev-master",
+        "wbraganca/yii2-dynamicform": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -24,6 +24,7 @@ use Yii;
  * @property integer $rt
  * @property integer $rw
  * @property string $alamat
+ * @property integer $desa_id
  * @property integer $kehadiran
  * @property integer $nilai_pretest
  * @property integer $nilai_posttest
@@ -38,14 +39,17 @@ use Yii;
  * @property integer $masa_berlaku
  * @property integer $lanjut
  *
+ * @property \app\models\WilayahDesa $desa
+ * @property \app\models\MasterJenisKelamin $jenisKelamin
+ * @property \app\models\MasterPekerjaan $pekerjaan
+ * @property \app\models\Pelatihan $pelatihan
  * @property \app\models\PelatihanKuesionerKepuasan[] $pelatihanKuesionerKepuasans
  * @property \app\models\PelatihanKuesionerMonev[] $pelatihanKuesionerMonevs
- * @property \app\models\MasterJenisKelamin $jenisKelamin
- * @property \app\models\User $user
- * @property \app\models\Pelatihan $pelatihan
- * @property \app\models\MasterPendidikan $pendidikan
- * @property \app\models\MasterPekerjaan $pekerjaan
+ * @property \app\models\PelatihanKuisionerKepuasan[] $pelatihanKuisionerKepuasans
+ * @property \app\models\PelatihanKuisionerMonev[] $pelatihanKuisionerMonevs
  * @property \app\models\PelatihanSoalPeserta[] $pelatihanSoalPesertas
+ * @property \app\models\MasterPendidikan $pendidikan
+ * @property \app\models\User $user
  * @property string $aliasModel
  */
 abstract class PelatihanPeserta extends \yii\db\ActiveRecord
@@ -67,13 +71,12 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
-            [['nilai_pretest', 'nilai_posttest', 'nilai_praktek'], 'integer', 'max' => 100, 'min' => 0],
+            [['user_id', 'pelatihan_id', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'desa_id', 'kehadiran', 'nilai_pretest', 'nilai_posttest', 'nilai_praktek', 'kesibukan_pasca_pelatihan', 'masa_berlaku', 'lanjut'], 'integer'],
             [['pelatihan_id', 'nik', 'nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'jenis_kelamin_id', 'pendidikan_id', 'pekerjaan_id', 'rt', 'rw', 'alamat'], 'required'],
             [['alamat', 'komentar', 'lokasi', 'jenis_izin_usaha', 'nib'], 'string'],
             [['nik'], 'string', 'max' => 20],
             [['nama', 'email', 'no_telp', 'tanggal_lahir', 'tempat_lahir', 'nama_usaha', 'jenis_usaha'], 'string', 'max' => 100],
-            [['nik', 'pelatihan_id'], 'unique', 'targetAttribute' => ['nik', 'pelatihan_id']], // menambahkan filter agar peserta dalam pelatihan tidak duplicate
+            [['desa_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\WilayahDesa::className(), 'targetAttribute' => ['desa_id' => 'id']],
             [['jenis_kelamin_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterJenisKelamin::className(), 'targetAttribute' => ['jenis_kelamin_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['pelatihan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Pelatihan::className(), 'targetAttribute' => ['pelatihan_id' => 'id']],
@@ -103,6 +106,7 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
             'rt' => 'Rt',
             'rw' => 'Rw',
             'alamat' => 'Alamat',
+            'desa_id' => 'Desa ID',
             'kehadiran' => 'Kehadiran',
             'nilai_pretest' => 'Nilai Pretest',
             'nilai_posttest' => 'Nilai Posttest',
@@ -144,6 +148,38 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getDesa()
+    {
+        return $this->hasOne(\app\models\WilayahDesa::className(), ['id' => 'desa_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getJenisKelamin()
+    {
+        return $this->hasOne(\app\models\MasterJenisKelamin::className(), ['id' => 'jenis_kelamin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPekerjaan()
+    {
+        return $this->hasOne(\app\models\MasterPekerjaan::className(), ['id' => 'pekerjaan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelatihan()
+    {
+        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPelatihanKuesionerKepuasans()
     {
         return $this->hasMany(\app\models\PelatihanKuesionerKepuasan::className(), ['peserta_id' => 'id']);
@@ -160,25 +196,25 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getJenisKelamin()
+    public function getPelatihanKuisionerKepuasans()
     {
-        return $this->hasOne(\app\models\MasterJenisKelamin::className(), ['id' => 'jenis_kelamin_id']);
+        return $this->hasMany(\app\models\PelatihanKuisionerKepuasan::className(), ['peserta_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getPelatihanKuisionerMonevs()
     {
-        return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
+        return $this->hasMany(\app\models\PelatihanKuisionerMonev::className(), ['peserta_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPelatihan()
+    public function getPelatihanSoalPesertas()
     {
-        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_id']);
+        return $this->hasMany(\app\models\PelatihanSoalPeserta::className(), ['peserta_id' => 'id']);
     }
 
     /**
@@ -192,17 +228,9 @@ abstract class PelatihanPeserta extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPekerjaan()
+    public function getUser()
     {
-        return $this->hasOne(\app\models\MasterPekerjaan::className(), ['id' => 'pekerjaan_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPelatihanSoalPesertas()
-    {
-        return $this->hasMany(\app\models\PelatihanSoalPeserta::className(), ['peserta_id' => 'id']);
+        return $this->hasOne(\app\models\User::className(), ['id' => 'user_id']);
     }
 
 

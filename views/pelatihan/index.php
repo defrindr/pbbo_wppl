@@ -1,6 +1,7 @@
 <?php
 
 use app\components\Tanggal;
+use app\models\PelatihanJenis;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
@@ -15,22 +16,23 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <p>
-    <?=Html::a('<i class="fa fa-plus"></i> Tambah Baru', ['create'], ['class' => 'btn btn-success'])?>
+    <?= Html::a('<i class="fa fa-plus"></i> Tambah Baru', ['create'], ['class' => 'btn btn-success']) ?>
 </p>
 
 
-    <?php \yii\widgets\Pjax::begin(['id' => 'pjax-main', 'enableReplaceState' => false, 'linkSelector' => '#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
+<?php \yii\widgets\Pjax::begin(['id' => 'pjax-main', 'enableReplaceState' => false, 'linkSelector' => '#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']]) ?>
 
-    <div class="box box-info">
-        <div class="box-body">
-            <div class="table-responsive">
-                <?=GridView::widget([
+<div class="box box-info">
+    <div class="box-body">
+        <div class="table-responsive">
+            <?= GridView::widget([
                 'layout' => '{summary}{pager}{items}{pager}',
                 'dataProvider' => $dataProvider,
                 'pager' => [
                     'class' => yii\widgets\LinkPager::className(),
                     'firstPageLabel' => 'First',
-                    'lastPageLabel' => 'Last'],
+                    'lastPageLabel' => 'Last'
+                ],
                 'filterModel' => $searchModel,
                 'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'],
                 'headerRowOptions' => ['class' => 'x'],
@@ -46,24 +48,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'attribute' => 'tanggal_mulai',
                         'format' => 'raw',
-                        'value' => function($model){
+                        'value' => function ($model) {
                             return Tanggal::toReadableDate($model->tanggal_mulai);
                         }
                     ],
-                    
+
                     [
                         'class' => yii\grid\DataColumn::className(),
-                        'attribute' => 'tingkat_id',
+                        'attribute' => 'materi_pelatihan',
                         'value' => function ($model) {
-                            if ($rel = $model->tingkat) {
-                                return $rel->nama;
-                            } else {
-                                return '';
-                            }
+                            $jenis = PelatihanJenis::findOne($model->jenis);
+                            return $jenis == null ? null : $jenis->nama . "<br/>Materi : " . $model->materi_pelatihan;
                         },
                         'format' => 'raw',
                     ],
-                    
+
                     [
                         'class' => yii\grid\DataColumn::className(),
                         'attribute' => 'pelaksana_id',
@@ -99,10 +98,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format' => 'raw',
                     ],
                 ],
-            ]);?>
-            </div>
+            ]); ?>
         </div>
     </div>
+</div>
 
-    <?php \yii\widgets\Pjax::end()?>
-
+<?php \yii\widgets\Pjax::end() ?>

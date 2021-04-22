@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
+
 /**
  * @var yii\web\View $this
  * @var app\models\Pelatihan $model
@@ -14,11 +15,11 @@ $this->params['breadcrumbs'][] = 'Edit';
 ?>
 
 <p>
-    <?=Html::a('<i class="fa fa-eye-open"></i> Kembali', ['view', 'id' => $model->id], ['class' => 'btn btn-default'])?>
+    <?= Html::a('<i class="fa fa-eye-open"></i> Kembali', ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
 </p>
 <style>
     .form-group {
-        margin: 0!important;
+        margin: 0 !important;
     }
 </style>
 <div class="box box-info">
@@ -39,7 +40,7 @@ $this->params['breadcrumbs'][] = 'Edit';
                 1 => [
                     'title' => 'Jenis Soal',
                     'icon' => 'glyphicon glyphicon-book',
-                    'content' => $this->render('_soal_jenis.php',[
+                    'content' => $this->render('_soal_jenis.php', [
                         'modelSoalJenis' => $modelSoalJenis,
                         'model' => $model,
                         'form' => $form,
@@ -56,9 +57,9 @@ $this->params['breadcrumbs'][] = 'Edit';
                 2 => [
                     'title' => 'Soal',
                     'icon' => 'glyphicon glyphicon-book',
-                    'content' => $this->render('_soal.php',[
-                        'modelSoal' => $modelSoal, 
-                        'modelSoalPilihan' => $modelSoalPilihan, 
+                    'content' => $this->render('_soal.php', [
+                        'modelSoal' => $modelSoal,
+                        'modelSoalPilihan' => $modelSoalPilihan,
                         'model' => $model,
                         'form' => $form,
                     ]),
@@ -77,11 +78,11 @@ $this->params['breadcrumbs'][] = 'Edit';
         ];
         ?>
 
-        <?=\drsdre\wizardwidget\WizardWidget::widget($wizard_config);?>
-            <hr/>
-            <?php echo $form->errorSummary($model); ?>
+        <?= \drsdre\wizardwidget\WizardWidget::widget($wizard_config); ?>
+        <hr />
+        <?php echo $form->errorSummary($model); ?>
 
-        <?php ActiveForm::end();?>
+        <?php ActiveForm::end(); ?>
 
     </div>
 </div>

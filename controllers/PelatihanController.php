@@ -226,7 +226,10 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
         $waktu_sekarang = strtotime(date('Y-m-d H:i:s'));
         $lebih_tgl_mulai = $waktu_sekarang >= strtotime($model->tanggal_mulai);
-        $kurang_tgl_selesai = $waktu_sekarang <= strtotime($model->tanggal_selesai);
+
+        $selesai = date('Y-m-d H:i:s', strtotime($model->tanggal_selesai . ' +1 day'));
+        $kurang_tgl_selesai = $waktu_sekarang <= strtotime($selesai);
+
         if (($lebih_tgl_mulai && $kurang_tgl_selesai) == false) {
             Yii::$app->session->setFlash('error', 'Pelatihan ini belum mulai / sudah berakhir.');
             return $this->goBack();
@@ -406,10 +409,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionAddSoal($id)
     {
         $model = $this->findModel($id);
+        /*
         if ($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
         }
+        */
         $modelSoalJenis = new PelatihanSoalJenis;
         $modelSoal = [new PelatihanSoal];
         $modelSoalPilihan = [[new PelatihanSoalPilihan]];
@@ -466,7 +471,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                         if ($o->unique_id == null) {
                             $o->unique_id = \Yii::$app->security->generateRandomString(50);
                         }
-
                     }
 
                     // validasi dynamic form
@@ -547,10 +551,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     {
         $modelSoalJenis = PelatihanSoalJenis::findOne($id);
         $model = $modelSoalJenis->pelatihan;
+        /*
         if ($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
         }
+        */
         $modelSoal = $modelSoalJenis->pelatihanSoals;
         $modelSoalPilihan = [];
 
@@ -561,7 +567,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             } else {
                 $modelSoalPilihan[$index] = [new PelatihanSoalPilihan()];
             }
-
         }
 
         if (count($modelSoal) < 1) {
@@ -756,7 +761,6 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         if ($file->saveAs($path)) {
             return $url . $filename;
         }
-
     }
 
     public function actionAjukanMonev($id)
@@ -896,12 +900,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 }
 
                 $transaction->commit();
-                Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah');
-                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', 'Data kehadiran peserta berhasil diubah - ' . date('Y-m-d H:i:s'));
+                return $this->redirect(['/pelatihan/update-kehadiran', 'id' => $model->id]);
             } catch (\Throwable $e) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('success', 'Telah terjadi kesalahan');
-                return $this->redirect(['/pelatihan/view', 'id' => $model->id]);
+                return $this->redirect(['/pelatihan/update-kehadiran', 'id' => $model->id]);
             }
         }
 
@@ -1105,6 +1109,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         header("Expires: 0");
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
+        die();
         ob_end_clean();
     }
 }

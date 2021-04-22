@@ -107,6 +107,8 @@ class PelatihanController extends Controller
         $model = new Pelatihan;
         $modelLampiran = [new PelatihanLampiran];
         $model->kota = "Sidoarjo";
+        $model->kriteria = "-";
+        $model->status_id != 3; //tanpa approval bappeda
 
         $transaction = \Yii::$app->db->beginTransaction();
 
@@ -115,9 +117,12 @@ class PelatihanController extends Controller
                 if (Yii::$app->user->identity->role_id != RoleType::SA) {
                     $model->pelaksana_id = Yii::$app->user->identity->id;
                 }
-                if (!preg_match("/https?/", $model->forum_diskusi)) {
-                    $model->forum_diskusi = "http://{$model->forum_diskusi}";
+
+                if ($model->forum_diskusi[0] == "0") {
+                    $model->forum_diskusi[0] = "+62";
+                    $model->forum_diskusi = "http://wa.me/{$model->forum_diskusi}";
                 }
+
 
                 $modelLampiran = Pelatihan::createMultiple(PelatihanLampiran::class);
                 Pelatihan::loadMultiple($modelLampiran, \Yii::$app->request->post());
@@ -147,7 +152,7 @@ class PelatihanController extends Controller
                     $kuisionerKepuasan->jumlah_soal = MasterKuesionerKepuasan::find()->count();
                     $kuisionerKepuasan->waktu_pengerjaan = Constant::DEFAULT_PENGISIAN_KUESIONER; // default 2 jam
                     $kuisionerKepuasan->save();
-                    
+
                     // create kuisioner monev
                     $kuisionerKepuasan = new PelatihanSoalJenis();
                     $kuisionerKepuasan->jenis_id = Constant::SOAL_JENIS_KUESIONER_MONEV;
@@ -218,10 +223,10 @@ class PelatihanController extends Controller
     {
         $model = $this->findModel($id);
         $uniqueId = $model->unique_id;
-        if ($model->status_id != 1) {
+        /*if ($model->status_id != 1) {
             Yii::$app->session->setFlash('error', 'Tidak dapat melakukan pengeditan karena pelatihan ini telah diajukan');
             return $this->goBack();
-        }
+        }*/
         // ambil data relasional
         $modelLampiran = $model->pelatihanLampirans;
 
@@ -240,9 +245,14 @@ class PelatihanController extends Controller
         $transaction = \Yii::$app->db->beginTransaction();
 
         if ($model->load($_POST)) {
-            if (!preg_match("/https?/", $model->forum_diskusi)) {
-                $model->forum_diskusi = "http://{$model->forum_diskusi}";
+
+            $model->forum_diskusi =  preg_replace("/[^0-9]/", "", $model->forum_diskusi);
+            if ($model->forum_diskusi[0] == "0") {
+                $tempNoTelpon = $model->forum_diskusi;
+                $tempNoTelpon[0] = "+62";
+                $model->forum_diskusi = "http://wa.me/{$tempNoTelpon}";
             }
+
             if ($model->unique_id == null) $model->unique_id = Yii::$app->security->generateRandomString(32);
             else $model->unique_id = $uniqueId;
 

@@ -33,19 +33,26 @@ class PelatihanPeserta extends BasePelatihanPeserta
         );
     }
 
-    public function getPesertaIkut(){
-        $list_pelatihan = PelatihanPeserta::find()->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')->where(['nik' => $this->nik,'pelatihan_peserta.kehadiran' => Constant::KEHADIRAN_HADIR])->select('pelatihan.id')->asArray()->all();
+    public function getPesertaIkut()
+    {
+        $list_pelatihan = PelatihanPeserta::find()->join('inner join', 'pelatihan', 'pelatihan.id = pelatihan_peserta.pelatihan_id')
+            ->where([
+                'nik' => $this->nik, 'pelatihan_peserta.kehadiran' => Constant::KEHADIRAN_HADIR
+            ])
+            ->select('pelatihan.id')
+            ->asArray()->all();
         $list = [];
 
-        foreach($list_pelatihan as $i) array_push($list, $i['id']);
+        foreach ($list_pelatihan as $i) array_push($list, $i['id']);
         $model = Pelatihan::find()->where(['in', 'id', $list]);
         return $model;
     }
 
-    public static function searchByNIK($nik){
+    public static function searchByNIK($nik)
+    {
         $model = PelatihanPeserta::findOne(['nik' => $nik]);
 
-        if($model){
+        if ($model) {
             $model = $model->toArray();
             unset($model['pelatihan_id']);
             unset($model['user_id']);
@@ -62,9 +69,9 @@ class PelatihanPeserta extends BasePelatihanPeserta
             unset($model['nib']);
             unset($model['masa_berlaku']);
             unset($model['lanjut']);
-    
+
             $model['message'] = "data-found";
-        }else{
+        } else {
             $model['message'] = "data-not-found";
         }
 

@@ -12,13 +12,13 @@ use yii\helpers\ArrayHelper;
 class PelatihanJenis extends BasePelatihanJenis
 {
 
+    public $selectedInstansi = [];
+
     public function behaviors()
     {
         return ArrayHelper::merge(
             parent::behaviors(),
-            [
-                # custom behaviors
-            ]
+            []
         );
     }
 
@@ -27,7 +27,7 @@ class PelatihanJenis extends BasePelatihanJenis
         return ArrayHelper::merge(
             parent::rules(),
             [
-                # custom validation rules
+                ['selectedInstansi', 'each', 'rule' => ['integer']],
             ]
         );
     }

@@ -26,9 +26,10 @@ use Yii;
  * @property string $kriteria
  * @property string $jenis
  * @property integer $jumlah_target
- * @property integer $sasaran
+ * @property string $sasaran
  * @property string $sasaran_wilayah
  * @property string $sumber_dana
+ * @property string $alokasi_dana
  * @property string $hasil_pelaksanaan_pelatihan
  * @property string $dasar_pelaksanaan
  * @property string $absensi_kehadiran
@@ -44,14 +45,14 @@ use Yii;
  * @property integer $modified_by
  * @property integer $flag
  *
- * @property \app\models\PelatihanTingkat $tingkat
  * @property \app\models\User $pelaksana
- * @property \app\models\PelatihanStatus $status
- * @property \app\models\Pelatihan $pelatihanSebelumnya
- * @property \app\models\Pelatihan[] $pelatihans
  * @property \app\models\PelatihanLampiran[] $pelatihanLampirans
  * @property \app\models\PelatihanPeserta[] $pelatihanPesertas
+ * @property \app\models\Pelatihan $pelatihanSebelumnya
  * @property \app\models\PelatihanSoalJenis[] $pelatihanSoalJenis
+ * @property \app\models\Pelatihan[] $pelatihans
+ * @property \app\models\PelatihanStatus $status
+ * @property \app\models\PelatihanTingkat $tingkat
  * @property string $aliasModel
  */
 abstract class Pelatihan extends \yii\db\ActiveRecord
@@ -73,13 +74,13 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'latar_belakang', 'tujuan', 'kota', 'nip_penandatangan', 'nama_penandatangan', 'tanggal_mulai', 'tingkat_id', 'lokasi', 'kriteria', 'jenis', 'jumlah_target', 'sasaran', 'sasaran_wilayah', 'sumber_dana', 'pelaksana_id', 'created_by', 'modified_by'], 'required'],
-            [['latar_belakang', 'tujuan', 'kota', 'nama_penandatangan', 'lokasi', 'hasil_pelaksanaan_pelatihan', 'dasar_pelaksanaan'], 'string'],
+            [['nama', 'latar_belakang', 'tujuan', 'kota', 'nip_penandatangan', 'nama_penandatangan', 'tanggal_mulai', 'tingkat_id', 'lokasi', 'kriteria', 'jenis', 'jumlah_target', 'sasaran', 'sasaran_wilayah', 'sumber_dana', 'alokasi_dana', 'pelaksana_id', 'created_by', 'modified_by'], 'required'],
+            [['latar_belakang', 'tujuan', 'kota', 'nama_penandatangan', 'lokasi', 'sasaran', 'hasil_pelaksanaan_pelatihan', 'dasar_pelaksanaan', 'materi_pelatihan'], 'string'],
             [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'modified_at'], 'safe'],
-            [['tingkat_id', 'status_id', 'jumlah_target', 'sasaran', 'pelaksana_id', 'pelatihan_sebelumnya', 'created_by', 'modified_by', 'flag'], 'integer'],
+            [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'pelatihan_sebelumnya', 'created_by', 'modified_by', 'flag'], 'integer'],
             [['unique_id'], 'string', 'max' => 32],
             [['nama', 'kriteria', 'jenis', 'proposal'], 'string', 'max' => 200],
-            [['nip_penandatangan', 'forum_diskusi', 'sasaran_wilayah', 'sumber_dana', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat', 'materi_pelatihan'], 'string', 'max' => 100],
+            [['nip_penandatangan', 'forum_diskusi', 'sasaran_wilayah', 'sumber_dana', 'alokasi_dana', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat'], 'string', 'max' => 100],
             [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
             [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanStatus::className(), 'targetAttribute' => ['status_id' => 'id']],
@@ -113,6 +114,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             'sasaran' => 'Sasaran',
             'sasaran_wilayah' => 'Sasaran Wilayah',
             'sumber_dana' => 'Sumber Dana',
+            'alokasi_dana' => 'Alokasi Dana',
             'hasil_pelaksanaan_pelatihan' => 'Hasil Pelaksanaan Pelatihan',
             'dasar_pelaksanaan' => 'Dasar Pelaksanaan',
             'absensi_kehadiran' => 'Absensi Kehadiran',
@@ -146,41 +148,9 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTingkat()
-    {
-        return $this->hasOne(\app\models\PelatihanTingkat::className(), ['id' => 'tingkat_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getPelaksana()
     {
         return $this->hasOne(\app\models\User::className(), ['id' => 'pelaksana_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getStatus()
-    {
-        return $this->hasOne(\app\models\PelatihanStatus::className(), ['id' => 'status_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPelatihanSebelumnya()
-    {
-        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_sebelumnya']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPelatihans()
-    {
-        return $this->hasMany(\app\models\Pelatihan::className(), ['pelatihan_sebelumnya' => 'id']);
     }
 
     /**
@@ -202,9 +172,41 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPelatihanSebelumnya()
+    {
+        return $this->hasOne(\app\models\Pelatihan::className(), ['id' => 'pelatihan_sebelumnya']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPelatihanSoalJenis()
     {
         return $this->hasMany(\app\models\PelatihanSoalJenis::className(), ['pelatihan_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelatihans()
+    {
+        return $this->hasMany(\app\models\Pelatihan::className(), ['pelatihan_sebelumnya' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStatus()
+    {
+        return $this->hasOne(\app\models\PelatihanStatus::className(), ['id' => 'status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTingkat()
+    {
+        return $this->hasOne(\app\models\PelatihanTingkat::className(), ['id' => 'tingkat_id']);
     }
 
 
