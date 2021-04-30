@@ -5,12 +5,13 @@ namespace app\models;
 class User extends \app\models\base\User implements \yii\web\IdentityInterface
 {
 
+    public $stringPelatihanDiikuti;
     /**
      * @inheritdoc
      */
     public static function findIdentity($id)
     {
-        return User::find()->where(["id"=>$id])->one();
+        return User::find()->where(["id" => $id])->one();
     }
 
     /**
@@ -29,7 +30,7 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return User::find()->where(["username"=>$username])->one();
+        return User::find()->where(["username" => $username])->one();
     }
 
     /**
@@ -67,7 +68,8 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
         return $this->password === md5($password);
     }
 
-    public function getPelatihanPesertas(){
+    public function getPelatihanPesertas()
+    {
         return $this->hasMany(\app\models\PelatihanPeserta::class, ['user_id' => 'id']);
     }
 }
