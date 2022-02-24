@@ -985,10 +985,12 @@ class PelatihanController extends \app\controllers\base\PelatihanController
     public function actionDownloadTemplatePeserta()
     {
         $objPHPExcel = new \PHPExcel();
-        $sheet0 = 0;
-        $sheet1 = 1;
+        $sheetpekerjaan = 0;
+        $sheetjenkel = 2;
+        $sheetpendidikan = 1;
+        $sheetmain = 3;
 
-        $objPHPExcel->setActiveSheetIndex($sheet0)->setSheetState(PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN);
+        $objPHPExcel->setActiveSheetIndex($sheetpekerjaan); //->setSheetState(PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN);
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
         $objPHPExcel->getActiveSheet()->setTitle("pekerjaan")
             ->setCellValue('A1', 'Nama');
@@ -997,16 +999,49 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         foreach ($masterPekerjaanDB as $index => $pekerjaan) {
             $masterPekerjaanDB[$index] = array_values($pekerjaan)[0];
         }
-        for ($i = 2; $i < count($masterPekerjaanDB); $i++) {
+        for ($i = 2; $i < count($masterPekerjaanDB) + 2; $i++) {
             $objPHPExcel->getActiveSheet()->setCellValue("A$i", $masterPekerjaanDB[$i - 2]);
         }
+
+        $objPHPExcel->createSheet();
+        $objPHPExcel->setActiveSheetIndex($sheetpendidikan); //->setSheetState(PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->setTitle("pendidikan")
+            ->setCellValue('A1', 'Nama');
+        // data pendidikan
+        $masterPendidikanDB = MasterPendidikan::find()->select('nama')->asArray()->all();
+        foreach ($masterPendidikanDB as $index => $pekerjaan) {
+            $masterPendidikanDB[$index] = array_values($pekerjaan)[0];
+        }
+        for ($i = 2; $i < count($masterPendidikanDB) + 2; $i++) {
+            $objPHPExcel->getActiveSheet()->setCellValue("A$i", $masterPendidikanDB[$i - 2]);
+        }
+
+
+        $objPHPExcel->createSheet();
+        $objPHPExcel->setActiveSheetIndex($sheetjenkel); //->setSheetState(PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->setTitle("jenkel")
+            ->setCellValue('A1', 'Nama');
+
+        // data jenis kelamin
+        $masterJenisKelaminDB = MasterJenisKelamin::find()->select('nama')->asArray()->all();
+        foreach ($masterJenisKelaminDB as $index => $jenis_kelamin) {
+            $masterJenisKelaminDB[$index] = array_values($jenis_kelamin)[0];
+        }
+        // var_dump($masterJenisKelaminDB);
+        // die;
+        for ($i = 2; $i < count($masterJenisKelaminDB) + 2; $i++) {
+            $objPHPExcel->getActiveSheet()->setCellValue("A$i", $masterJenisKelaminDB[$i - 2]);
+        }
+
 
         /**
          * Must create new sheet
          * to handle error offset value
          */
         $objPHPExcel->createSheet();
-        $objPHPExcel->setActiveSheetIndex($sheet1);
+        $objPHPExcel->setActiveSheetIndex($sheetmain);
 
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
@@ -1040,13 +1075,8 @@ class PelatihanController extends \app\controllers\base\PelatihanController
             $objPHPExcel->getActiveSheet()->getStyle("{$alphabet}1")->getFont()->setBold(true)->setName('Verdana')->setSize(10)->getColor()->setRGB('6F6F6F');
         }
 
-        // data jenis kelamin
-        $masterJenisKelamin = MasterJenisKelamin::find()->select('nama')->asArray()->all();
-        foreach ($masterJenisKelamin as $index => $jenis_kelamin) {
-            $masterJenisKelamin[$index] = array_values($jenis_kelamin)[0];
-        }
         // extract value
-        $configs = implode(",", $masterJenisKelamin);
+        $configs = "jenkel!\$A$2:\$A$" . (count($masterJenisKelaminDB) + 2);
         for ($i = 2; $i <= 200; $i++) {
             $objValidation = $objPHPExcel->getActiveSheet()->getCell("G$i")->getDataValidation();
             $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
@@ -1059,11 +1089,11 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 ->setError('Value is not in list.')
                 ->setPromptTitle('Pick from list')
                 ->setPrompt('Please pick a value from the drop-down list.')
-                ->setFormula1("\"$configs\"");
+                ->setFormula1($configs);
         }
 
         // data pekerjaan
-        $configs = "pekerjaan!\$A$2:\$A$88";
+        $configs = "pekerjaan!\$A$2:\$A$" . (count($masterPekerjaanDB) + 2);
         for ($i = 2; $i <= 200; $i++) {
             $objValidation = $objPHPExcel->getActiveSheet()->getCell("H$i")->getDataValidation();
             $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
@@ -1079,13 +1109,8 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 ->setFormula1($configs);
         }
 
-        // data pendidikan
-        $masterPendidikan = MasterPendidikan::find()->select('nama')->asArray()->all();
-        foreach ($masterPendidikan as $index => $pekerjaan) {
-            $masterPendidikan[$index] = array_values($pekerjaan)[0];
-        }
         // extract value
-        $configs = implode(",", $masterPendidikan);
+        $configs = "pendidikan!\$A$2:\$A$" . (count($masterPendidikanDB) + 2);
         for ($i = 2; $i <= 200; $i++) {
             $objValidation = $objPHPExcel->getActiveSheet()->getCell("I$i")->getDataValidation();
             $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
@@ -1098,7 +1123,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
                 ->setError('Value is not in list.')
                 ->setPromptTitle('Pick from list')
                 ->setPrompt('Please pick a value from the drop-down list.')
-                ->setFormula1("\"$configs\"");
+                ->setFormula1($configs);
         }
 
         $filename = "Template Peserta.xls";
@@ -1107,7 +1132,7 @@ class PelatihanController extends \app\controllers\base\PelatihanController
         header('Content-Disposition: attachment;filename=' . $filename . ' ');
         header("Pragma: no-cache");
         header("Expires: 0");
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
         die();
         ob_end_clean();
