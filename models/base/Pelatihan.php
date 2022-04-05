@@ -79,7 +79,7 @@ abstract class Pelatihan extends \yii\db\ActiveRecord
             [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'modified_at'], 'safe'],
             [['tingkat_id', 'status_id', 'jumlah_target', 'pelaksana_id', 'pelatihan_sebelumnya', 'created_by', 'modified_by', 'flag'], 'integer'],
             [['unique_id'], 'string', 'max' => 32],
-            [['nama', 'kriteria', 'jenis', 'proposal'], 'string', 'max' => 200],
+            [['nama', 'kriteria', 'proposal'], 'string', 'max' => 200],
             [['nip_penandatangan', 'forum_diskusi', 'sasaran_wilayah', 'sumber_dana', 'alokasi_dana', 'absensi_kehadiran', 'rekapitulasi_nilai', 'sertifikat'], 'string', 'max' => 100],
             [['tingkat_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\PelatihanTingkat::className(), 'targetAttribute' => ['tingkat_id' => 'id']],
             [['pelaksana_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['pelaksana_id' => 'id']],

@@ -529,6 +529,15 @@ class PelatihanController extends \app\controllers\base\PelatihanController
 
                     $modelSoalJenis->jumlah_soal = count($modelSoalJenis->pelatihanSoals);
                     $modelSoalJenis->save();
+                } else {
+                    $transaction->rollback();
+                    Yii::$app->session->setFlash('error', "Validasi gagal.");
+                    return $this->render('update', [
+                        'model' => $model,
+                        'modelSoalJenis' => $modelSoalJenis,
+                        'modelSoalPilihan' => $modelSoalPilihan,
+                        'modelSoal' => $modelSoal,
+                    ]);
                 }
                 $transaction->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
