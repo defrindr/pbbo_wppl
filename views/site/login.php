@@ -21,7 +21,7 @@ $fieldOptions2 = [
 
 <div class="login-box">
     <div class="login-logo">
-        <?= Html::img(["uploads/logo.png"],["width" => "200px"]) ?>
+        <?= Html::img(["uploads/logo.png"],["width" => "300px"]) ?>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
