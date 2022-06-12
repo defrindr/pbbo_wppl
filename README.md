@@ -1,41 +1,28 @@
-Yii2 Basic Ready
+PBBO WPPL
 ============================
 
-Yii2 Basic Ready for your standard application.
+Website Pelatihan Online menggunakan YII 2
 
-LIBRARIES USED
+KELOMPOK
 --------------
-	
-- [dmstr/yii2-adminlte-asset](https://github.com/dmstr/yii2-adminlte-asset) (For Admin Template)
-- [schmunk42/yii2-giiant](https://github.com/schmunk42/yii2-giiant) (For Model & CRUD generator)
-- [kartik-v/yii2-widget-fileinput](https://github.com/kartik-v/yii2-widget-fileinput) (For File Upload)
+
+- FERDINAND ANGGRIS (3120510406)
+- DEFRI INDRA M (3120510402)
+- RIKO FIRNANDO (3120511108)
+- AVIS ALVIAN (3120510407)
+- FAUZI FERDIANSYAH (3120510403)
+- MOH AJI KHOIRUL M (3120510404)
+- SYIFA RAHMALIA (3120511005)
+- SYAHRUL RAMADHAN (3120511110)
+- TRESNA DWI RESTU PAMUJI (3120511103)
+
 	
 FEATURES
 --------
-- Login with user from database.
-- Register a Membership
-- Logout
-- User Menu
-- Role Menu
-- Dynamic Menu
-- Dynamic RBAC
+- Dashboard
+- Pelatihan Online
+- Admin Template menggunakan Mazer
+- Lanjut Tahap Pelatihan
+- Upload Peserta Dari Excel
+- RBAC Sistem
 
-
-INSTALLATION
-------------
-
-Extract the archive file downloaded from [master.zip](https://github.com/febfeb/yii2-ready-basic/archive/master.zip) (approx 24MB) to a directory under the Web root.
-
-Create a database named `yii2-basic-ready` and import an SQL file from directory `db/yii2-basic-ready.sql`
-
-You can then access the application through the following URL:
-
-~~~
-http://localhost/yii2-basic-ready/web/
-~~~
-
-You can login using username `admin` with password `admin` (With Super Administrator privilege) or `user` with password `user` (With Regular User privilege). Or if you want to add more user, you can change it inside `user` table.
-
-CONFIGURATION
-----
-You can change whether AdminLTE loads css and js from plugin theme or not inside `assets/AdminLtePluginAsset.php`
