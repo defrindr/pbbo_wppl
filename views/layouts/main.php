@@ -7,6 +7,7 @@ use yii\helpers\Url;
 /* @var $content string */
 
 \app\assets\MazerAsset::register($this);
+\app\assets\MazerPluginAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
