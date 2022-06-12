@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \dmstr\bootstrap\Tabs;
+use \app\components\mazer\Tabs;
 
 /**
 * @var yii\web\View $this
@@ -12,8 +12,8 @@ use \dmstr\bootstrap\Tabs;
 
 ?>
 
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php $form = ActiveForm::begin([
         'id' => 'PelatihanPeserta',
         'layout' => 'horizontal',

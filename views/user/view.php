@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
-use dmstr\bootstrap\Tabs;
+use app\components\mazer\Tabs;
 
 /**
  * @var yii\web\View $this
@@ -24,9 +24,6 @@ $this->params['breadcrumbs'][] = 'View';
         <?= Html::a('<span class="glyphicon glyphicon-pencil"></span> ' . 'Edit', ['update', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
         <?= Html::a('<span class="glyphicon glyphicon-plus"></span> ' . 'New', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <p class="pull-right">
-        <?= Html::a('<span class="glyphicon glyphicon-list"></span> ' . 'List Users', ['index'], ['class' => 'btn btn-default']) ?>
-    </p>
 
     <div class="clearfix"></div>
 
@@ -39,16 +36,13 @@ $this->params['breadcrumbs'][] = 'View';
         </span>
     <?php endif; ?>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-header">
             <h2>
-                <?= $model->name ?>            </h2>
+                <?= $model->name ?> </h2>
         </div>
 
-        <div class="panel-body">
-
-
-            <?php $this->beginBlock('app\models\User'); ?>
+        <div class="card-body">
 
             <?= DetailView::widget([
                 'model' => $model,
@@ -61,35 +55,27 @@ $this->params['breadcrumbs'][] = 'View';
                         'value' => ($model->getRole()->one() ? Html::a($model->getRole()->one()->name, ['role/view', 'id' => $model->getRole()->one()->id,]) : '<span class="label label-warning">?</span>'),
                     ],
                     'photo_url:url',
-                    'last_login',
-                    'last_logout',
+                    'last_login:datetime',
+                    'last_logout:datetime',
+                    [
+                        'class' => yii\grid\DataColumn::className(),
+                        'attribute' => 'textPelatihanDiikuti',
+                        'format' => 'raw',
+                    ],
                 ],
             ]); ?>
 
-            <hr/>
+            <hr />
 
-            <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . 'Delete', ['delete', 'id' => $model->id],
+            <?= Html::a(
+                '<span class="glyphicon glyphicon-trash"></span> ' . 'Delete',
+                ['delete', 'id' => $model->id],
                 [
                     'class' => 'btn btn-danger',
                     'data-confirm' => '' . 'Are you sure to delete this item?' . '',
                     'data-method' => 'post',
-                ]); ?>
-            <?php $this->endBlock(); ?>
-
-
-
-            <?= Tabs::widget(
-                [
-                    'id' => 'relation-tabs',
-                    'encodeLabels' => false,
-                    'items' => [[
-                        'label' => '<b class=""># ' . $model->id . '</b>',
-                        'content' => $this->blocks['app\models\User'],
-                        'active' => true,
-                    ],]
                 ]
-            );
-            ?>
+            ); ?>
         </div>
     </div>
 </div>

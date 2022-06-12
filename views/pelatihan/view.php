@@ -4,7 +4,7 @@ use app\components\Constant;
 use app\components\RoleType;
 use app\components\Tanggal;
 use app\models\PelatihanLampiran;
-use dmstr\bootstrap\Tabs;
+use app\components\mazer\Tabs;
 use dmstr\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\DetailView;
@@ -50,8 +50,8 @@ $this->params['breadcrumbs'][] = 'View';
     </span>
 <?php endif; ?>
 
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php $this->beginBlock('app\models\Pelatihan'); ?>
 
         <?= DetailView::widget([
@@ -195,7 +195,7 @@ $this->params['breadcrumbs'][] = 'View';
                     ],
                 ]),
                 'pager' => [
-                    'class' => yii\widgets\LinkPager::className(),
+                    'class' => app\components\mazer\LinkPager::className(),
                     'firstPageLabel' => 'First',
                     'lastPageLabel' => 'Last',
                 ],
@@ -249,7 +249,7 @@ $this->params['breadcrumbs'][] = 'View';
                     ],
                 ]),
                 'pager' => [
-                    'class' => yii\widgets\LinkPager::className(),
+                    'class' => app\components\mazer\LinkPager::className(),
                     'firstPageLabel' => 'First',
                     'lastPageLabel' => 'Last',
                 ],
@@ -338,7 +338,7 @@ $this->params['breadcrumbs'][] = 'View';
                     ],
                 ]),
                 'pager' => [
-                    'class' => yii\widgets\LinkPager::className(),
+                    'class' => app\components\mazer\LinkPager::className(),
                     'firstPageLabel' => 'First',
                     'lastPageLabel' => 'Last',
                 ],

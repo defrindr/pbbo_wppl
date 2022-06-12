@@ -11,8 +11,8 @@ use yii\helpers\Html;
 
 ?>
 
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php $form = ActiveForm::begin([
     'id' => 'PelatihanSoal',
     'layout' => 'horizontal',

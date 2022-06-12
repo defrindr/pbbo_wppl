@@ -4,24 +4,24 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
-* @var yii\web\View $this
-* @var app\models\search\InstansiSearch $model
-* @var yii\widgets\ActiveForm $form
-*/
+ * @var yii\web\View $this
+ * @var app\models\search\InstansiSearch $model
+ * @var yii\widgets\ActiveForm $form
+ */
 ?>
 
 <div class="instansi-search">
 
     <?php $form = ActiveForm::begin([
-    'action' => ['index'],
-    'method' => 'get',
+        'action' => ['index'],
+        'method' => 'get',
     ]); ?>
 
-    		<?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'id') ?>
 
-		<?= $form->field($model, 'nama') ?>
+    <?= $form->field($model, 'nama') ?>
 
-		<?= $form->field($model, 'flag') ?>
+    <?= $form->field($model, 'flag') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

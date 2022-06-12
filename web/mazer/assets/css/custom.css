@@ -1,0 +1,23 @@
+.sidebar-wrapper .sidebar-header img,
+body.theme-dark .sidebar-wrapper .sidebar-header img {
+    height: 4.5rem;
+}
+
+body.theme-dark .sidebar-wrapper .sidebar-header img {
+    filter: invert(100%)
+}
+
+body.theme-dark .breadcrumb {
+    background-color: #151521;
+}
+
+.wizard {
+    background: transparent;
+}
+
+.wizard button {
+    border-radius: 1.2rem;
+    background-color: #435ebe;
+    color: #fff;
+    border: none;
+}

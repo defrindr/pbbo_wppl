@@ -18,15 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::a('<i class="fa fa-plus"></i> Tambah', ['create'], ['class' => 'btn btn-success']) ?>
 </p>
 
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php \yii\widgets\Pjax::begin(['id' => 'pjax-main', 'enableReplaceState' => false, 'linkSelector' => '#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']]) ?>
 
         <?= GridView::widget([
             'layout' => '{summary}{pager}{items}{pager}',
             'dataProvider' => $dataProvider,
             'pager' => [
-                'class' => yii\widgets\LinkPager::className(),
+                'class' => app\components\mazer\LinkPager::className(),
                 'firstPageLabel' => 'First',
                 'lastPageLabel' => 'Last'],
             'filterModel' => $searchModel,

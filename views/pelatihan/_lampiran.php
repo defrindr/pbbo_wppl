@@ -1,4 +1,5 @@
 <?php
+
 use kartik\file\FileInput;
 use yii\web\VIEW;
 use yii\helpers\Html;
@@ -30,55 +31,53 @@ DynamicFormWidget::begin([
 ?>
 
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card card-default">
+    <div class="card-header">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Berkas Lampiran
-            <button type="button" class="add-item btn btn-success btn-sm pull-right"><i
-                    class="glyphicon glyphicon-plus"></i> Add</button>
+            <button type="button" class="add-item btn btn-success btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i> Add</button>
         </h4>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <div class="container-items">
             <!-- widgetBody -->
 
-            <?php foreach ($modelLampiran as $i => $o): ?>
-            <div class="item panel panel-default">
-                <!-- widgetItem -->
-                <div class="panel-heading">
-                    <h3 class="panel-title pull-left">Lampiran</h3>
-                    <div class="pull-right">
-                        <button type="button" class="remove-item btn btn-danger btn-xs"><i
-                                class="glyphicon glyphicon-minus"></i></button>
+            <?php foreach ($modelLampiran as $i => $o) : ?>
+                <div class="item card card-default">
+                    <!-- widgetItem -->
+                    <div class="card-header">
+                        <h3 class="panel-title pull-left">Lampiran</h3>
+                        <div class="pull-right">
+                            <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="panel-body">
-                    <?=$form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?>
-                    <?=$form->field($o, "[{$i}]pelatihan_id", $hiddenTemplate)->textInput($hiddenStyle) ?>
-                    <?=$form->field($o, "[{$i}]judul_lampiran")->textInput(['maxlength' => true])?>
-                    <?=$form->field($o, "[{$i}]image")->widget(FileInput::className(), [
-                        'options' => [
-                            'multiple' => false,
-                            'accept' => 'application/msword,application/vnd.ms-excel'
-                        ],
-                        'pluginOptions' => [
-                            'maxSize' => 3000,
-                            'showPreview' => false,
-                            'showCaption' => true,
-                            'showRemove' => true,
-                            'showUpload' => false
-                        ],
-                    ])?>
-                    <div class="col-md-6 col-md-offset-3">
-                        <?php if($o->file != null): ?>
-                            Berkas : <a target="_blank" href="<?= Url::base()."/{$o->getUploadedUrlFolder()}{$o->file}" ?>"><?= $o->judul_lampiran ?></a>
-                        <?php endif; ?>
-                    </div>
-                    <hr>
+                    <div class="card-body">
+                        <?= $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle) ?>
+                        <?= $form->field($o, "[{$i}]pelatihan_id", $hiddenTemplate)->textInput($hiddenStyle) ?>
+                        <?= $form->field($o, "[{$i}]judul_lampiran")->textInput(['maxlength' => true]) ?>
+                        <?= $form->field($o, "[{$i}]image")->widget(FileInput::className(), [
+                            'options' => [
+                                'multiple' => false,
+                                'accept' => 'application/msword,application/vnd.ms-excel'
+                            ],
+                            'pluginOptions' => [
+                                'maxSize' => 3000,
+                                'showPreview' => false,
+                                'showCaption' => true,
+                                'showRemove' => true,
+                                'showUpload' => false
+                            ],
+                        ]) ?>
+                        <div class="col-md-6 col-md-offset-3">
+                            <?php if ($o->file != null) : ?>
+                                Berkas : <a target="_blank" href="<?= Url::base() . "/{$o->getUploadedUrlFolder()}{$o->file}" ?>"><?= $o->judul_lampiran ?></a>
+                            <?php endif; ?>
+                        </div>
+                        <hr>
 
+                    </div>
                 </div>
-            </div>
             <?php endforeach; ?>
         </div>
     </div>

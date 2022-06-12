@@ -24,7 +24,7 @@ $fieldOptions2 = [
         <?= Html::img(["uploads/logo.png"],["width" => "300px"]) ?>
     </div>
     <!-- /.login-logo -->
-    <div class="login-box-body">
+    <div class="login-card-body">
         <p class="login-box-msg">Silakan masukkan username & password</p>
 
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
@@ -54,5 +54,5 @@ $fieldOptions2 = [
         <?php ActiveForm::end(); ?>
 
     </div>
-    <!-- /.login-box-body -->
+    <!-- /.login-card-body -->
 </div><!-- /.login-box -->

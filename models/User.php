@@ -72,4 +72,22 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
     {
         return $this->hasMany(\app\models\PelatihanPeserta::class, ['user_id' => 'id']);
     }
+
+    public function getPelatihanDiikuti()
+    {
+        return $this->getPelatihanPesertas()
+            ->joinWith('pelatihan');
+    }
+
+    public function getTextPelatihanDiikuti()
+    {
+        $data = $this->pelatihanDiikuti;
+        $string = "";
+        foreach ($data as $key => $value) {
+            // var_dump($value);
+            // die;
+            $string .= $value->pelatihan->id. ". " .$value->pelatihan->nama . ", ";
+        }
+        return rtrim($string, ", ");
+    }
 }

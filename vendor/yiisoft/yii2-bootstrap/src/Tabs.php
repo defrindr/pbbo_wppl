@@ -220,6 +220,9 @@ class Tabs extends Widget
             $headers[] = Html::tag('li', $header, $headerOptions);
         }
 
+        var_dump($headers);
+        die;
+
         return Html::tag('ul', implode("\n", $headers), $this->options) . $this->renderPanes($panes);
     }
 

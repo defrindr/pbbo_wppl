@@ -12,8 +12,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Menu', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => (string)$model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Edit';
 ?>
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php echo $this->render('_form', [
             'model' => $model,
         ]); ?>

@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Hak Akses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => "Set Menu untuk ".$model->name, 'url' => ['view', 'id' => $model->id]];
 ?>
 <?php $form = ActiveForm::begin(['id' => 'my-form']); ?>
-<div class="box box-success">
-    <div class="box-header">
+<div class="card card-default">
+    <div class="card-header">
         <h3 class="box-title">Pilih Menu untuk Hak Akses <?= $model->name; ?></h3>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <?php
         function isChecked($role_id, $menu_id){
 
@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = ['label' => "Set Menu untuk ".$model->name, 'ur
         ?>
 
     </div>
-    <div class="box-footer">
+    <div class="card-footer">
         <button class="btn btn-info" type="button" id="select_all_btn">
             <i class="fa fa-check"></i> Select/Deselect All
         </button>

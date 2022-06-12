@@ -20,7 +20,7 @@ echo "<?php\n";
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \dmstr\bootstrap\Tabs;
+use \app\components\mazer\Tabs;
 use yii\helpers\StringHelper;
 
 /**

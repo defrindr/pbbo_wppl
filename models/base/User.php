@@ -55,7 +55,7 @@ class User extends \yii\db\ActiveRecord
             'username' => 'Username',
             'password' => 'Password',
             'name' => 'Name',
-            'role_id' => 'Role ID',
+            'role_id' => 'Role',
             'photo_url' => 'Photo Url',
             'last_login' => 'Last Login',
             'last_logout' => 'Last Logout'
@@ -69,5 +69,4 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->hasOne(\app\models\Role::className(), ['id' => 'role_id']);
     }
-
 }

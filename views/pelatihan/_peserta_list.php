@@ -12,7 +12,7 @@ use yii\helpers\Html;
         'layout' => '{summary}{pager}{items}{pager}',
         'dataProvider' => $dataProvider,
         'pager' => [
-            'class' => yii\widgets\LinkPager::className(),
+            'class' => app\components\mazer\LinkPager::className(),
             'firstPageLabel' => 'First',
             'lastPageLabel' => 'Last'
         ],

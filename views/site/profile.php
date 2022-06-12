@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \dmstr\bootstrap\Tabs;
+use \app\components\mazer\Tabs;
 
 /**
  * @var yii\web\View $this
@@ -14,12 +14,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="giiant-crud">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-header">
             <h2><?= $model->name ?></h2>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
 
             <div class="user-form">
 

@@ -6,7 +6,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
-use dmstr\bootstrap\Tabs;
+use app\components\mazer\Tabs;
 
 /**
  * @var yii\web\View $this
@@ -40,8 +40,8 @@ $this->params['breadcrumbs'][] = 'View';
         </span>
     <?php endif; ?>
 
-    <div class="box box-info">
-        <div class="box-body">
+    <div class="card card-default">
+        <div class="card-body">
             <?php $this->beginBlock('\app\models\PelatihanJenis'); ?>
 
             <?= DetailView::widget([

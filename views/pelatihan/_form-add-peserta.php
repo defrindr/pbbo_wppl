@@ -18,8 +18,8 @@ $this->params['breadcrumbs'][] = 'Edit';
     <?=Html::a('<i class="fa fa-eye-open"></i> Lihat', ['view', 'id' => $model->id], ['class' => 'btn btn-default'])?>
 </p>
 
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php $form = ActiveForm::begin([
     'id' => 'Pelatihan',
     'layout' => 'horizontal',

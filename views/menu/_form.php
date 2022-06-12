@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \dmstr\bootstrap\Tabs;
+use \app\components\mazer\Tabs;
 
 /**
  * @var yii\web\View $this

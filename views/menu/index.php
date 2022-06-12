@@ -26,12 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="box box-info">
-            <div class="box-header">
+        <div class="card card-default">
+            <div class="card-header">
                 <?= Html::a("<i class=\"fa fa-plus\"></i> Tambah Menu Baru", ["create"], ["class"=>"btn btn-info"]) ?>
                 <button id="simpanBtn" class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <table class="table table-responsive" id="tableSorter">
                     <thead>
                     <tr>

@@ -39,7 +39,11 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $countPelatihan = \app\models\Pelatihan::find()->count();
+        $countUser = \app\models\User::find()->count();
+        $countInstansi = \app\models\Instansi::find()->count();
+        $countPelatihanBulanIni = \app\models\Pelatihan::find()->where(['MONTH(tanggal_mulai)' => date('m'), 'YEAR(tanggal_mulai)' => date("Y")])->count();
+        return $this->render('index', compact('countPelatihan', 'countUser', 'countInstansi', 'countPelatihanBulanIni'));
     }
 
     public function actionProfile()

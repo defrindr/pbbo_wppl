@@ -11,8 +11,8 @@ $this->title = 'Tambah';
 $this->params['breadcrumbs'][] = ['label' => 'Pengguna', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php echo $this->render('_form', [
             'model' => $model,
         ]); ?>

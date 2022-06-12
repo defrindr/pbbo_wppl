@@ -1,9 +1,9 @@
 <?php
 use yii\helpers\Url;
 ?>
-<div class="box-header">
+<div class="card-header">
 </div>
-<div class="box-body">
+<div class="card-body">
     <form id="form-soal">
         <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?=$model->unique_id?>"
             value="<?=$model->unique_id?>">

@@ -22,8 +22,8 @@ $this->params['breadcrumbs'][] = 'Edit';
         margin: 0 !important;
     }
 </style>
-<div class="box box-info">
-    <div class="box-body">
+<div class="card card-default">
+    <div class="card-body">
         <?php $form = ActiveForm::begin([
             'id' => 'Pelatihan',
             // 'layout' => 'horizontal',

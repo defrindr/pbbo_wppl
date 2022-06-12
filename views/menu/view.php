@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
-use dmstr\bootstrap\Tabs;
+use app\components\mazer\Tabs;
 
 /**
 * @var yii\web\View $this
@@ -39,13 +39,13 @@ $this->params['breadcrumbs'][] = 'View';
         </span>
     <?php endif; ?>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card card-default">
+        <div class="card-header">
             <h2>
                 <?= $model->name ?>            </h2>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
 
 
 
@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = 'View';
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getMenus(), 'pagination' => ['pageSize' => 20, 'pageParam'=>'page-menuses']]),
     'pager'        => [
-        'class'          => yii\widgets\LinkPager::className(),
+        'class'          => app\components\mazer\LinkPager::className(),
         'firstPageLabel' => 'First',
         'lastPageLabel'  => 'Last'
     ],
@@ -146,7 +146,7 @@ $this->params['breadcrumbs'][] = 'View';
     'layout' => '{summary}{pager}<br/>{items}{pager}',
     'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getRoleMenus(), 'pagination' => ['pageSize' => 20, 'pageParam'=>'page-rolemenuses']]),
     'pager'        => [
-        'class'          => yii\widgets\LinkPager::className(),
+        'class'          => app\components\mazer\LinkPager::className(),
         'firstPageLabel' => 'First',
         'lastPageLabel'  => 'Last'
     ],

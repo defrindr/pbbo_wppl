@@ -187,7 +187,7 @@ PHP;
         'layout' => '{summary}{pager}{items}{pager}',
         'dataProvider' => $dataProvider,
         'pager' => [
-        'class' => yii\widgets\LinkPager::className(),
+        'class' => app\components\mazer\LinkPager::className(),
         'firstPageLabel' => <?= $generator->generateString('First') ?>,
         'lastPageLabel' => <?= $generator->generateString('Last') ?>
         ],
