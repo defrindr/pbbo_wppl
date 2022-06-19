@@ -31,8 +31,8 @@ $this->params['breadcrumbs'][] = 'View';
         </span>
     <?php endif;?>
 
-    <div class="card card-default">
-        <div class="card-body">
+    <div class="box box-default">
+        <div class="box-body">
             <?php $this->beginBlock('app\models\PelatihanSoalJenis');?>
 
             <?=DetailView::widget([

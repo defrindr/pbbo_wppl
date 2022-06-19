@@ -35,24 +35,24 @@ DynamicFormWidget::begin([
 ?>
 
 
-<div class="card card-default">
-    <div class="card-header">
+<div class="box box-default">
+    <div class="box-header">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Daftar Peserta
             <button type="button" class="add-item btn btn-success btn-sm pull-right"><i
                     class="glyphicon glyphicon-plus"></i> Add</button>
         </h4>
     </div>
-    <div class="card-body">
+    <div class="box-body">
         <div class="container-items peserta-items">
             <!-- widgetBody -->
 
             <?php
             foreach ($modelPeserta as $i => $o):
             ?>
-            <div class="item item-peserta card card-default">
+            <div class="item item-peserta box box-default">
                 <!-- widgetItem -->
-                <div class="card-header">
+                <div class="box-header">
                     <h3 class="panel-title pull-left">Peserta</h3>
                     <div class="pull-right">
                         <button type="button" class="add-item btn btn-success btn-xs pull-right" style="margin-left: 10px;"><i
@@ -62,7 +62,7 @@ DynamicFormWidget::begin([
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="card-body">
+                <div class="box-body">
                     <!-- <?php // $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle)?> -->
                     <?=$form->field($o, "[{$i}]nik")->widget(\app\components\NikFinder::class, [
     "pilihan" => [

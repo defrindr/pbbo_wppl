@@ -93,8 +93,12 @@ class UserController extends Controller
                 }else{
                     $model->photo_url = "default.png";
                 }
-
-                $model->save();
+                if ($model->validate()) {
+                    $model->save();
+                } else {
+                    var_dump($model->getErrors());
+                    die;
+                }
                 return $this->redirect(Url::previous());
             } elseif (!\Yii::$app->request->isPost) {
                 $model->load($_GET);

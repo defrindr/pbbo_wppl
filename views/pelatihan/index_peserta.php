@@ -43,7 +43,7 @@ $this->title = 'Daftar Pelatihan';
         <?php else: ?>
         <div class="col-lg-6 col-xs-12">
             <div class="box box-danger">
-                <div class="card-body">
+                <div class="box-body">
                     Anda belum Mengikuti Pelatihan Apapun
                 </div>
             </div>

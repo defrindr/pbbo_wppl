@@ -14,8 +14,8 @@ $this->params['breadcrumbs'][] = 'Edit';
 ?>
 <div class="giiant-crud instansi-update">
 
-    <div class="card card-default">
-        <div class="card-body">
+    <div class="box box-default">
+        <div class="box-body">
             <?= $this->render('_form', [
                 'model' => $model,
             ]); ?>

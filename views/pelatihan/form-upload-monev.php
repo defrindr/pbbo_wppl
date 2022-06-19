@@ -14,8 +14,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Pelatihan', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <?php $form = ActiveForm::begin([
             'id' => 'PelatihanLampiran',
             'layout' => 'horizontal',

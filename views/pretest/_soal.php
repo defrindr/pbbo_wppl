@@ -3,9 +3,9 @@
 use app\components\Constant;
 use yii\helpers\Url;
  ?>
-<div class="card-header">
+<div class="box-header">
 </div>
-<div class="card-body">
+<div class="box-body">
     <form id="form-soal">
         <input type="hidden" name="pelatihan_id" id="pelatihan-id-<?= $model->unique_id ?>"
             value="<?= $model->unique_id ?>">

@@ -50,8 +50,8 @@ $this->params['breadcrumbs'][] = 'View';
     </span>
 <?php endif; ?>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <?php $this->beginBlock('app\models\Pelatihan'); ?>
 
         <?= DetailView::widget([
@@ -149,7 +149,7 @@ $this->params['breadcrumbs'][] = 'View';
                 ]
             );
         }
-        if (($model->status_id == 3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->role_id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
+        if (($model->status_id == 3 || $model->status_id == 4) && ($model->pelaksana_id == \Yii::$app->user->identity->id || \Yii::$app->user->identity->role_id == RoleType::SA)) {
             echo Html::a('<span class="glyphicon glyphicon-arrow-up"></span> ' . (($model->status_id == 3) ? 'Ajukan Monev' : "Ubah Data Monev"), ['ajukan-monev', 'id' => $model->id], ['class' => 'btn btn-primary']);
         }
 

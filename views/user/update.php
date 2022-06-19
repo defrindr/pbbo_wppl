@@ -13,8 +13,8 @@ $this->params['breadcrumbs'][] = ['label' => (string)$model->name, 'url' => ['vi
 $this->params['breadcrumbs'][] = 'Edit';
 ?>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <?php echo $this->render('_form', [
             'model' => $model,
         ]); ?>

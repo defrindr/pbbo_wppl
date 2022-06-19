@@ -17,8 +17,8 @@ $this->title = 'Dashboard';
 
     <div class="row">
         <div class="col-6 col-lg-3 col-md-6">
-            <div class="card">
-                <div class="card-body px-3 py-4-5">
+            <div class="box">
+                <div class="box-body px-3 py-4-5">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="stats-icon blue">
@@ -34,8 +34,8 @@ $this->title = 'Dashboard';
             </div>
         </div>
         <div class="col-6 col-lg-3 col-md-6">
-            <div class="card">
-                <div class="card-body px-3 py-4-5">
+            <div class="box">
+                <div class="box-body px-3 py-4-5">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="stats-icon white">
@@ -51,8 +51,8 @@ $this->title = 'Dashboard';
             </div>
         </div>
         <div class="col-6 col-lg-3 col-md-6">
-            <div class="card">
-                <div class="card-body px-3 py-4-5">
+            <div class="box">
+                <div class="box-body px-3 py-4-5">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="stats-icon red">
@@ -68,8 +68,8 @@ $this->title = 'Dashboard';
             </div>
         </div>
         <div class="col-6 col-lg-3 col-md-6">
-            <div class="card">
-                <div class="card-body px-3 py-4-5">
+            <div class="box">
+                <div class="box-body px-3 py-4-5">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="stats-icon green">

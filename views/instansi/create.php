@@ -13,8 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="giiant-crud instansi-create">
 
-    <div class="card card-default">
-        <div class="card-body">
+    <div class="box box-default">
+        <div class="box-body">
             <?= $this->render('_form', [
                 'model' => $model,
             ]); ?>

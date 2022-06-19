@@ -8,11 +8,11 @@ $namaChart = "pelatihan-user-pembuat";
 $judulChart = "Pembuat Pelatihan";
 
 ?>
-<div class="card card-danger">
-    <div class="card-header with-border">
-        <h3 class="card-title"><?= $judulChart ?></h3>
+<div class="box box-danger">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= $judulChart ?></h3>
     </div>
-    <div class='card-body'>
+    <div class='box-body'>
         <canvas id="<?= $namaChart ?>"></canvas>
     </div>
 </div>
