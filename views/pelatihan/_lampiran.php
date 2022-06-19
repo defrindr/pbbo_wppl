@@ -31,28 +31,28 @@ DynamicFormWidget::begin([
 ?>
 
 
-<div class="card card-default">
-    <div class="card-header">
+<div class="box box-default">
+    <div class="box-header">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Berkas Lampiran
             <button type="button" class="add-item btn btn-success btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i> Add</button>
         </h4>
     </div>
-    <div class="card-body">
+    <div class="box-body">
         <div class="container-items">
             <!-- widgetBody -->
 
             <?php foreach ($modelLampiran as $i => $o) : ?>
-                <div class="item card card-default">
+                <div class="item box box-default">
                     <!-- widgetItem -->
-                    <div class="card-header">
+                    <div class="box-header">
                         <h3 class="panel-title pull-left">Lampiran</h3>
                         <div class="pull-right">
                             <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="card-body">
+                    <div class="box-body">
                         <?= $form->field($o, "[{$i}]id", $hiddenTemplate)->textInput($hiddenStyle) ?>
                         <?= $form->field($o, "[{$i}]pelatihan_id", $hiddenTemplate)->textInput($hiddenStyle) ?>
                         <?= $form->field($o, "[{$i}]judul_lampiran")->textInput(['maxlength' => true]) ?>

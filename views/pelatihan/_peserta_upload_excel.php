@@ -19,8 +19,8 @@ $hiddenStyle = ["style" => "display: none"];
 ?>
 
 
-<div class="card card-default">
-    <div class="card-header">
+<div class="box box-default">
+    <div class="box-header">
         <h4>
             <i class="glyphicon glyphicon-book"></i> Upload List Peserta
             <div class="pull-right">
@@ -28,7 +28,7 @@ $hiddenStyle = ["style" => "display: none"];
             </div>
         </h4>
     </div>
-    <div class="card-body">
+    <div class="box-body">
         <div class="container-items peserta-items">
             <?= $form->field($model, "file")->widget(FileInput::class, [
                 'options' => [

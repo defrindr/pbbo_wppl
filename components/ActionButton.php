@@ -46,13 +46,13 @@ class ActionButton
                 if ($model->status_id == Constant::STATUS_SELESAI && $model->tingkat_id != Constant::PELATIHAN_TINGKAT_LANJUT_2) {
                     $check_exist = Pelatihan::findOne(['pelatihan_sebelumnya' => $model->id, 'flag' => 1]);
                     if ($check_exist == []) {
-                        return Html::a("Tingkat Berikutnya", ["tingkat-lanjut", "id" => $model->id], [
-                            "class" => "btn btn-primary",
-                            'style' => 'margin-bottom: 5px',
-                            "title" => "Pengajuan Data",
-                            "data-confirm" => "Apakah Anda yakin ingin mengajukan tingkat berikutnya ?",
+                        // return Html::a("Tingkat Berikutnya", ["tingkat-lanjut", "id" => $model->id], [
+                        //     "class" => "btn btn-primary",
+                        //     'style' => 'margin-bottom: 5px',
+                        //     "title" => "Pengajuan Data",
+                        //     "data-confirm" => "Apakah Anda yakin ingin mengajukan tingkat berikutnya ?",
                             //"data-method" => "GET"
-                        ]);
+                            return '';;
                     }
                 }
             };

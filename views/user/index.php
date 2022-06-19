@@ -18,8 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::a('<i class="fa fa-plus"></i> Tambah', ['create'], ['class' => 'btn btn-success']) ?>
 </p>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <div class="table table-responsive">
             <?php \yii\widgets\Pjax::begin(['id' => 'pjax-main', 'enableReplaceState' => false, 'linkSelector' => '#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']]) ?>
 

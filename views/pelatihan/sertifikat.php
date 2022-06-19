@@ -23,7 +23,7 @@ use yii\base\Model;
         margin: 0 auto;
         margin-bottom: 1.5cm;
         margin-top: 1.5cm;
-        background-image: url("https://backgroundcheckall.com/wp-content/uploads/2017/12/background-desain-sertifikat-2.jpg");
+        background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjY7evICDkZOQTsXuTFDMeQtSlpiKc2Y62MYGoc7V4PGdIQ4-gopCd4xxw0ycZxaXeQh_h2YvIYCfpg7kofeCxb-tpGSJQuIP4uc44d4xi3YFakVqTKkxarqC10AvbYZjd4lGL9TJbYnkDKjATIlE6AOzHlbvuPBlW9YM3gIW1gHS4ZPblEM3Lnybo_/w640-h452/background%20piagam%20sertifikat%20kosong%20polos%20(12).png");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -41,21 +41,22 @@ use yii\base\Model;
     }
 
     img {
-        width: 80pt;
+        width: 150pt;
         padding-top: 40pt;
         margin-top: 0;
     }
 
     h1 {
-        font-size: 36pt;
+        font-size: 32pt;
     }
 
     p {
-        margin: 8pt;
+        margin: 4pt;
     }
 
     .textbiasa {
         font-size: 14pt;
+        margin: 0;
     }
 
     .namapeserta {
@@ -88,7 +89,7 @@ $cretedby = User::findOne(['id' => $model->created_by])
 <?php foreach ($model->pelatihanPesertas as $p) { ?>
 
     <page size="A4">
-        <img src="https://seeklogo.com/images/S/sidoarjo-logo-5B22446ACF-seeklogo.com.png" />
+        <img src="<?= \Yii::$app->request->baseUrl."/uploads/logo.png" ?>" />
         <h1>SERTIFIKAT</h1>
         <p class='textbiasa'>Diberikan Kepada</p>
         <p class='namapeserta'>&nbsp;&nbsp;&nbsp;<?= $p->nama ?>&nbsp;&nbsp;&nbsp;</p>

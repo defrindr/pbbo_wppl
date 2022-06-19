@@ -39,13 +39,13 @@ $this->params['breadcrumbs'][] = 'View';
         </span>
     <?php endif; ?>
 
-    <div class="card card-default">
-        <div class="card-header">
+    <div class="box box-default">
+        <div class="box-header">
             <h2>
                 <?= $model->name ?>            </h2>
         </div>
 
-        <div class="card-body">
+        <div class="box-body">
 
 
 

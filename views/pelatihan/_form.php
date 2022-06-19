@@ -10,8 +10,8 @@ use yii\bootstrap\ActiveForm;
 
 ?>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <?php $form = ActiveForm::begin([
             'id' => 'Pelatihan',
             'layout' => 'horizontal',

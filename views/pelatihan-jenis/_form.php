@@ -15,8 +15,8 @@ use yii\helpers\ArrayHelper;
 
 ?>
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="box box-default">
+    <div class="box-body">
         <?php $form = ActiveForm::begin(
             [
                 'id' => 'PelatihanJenis',
@@ -27,8 +27,9 @@ use yii\helpers\ArrayHelper;
         );
         ?>
 
-        <?= $form->field($model, 'index')->textInput(['maxlength' => true]) ?>
+        <?php //$form->field($model, 'index')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'materi')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'sasaran')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'peserta')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'durasi')->textInput(['maxlength' => true]) ?>

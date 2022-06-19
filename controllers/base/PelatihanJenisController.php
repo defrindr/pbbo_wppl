@@ -78,13 +78,20 @@ class PelatihanJenisController extends Controller
     {
         $model = new PelatihanJenis;
 
+        // $db = \Yii::$app->db->begintransaction();
         try {
             if ($model->load($_POST)) {
 
                 $model->instansi_id = implode(",", $model->selectedInstansi);
 
-                if ($model->save())
+                if ($model->save()) {
+                    $model->index = "$model->id";
+                    // $model->validate();
+                    // var_dump($model->getErrors());
+                    // die;
+                    $model->save();
                     return $this->redirect(['view', 'id' => $model->id]);
+                }
             } elseif (!\Yii::$app->request->isPost) {
                 $model->load($_GET);
             }
@@ -107,7 +114,7 @@ class PelatihanJenisController extends Controller
         $model->selectedInstansi = explode(",", $model->instansi_id);
 
         if ($model->load($_POST)) {
-
+            $model->index = "$model->id";
             $model->instansi_id = implode(",", $model->selectedInstansi);
 
             if ($model->save())

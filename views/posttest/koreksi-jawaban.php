@@ -23,8 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php \yii\widgets\Pjax::begin(['id' => 'pjax-main', 'enableReplaceState' => false, 'linkSelector' => '#pjax-main ul.pagination a, th a', 'clientOptions' => ['pjax:success' => 'function(){alert("yo")}']])?>
 
-    <div class="card card-default">
-        <div class="card-body">
+    <div class="box box-default">
+        <div class="box-body">
             <?php $form = ActiveForm::begin([
                 'action' => Url::to(["/pelatihan/posttest/koreksi-jawaban/$peserta->id/$model->unique_id"]), 
                 'layout' => 'horizontal',

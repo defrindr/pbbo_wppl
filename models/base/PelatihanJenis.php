@@ -37,10 +37,11 @@ abstract class PelatihanJenis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['index', 'nama'], 'required'],
+            [['nama'], 'required'],
             [['index'], 'string', 'max' => 5],
             [['nama', 'sasaran'], 'string', 'max' => 200],
             [['peserta'], 'string', 'max' => 10],
+            [['materi'], 'safe'],
             [['durasi'], 'string', 'max' => 50],
             [['instansi_id'], 'string', 'max' => 100]
         ];
@@ -56,8 +57,8 @@ abstract class PelatihanJenis extends \yii\db\ActiveRecord
             'index' => 'Index',
             'nama' => 'Nama',
             'sasaran' => 'Sasaran',
-            'peserta' => 'Peserta',
-            'durasi' => 'Durasi',
+            'peserta' => 'Peserta (jumlah)',
+            'durasi' => 'Durasi (menit)',
             'instansi_id' => 'Instansi ID',
         ];
     }
